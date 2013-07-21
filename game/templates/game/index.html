@@ -1,0 +1,12 @@
+{% load admin_urls %}
+<a href="{% url 'admin:game_game_add' %}">Add a result</a>
+
+{% if latest_results %}
+    <ul>
+    {% for result in latest_results %}
+        <li><a href="{% url 'detail' result.id %}">{{ result }} - {{ result.date }}</a></li>
+    {% endfor %}
+    </ul>
+{% else %}
+    <p>No results found.</p>
+{% endif %}
