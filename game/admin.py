@@ -3,7 +3,9 @@ from game.models import Game, Rank
 
 
 class GameAdmin(admin.ModelAdmin):
-    pass
+    def save_model(self, request, obj, form, change):
+        Rank.update_rank(obj.winner.id, obj.loser.id)
+        obj.save()
 
 admin.site.register(Game, GameAdmin)
 
