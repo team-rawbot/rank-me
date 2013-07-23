@@ -1,6 +1,10 @@
 Installation
 ============
 
+(optional) create a virtualenv with virtualenvwrapper::
+
+    mkvirtualenv rankme
+
 Start by installing the requirements and copy the settings file::
 
     pip install -r requirements.txt
