@@ -1,0 +1,13 @@
+<h2>Add a new result</h2>
+
+<form action="" method="post">
+    {{ form.non_field_errors }}
+    {% csrf_token %}
+    {% for field in form %}
+        <div class="fieldWrapper">
+            {{ field.label_tag }} {{ field }}
+            {{ field.errors }}
+        </div>
+    {% endfor %}
+    <p><input type="submit" value="Add result" /></p>
+</form>

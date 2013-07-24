@@ -1,5 +1,5 @@
 {% load admin_urls %}
-<a href="{% url 'admin:game_game_add' %}">Add a result</a>
+<a href="{% url 'game_add' %}">Add a result</a>
 
 {% if score_board %}
     <h2>Scores</h2>
@@ -16,7 +16,7 @@
     <h2>Last 20 games</h2>
     <ul>
     {% for result in latest_results %}
-        <li><a href="{% url 'detail' result.id %}">{{ result }} - {{ result.date }}</a></li>
+        <li><a href="{% url 'game_detail' result.id %}">{{ result }} - {{ result.date }}</a></li>
     {% endfor %}
     </ul>
 {% else %}
