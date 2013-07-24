@@ -1,24 +1,28 @@
 {% load admin_urls %}
 <a href="{% url 'game_add' %}">Add a result</a>
 
-{% if score_board %}
+<div id="scores"
     <h2>Scores</h2>
-    <ul>
-        {% for rank in score_board %}
-            <li>{{ rank.user.username }} ({{ rank.rank }})</li>
-        {% endfor %}
-    </ul>
-{% else %}
-    <p>No score board yet.</p>
-{% endif %}
+    {% if score_board %}
+        <ul class="score-board">
+            {% for rank in score_board %}
+                <li class="score-item">{{ rank.user.username }} ({{ rank.rank }})</li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p>No scores registered yet.</p>
+    {% endif %}
+</div>
 
-{% if latest_results %}
-    <h2>Last 20 games</h2>
-    <ul>
-    {% for result in latest_results %}
-        <li><a href="{% url 'game_detail' result.id %}">{{ result }} - {{ result.date }}</a></li>
-    {% endfor %}
-    </ul>
-{% else %}
-    <p>No results found.</p>
-{% endif %}
+<div id="latest-results">
+    {% if latest_results %}
+        <h2>Last 20 games</h2>
+        <ul class="games">
+        {% for result in latest_results %}
+            <li class="game-item"><a href="{% url 'game_detail' result.id %}">{{ result }} - {{ result.date }}</a></li>
+        {% endfor %}
+        </ul>
+    {% else %}
+        <p>No results found.</p>
+    {% endif %}
+</div>

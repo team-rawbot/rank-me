@@ -1,6 +1,6 @@
 <h2>Add a new result</h2>
 
-<form action="" method="post">
+<form id="add-result" action="" method="post">
     {{ form.non_field_errors }}
     {% csrf_token %}
     {% for field in form %}

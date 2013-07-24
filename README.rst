@@ -20,3 +20,7 @@ Create the database::
 Then run the development server::
 
     ./manage.py runserver
+
+To run the tests::
+
+    ./manage.py test game
