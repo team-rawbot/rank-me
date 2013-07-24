@@ -28,9 +28,9 @@ class RankManager(models.Manager):
 
 
 class Rank(models.Model):
-    user = models.ForeignKey(User, related_name='+')
+    user = models.ForeignKey(User, related_name='rank', unique=True)
     rank = models.IntegerField(default=1000)
-    stdev = models.FloatField('standard deviation')
+    stdev = models.FloatField('standard deviation', default=50)
 
     objects = RankManager()
 
