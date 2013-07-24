@@ -1,5 +1,6 @@
 from datetime import datetime
 from django.contrib.auth.models import User
+from django.core.exceptions import ValidationError, ObjectDoesNotExist
 from django.db import models
 from django.forms import ModelForm
 
@@ -15,6 +16,13 @@ class Game(models.Model):
     date = models.DateTimeField(default=datetime.now)
 
     objects = GameManager()
+
+    def clean(self):
+        try:
+            if self.winner == self.loser:
+                raise ValidationError('Winner and loser can\'t be the same person!')
+        except ObjectDoesNotExist:
+            pass
 
     def __str__(self):
         return '%s beats %s' % (
