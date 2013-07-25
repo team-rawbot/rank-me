@@ -1,8 +1,7 @@
 from datetime import datetime
 from django.contrib.auth.models import User
-from django.core.exceptions import ValidationError, ObjectDoesNotExist
+from django.core.exceptions import ValidationError
 from django.db import models
-from django.forms import ModelForm
 
 
 class GameManager(models.Manager):
@@ -29,12 +28,6 @@ class Game(models.Model):
             self.winner,
             self.loser
         )
-
-
-class GameForm(ModelForm):
-    class Meta:
-        model = Game
-        fields = ['winner', 'loser']
 
 
 class RankManager(models.Manager):
