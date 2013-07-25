@@ -24,3 +24,11 @@ Then run the development server::
 To run the tests::
 
     ./manage.py test game
+
+
+Contribute
+==========
+
+Any contribution welcome, just make sure that the tests still pass (see above).
+Backlog available on `Trello:
+<https://trello.com/b/lcJzUtQS/rankme>`_.
