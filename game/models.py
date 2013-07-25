@@ -18,11 +18,11 @@ class Game(models.Model):
     objects = GameManager()
 
     def clean(self):
-        try:
-            if self.winner == self.loser:
-                raise ValidationError('Winner and loser can\'t be the same person!')
-        except ObjectDoesNotExist:
-            pass
+        if (self.winner_id is not None and self.loser_id is not None and
+                self.winner_id == self.loser_id):
+            raise ValidationError(
+                'Winner and loser can\'t be the same person!'
+            )
 
     def __str__(self):
         return '%s beats %s' % (
