@@ -1,6 +1,7 @@
-from django.http import Http404, HttpResponseRedirect
-from django.shortcuts import render, redirect
-from game.models import Game, Rank, GameForm
+from django.shortcuts import get_object_or_404, render, redirect
+
+from .forms import GameForm
+from .models import Game, Rank
 
 
 def index(request):
@@ -14,10 +15,8 @@ def index(request):
 
 
 def detail(request, game_id):
-    try:
-        game = Game.objects.get(pk=game_id)
-    except Game.DoesNotExist:
-        raise Http404
+    game = get_object_or_404(Game, pk=game_id)
+
     return render(request, 'game/detail.html', {'game': game})
 
 
