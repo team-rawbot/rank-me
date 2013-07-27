@@ -1,0 +1,12 @@
+{
+    "name": "Rankme",
+    "version": "0.1.0",
+    "dependencies": {
+        "bootstrap": "~2.3"
+    },
+    "ignore": [
+        "**/.*",
+        "node_modules",
+        "components"
+    ]
+}

@@ -1,4 +1,8 @@
+{% extends "base.html" %}
+
 {% load admin_urls %}
+
+{% block content %}
 <a href="{% url 'game_add' %}">Add a result</a>
 
 <div id="scores"
@@ -26,3 +30,4 @@
         <p>No results found.</p>
     {% endif %}
 </div>
+{% endblock %}
