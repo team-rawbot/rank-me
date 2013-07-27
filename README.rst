@@ -22,12 +22,12 @@ Then run the development server::
     ./manage.py runserver
 
 
-Manage assets
+Manage assets::
 
     npm install
     bower install
 
-Compute LESS with grunt
+Compute LESS with grunt::
 
     # compile once
     grunt less
