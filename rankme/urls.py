@@ -2,6 +2,9 @@ from django.conf.urls import patterns, include, url
 
 # Uncomment the next two lines to enable the admin:
 from django.contrib import admin
+
+from game import views
+
 admin.autodiscover()
 
 urlpatterns = patterns('',
@@ -12,6 +15,7 @@ urlpatterns = patterns('',
     # Uncomment the admin/doc line below to enable admin documentation:
     # url(r'^admin/doc/', include('django.contrib.admindocs.urls')),
 
+    url(r'^$', views.index, name='homepage'),
     url(r'^results/', include('game.urls')),
     url(r'^admin/', include(admin.site.urls)),
 )

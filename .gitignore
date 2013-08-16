@@ -1,2 +1,5 @@
 *.pyc
 rankme/settings/local.py
+static/vendors/*
+node_modules/*
+static/main.css

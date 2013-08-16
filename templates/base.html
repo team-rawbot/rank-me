@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Ranke-me</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link href="/static/main.css" rel="stylesheet" media="screen">
+    </head>
+    <body>
+        <div class="navbar navbar-fixed-top">
+            <div class="navbar-inner">
+                <div class="container">
+                    <a class="brand" href="/">Rank-me</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="app container">
+            {% block content %}{% endblock %}
+        </div>
+
+        <script src="/static/vendors/jquery/jquery.min.js"></script>
+    </body>
+</html>
