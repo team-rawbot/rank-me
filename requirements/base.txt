@@ -1,0 +1,4 @@
+distribute==0.7.3
+Django==1.5.1
+South==0.8.1
+trueskill==0.4.1

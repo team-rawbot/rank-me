@@ -1,0 +1,7 @@
+-r base.txt
+django-debug-toolbar==0.11.0
+django-extensions==1.2.5
+pip-tools==0.3.4
+six==1.4.1
+sqlparse==0.1.10
+Werkzeug==0.9.4
