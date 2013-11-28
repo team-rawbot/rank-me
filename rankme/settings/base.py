@@ -1,7 +1,8 @@
 # Django settings for rankme project.
 import os
+from . import get_env_variable
 
-DEBUG = True
+DEBUG = get_env_variable('DEBUG', False)
 TEMPLATE_DEBUG = DEBUG
 
 ADMINS = (
