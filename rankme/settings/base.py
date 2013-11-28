@@ -1,8 +1,10 @@
 # Django settings for rankme project.
 import os
+import dj_database_url
+
 from . import get_env_variable
 
-DEBUG = get_env_variable('DEBUG', False)
+DEBUG = bool(get_env_variable('DEBUG', False))
 TEMPLATE_DEBUG = DEBUG
 
 ADMINS = (
@@ -12,14 +14,7 @@ ADMINS = (
 MANAGERS = ADMINS
 
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.', # Add 'postgresql_psycopg2', 'mysql', 'sqlite3' or 'oracle'.
-        'NAME': '',                      # Or path to database file if using sqlite3.
-        'USER': '',                      # Not used with sqlite3.
-        'PASSWORD': '',                  # Not used with sqlite3.
-        'HOST': '',                      # Set to empty string for localhost. Not used with sqlite3.
-        'PORT': '',                      # Set to empty string for default. Not used with sqlite3.
-    }
+    'default': dj_database_url.parse(get_env_variable('DATABASE_URL'))
 }
 
 BASE_PATH = os.path.abspath(os.path.join(os.path.dirname(__file__), '../..'))
@@ -86,7 +81,7 @@ STATICFILES_FINDERS = (
 )
 
 # Make this unique, and don't share it with anybody.
-SECRET_KEY = '9+j6_^i=j86_h1jwoff1_x+2#+^lyn3+4#i&amp;^^z!j856jtq(@='
+SECRET_KEY = get_env_variable('SECRET_KEY', '')
 
 # List of callables that know how to import templates from various sources.
 TEMPLATE_LOADERS = (
