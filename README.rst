@@ -5,16 +5,15 @@ Installation
 
     mkvirtualenv rankme
 
-Start by installing the requirements and copy the settings file::
+Start by installing the requirements and set up your database::
 
     pip install -r requirements.txt
-    cp rankme/settings/local.py.dist rankme/settings/local.py
-
-Edit the `DATABASE_SETTINGS` to match your local setup.
+    # Put your database URL in here in the form postgres://user:password@host/dbname or sqlite:////absolute/path
+    vim envdir/DATABASE_URL
 
 Create the database::
 
-    ./manage.py syncdb --all
+    ./manage.py syncdb --all --noinput
     ./manage.py migrate --fake
 
 Then run the development server::

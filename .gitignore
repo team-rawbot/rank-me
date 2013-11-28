@@ -1,5 +1,6 @@
 *.pyc
-rankme/settings/local.py
 static/vendors/*
 node_modules/*
+envdir/*
+!envdir/.gitkeep
 static/main.css
