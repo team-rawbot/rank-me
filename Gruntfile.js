@@ -6,19 +6,19 @@ module.exports = function(grunt) {
         less: {
             development: {
                 options: {
-                    paths: ["static/assets/less"],
+                    paths: ["static/css"],
                     compress : false,
                     yuicompress : false
                 },
                 files: {
-                    "static/main.css": "static/main.less"
+                    "static/main.css": "static/css/*.less"
                 }
             }
         },
 
         watch: {
             assets: {
-                files: "static/**/*.less",
+                files: "static/css/*.less",
                 tasks: ["less"],
                 options: {
                     debounceDelay: 250,
