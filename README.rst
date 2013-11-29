@@ -7,7 +7,7 @@ Installation
 
 Start by installing the requirements and set up your database::
 
-    pip install -r requirements.txt
+    pip install -r requirements/dev.txt
     # Put your database URL in here in the form postgres://user:password@host/dbname or sqlite:////absolute/path
     vim envdir/DATABASE_URL
 
