@@ -21,7 +21,19 @@ Then run the development server::
     ./manage.py runserver
 
 
-Manage assets::
+To run the tests::
+
+    ./manage.py test game
+
+
+Assets management
+=================
+
+Make sure you have grunt and bower installed::
+
+    npm install -g bower grunt grunt-cli
+
+Install project dependencies::
 
     npm install
     bower install
@@ -33,10 +45,6 @@ Compute LESS with grunt::
 
     # keep looking at changes and recompile when needed
     grunt
-
-To run the tests::
-
-    ./manage.py test game
 
 
 Contribute
