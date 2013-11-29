@@ -12,11 +12,11 @@ class TestResultsPage(TestCase):
     def test_page_without_results(self):
         client = Client()
         response = client.get('/results/')
-        self.assertContains(response, '<div id="scores"')
+        self.assertContains(response, '<div class="scores"')
         self.assertContains(response, 'No scores registered yet')
         self.assertNotContains(response, '<ul class="score-board"')
-        self.assertContains(response, '<div id="latest-results"')
-        self.assertContains(response, 'No results found')
+        self.assertContains(response, '<div class="latest-results"')
+        self.assertContains(response, 'No result yet')
 
     def test_page_with_results(self):
         # create 2 users
@@ -32,11 +32,11 @@ class TestResultsPage(TestCase):
         client = Client()
         response = client.get('/results/')
 
-        self.assertContains(response, '<div id="scores"')
+        self.assertContains(response, '<div class="scores"')
         self.assertNotContains(response, 'No scores registered yet')
-        self.assertContains(response, '<ul class="score-board"')
+        self.assertContains(response, '<ol class="score-board"')
         self.assertContains(response, '<li class="score-item"', 2)
-        self.assertContains(response, '<div id="latest-results"')
+        self.assertContains(response, '<div class="latest-results"')
         self.assertContains(response, '<ul class="games')
         self.assertContains(response, '<li class="game-item', 1)
 
