@@ -4,8 +4,9 @@ python:
   - "2.7"
   - "2.6"
 env:
-    - DJANGO_SETTINGS_MODULE=rankme.settings.test
-    - DATABASE_URL=postgres://postgres@localhost/rankme
+    global:
+        - DJANGO_SETTINGS_MODULE=rankme.settings.test
+        - DATABASE_URL=postgres://postgres@localhost/rankme
 install:
     - pip install -r requirements/base.txt --use-mirrors
 script:
