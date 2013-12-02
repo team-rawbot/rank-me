@@ -5,12 +5,11 @@ Installation
 
     mkvirtualenv rankme
 
-Start by installing the requirements and copy the settings file::
+Start by installing the requirements and set up your database::
 
-    pip install -r requirements.txt
-    cp rankme/settings/local.py.dist rankme/settings/local.py
-
-Edit the `DATABASE_SETTINGS` to match your local setup.
+    pip install -r requirements/dev.txt
+    # Put your database URL in here in the form postgres://user:password@host/dbname or sqlite:////absolute/path
+    vim envdir/DATABASE_URL
 
 Create the database::
 
@@ -22,7 +21,19 @@ Then run the development server::
     ./manage.py runserver
 
 
-Manage assets::
+To run the tests::
+
+    ./manage.py test game
+
+
+Assets management
+=================
+
+Make sure you have grunt and bower installed::
+
+    npm install -g bower grunt grunt-cli
+
+Install project dependencies::
 
     npm install
     bower install
@@ -35,9 +46,19 @@ Compute LESS with grunt::
     # keep looking at changes and recompile when needed
     grunt
 
-To run the tests::
 
-    ./manage.py test game
+Available settings
+==================
+
+The following list contains the settings that can be set with environment
+variables. To set such a setting, create a file that has the same name as the
+setting in the ``envdir`` directory (for example if you want to override the
+``DEBUG`` setting, create a file named ``envdir/DEBUG`` and put the value of the
+setting in the file).
+
+* DATABASE_URL (see https://github.com/kennethreitz/dj-database-url for the syntax)
+* DEBUG (put an empty string in the file to set DEBUG to false, or 1 to set it to true)
+* SECRET_KEY
 
 
 Contribute
