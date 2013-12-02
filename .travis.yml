@@ -5,7 +5,10 @@ python:
   - "2.6"
 env:
     - DJANGO_SETTINGS_MODULE=rankme.settings.test
+    - DATABASE_URL=postgres://postgres@localhost/rankme
 install:
     - pip install -r requirements/base.txt --use-mirrors
 script:
     - python manage.py test
+before_script:
+    - psql -c 'create database rankme;' -U postgres
