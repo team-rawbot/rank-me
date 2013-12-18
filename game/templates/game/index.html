@@ -12,8 +12,8 @@
                 <h2>Scores</h2>
                 {% if score_board %}
                     <ol class="score-board">
-                        {% for rank in score_board %}
-                            <li class="score-item">{{ rank.user.username }} ({{ rank.rank }})</li>
+                        {% for team in score_board %}
+                            <li class="score-item">{{ team }} ({{ team.score }})</li>
                         {% endfor %}
                     </ol>
                 {% else %}
