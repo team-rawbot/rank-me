@@ -16,11 +16,8 @@ class Team(models.Model):
 
     objects = TeamManager()
 
-    def __str__(self):
-        names = []
-        for user in self.users.all():
-            names.append(user.username)
-        return '/'.join(names)
+    def __unicode__(self):
+        return u" / ".join([user.username for user in self.users.all()])
 
 
 class GameManager(models.Manager):
@@ -39,11 +36,11 @@ class Game(models.Model):
         if (self.winner_id is not None and self.loser_id is not None and
                 self.winner_id == self.loser_id):
             raise ValidationError(
-                'Winner and loser can\'t be the same team!'
+                "Winner and loser can't be the same team!"
             )
 
-    def __str__(self):
-        return '%s beats %s' % (
+    def __unicode__(self):
+        return u"%s beats %s" % (
             self.winner,
             self.loser
         )
