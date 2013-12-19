@@ -1,7 +1,7 @@
-from datetime import datetime
 from django.contrib.auth.models import User
 from django.core.exceptions import ValidationError
 from django.db import models
+from django.utils import timezone
 
 
 class GameManager(models.Manager):
@@ -12,7 +12,7 @@ class GameManager(models.Manager):
 class Game(models.Model):
     winner = models.ForeignKey(User, related_name='games_won')
     loser = models.ForeignKey(User, related_name='games_lost')
-    date = models.DateTimeField(default=datetime.now)
+    date = models.DateTimeField(default=timezone.now())
 
     objects = GameManager()
 
