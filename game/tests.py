@@ -22,11 +22,11 @@ class TestResultsPage(TestCase):
         # create 2 users (automatically creates corresponding teams)
         laurent = User.objects.create_user('laurent', 'laurent@test.com', 'pass')
         laurent.save()
-        laurent_team = Team.objects.get(pk=1)
+        laurent_team = laurent.teams.all()[0]
 
         rolf = User.objects.create_user('rolf', 'rolf@test.com', 'pass')
         rolf.save()
-        rolf_team = Team.objects.get(pk=2)
+        rolf_team = rolf.teams.all()[0]
 
         # create 1 game
         game = Game.objects.create(winner=laurent_team, loser=rolf_team)
@@ -61,10 +61,10 @@ class TestAddResultPage(TestCase):
         # create 2 users
         laurent = User.objects.create_user('laurent', 'laurent@test.com', 'pass')
         laurent.save()
-        laurent_team = Team.objects.get(pk=1)
+        laurent_team = laurent.teams.all()[0]
         rolf = User.objects.create_user('rolf', 'rolf@test.com', 'pass')
         rolf.save()
-        rolf_team = Team.objects.get(pk=2)
+        rolf_team = rolf.teams.all()[0]
 
         client = Client()
 

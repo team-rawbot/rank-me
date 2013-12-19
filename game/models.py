@@ -10,7 +10,7 @@ class TeamManager(models.Manager):
 
 
 class Team(models.Model):
-    users = models.ManyToManyField(User)
+    users = models.ManyToManyField(User, related_name='teams')
     score = models.IntegerField(default=1000)
     stdev = models.FloatField('standard deviation', default=50)
 
