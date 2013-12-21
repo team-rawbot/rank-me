@@ -1,6 +1,6 @@
 from django.contrib.auth.models import User
 from django.test import TestCase, Client
-from game.models import Game, Team
+from game.models import Game
 
 
 class TestResultsPage(TestCase):
@@ -22,14 +22,12 @@ class TestResultsPage(TestCase):
         # create 2 users (automatically creates corresponding teams)
         laurent = User.objects.create_user('laurent', 'laurent@test.com', 'pass')
         laurent.save()
-        laurent_team = laurent.teams.all()[0]
 
         rolf = User.objects.create_user('rolf', 'rolf@test.com', 'pass')
         rolf.save()
-        rolf_team = rolf.teams.all()[0]
 
         # create 1 game
-        game = Game.objects.create(winner=laurent_team, loser=rolf_team)
+        game = Game.objects.announce(winner=laurent, loser=rolf)
         game.save()
 
         client = Client()
@@ -48,9 +46,9 @@ class TestResultsPage(TestCase):
         self.assertContains(response, '<li class="score-item">rolf (971)</li>')
 
         # create a 2nd game (as usual Laurent wins)
-        game = Game.objects.create(winner=laurent_team, loser=rolf_team)
+        game = Game.objects.announce(winner=laurent, loser=rolf)
         game.save()
 
         response = client.get('/results/')
-        self.assertContains(response, '<li class="score-item">laurent (1037)</li>')
+        self.assertContains(response, '<li class="score-item">laurent (1036)</li>')
         self.assertContains(response, '<li class="score-item">rolf (962)</li>')
