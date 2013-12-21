@@ -25,7 +25,10 @@ def add(request):
         form = GameForm(request.POST)
 
         if form.is_valid():
-            form.save()
+            Game.objects.announce(
+                form.cleaned_data['winner'],
+                form.cleaned_data['loser']
+            )
 
             return redirect('game_index')
     else:

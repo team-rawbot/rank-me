@@ -1,9 +1,8 @@
-from django.contrib.auth.models import User
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 from trueskill import Rating, rate_1vs1
 
-from .models import Game, Team
+from .models import Game
 
 
 @receiver(post_save, sender=Game)
@@ -26,16 +25,3 @@ def update_score(sender, **kwargs):
     loser.score = loser_new_score.mu
     loser.stdev = loser_new_score.sigma
     loser.save()
-
-
-@receiver(post_save, sender=User)
-def create_user_team(sender, **kwargs):
-    """
-    Automatically create a team when a user is created
-    """
-    if not kwargs['created']:
-        return
-
-    team = Team()
-    team.save()
-    team.users.add(kwargs['instance'])

@@ -8,6 +8,36 @@ class TeamManager(models.Manager):
     def get_score_board(self):
         return self.get_query_set().order_by('-score')
 
+    def get_or_create_from_players(self, player_ids):
+        """
+        Return the team associated to the given players, creating it first if
+        it doesn't exist.
+
+        Args:
+            player_ids: a tuple of user ids, or a single user id.
+        """
+        if not isinstance(player_ids, tuple):
+            player_ids = (player_ids,)
+
+        # We need to get only the teams that have the exact number of player
+        # ids, otherwise we would also get teams that have the given players
+        # plus additional ones
+        team = self.annotate(c=models.Count('users')).filter(c=len(player_ids))
+
+        # Chain filter over all player ids
+        for player_id in player_ids:
+            team = team.filter(users=player_id)
+
+        if not team:
+            team = self.create()
+
+            for player_id in player_ids:
+                team.users.add(player_id)
+        else:
+            team = team.get()
+
+        return team
+
 
 class Team(models.Model):
     users = models.ManyToManyField(User, related_name='teams')
@@ -23,6 +53,21 @@ class Team(models.Model):
 class GameManager(models.Manager):
     def get_latest(self):
         return self.get_query_set().order_by('-date')[:20]
+
+    def announce(self, winner, loser):
+        """
+        Announce the results of a new game.
+
+        Args:
+            winner: the user id (or tuple of user ids) of the users who won the
+            game.
+            loser: the user id (or tuple of user ids) of the users who lost the
+            game.
+        """
+        return self.create(
+            winner=Team.objects.get_or_create_from_players(winner),
+            loser=Team.objects.get_or_create_from_players(loser)
+        )
 
 
 class Game(models.Model):
