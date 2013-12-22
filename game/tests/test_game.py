@@ -1,6 +1,6 @@
 from django.test import TestCase
 
-from ..factories import UserFactory
+from .factories import UserFactory
 from ..models import Game
 
 
