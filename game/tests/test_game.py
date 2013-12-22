@@ -13,6 +13,6 @@ class TestGameAnnouncement(TestCase):
     def test_game_announcement(self):
         Game.objects.announce(self.users[0], self.users[1])
         game = Game.objects.get()
-        self.assertEquals(game.winner.users.get(), self.users[0])
-        self.assertEquals(game.loser.users.get(), self.users[1])
+        self.assertEqual(game.winner.users.get(), self.users[0])
+        self.assertEqual(game.loser.users.get(), self.users[1])
         self.assertLess(game.loser.score, game.winner.score)

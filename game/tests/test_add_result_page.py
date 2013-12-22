@@ -14,7 +14,7 @@ class TestAddResultPage(TestCase):
 
         # test form availability
         response = client.get('/results/add/')
-        self.assertEquals(200, response.status_code)
+        self.assertEqual(200, response.status_code)
         self.assertContains(response, '<form id="add-result')
 
         # test form validation

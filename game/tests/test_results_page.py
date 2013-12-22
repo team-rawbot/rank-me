@@ -7,7 +7,7 @@ class TestResultsPage(TestCase):
     def test_page_availability(self):
         client = Client()
         response = client.get('/results/')
-        self.assertEquals(200, response.status_code)
+        self.assertEqual(200, response.status_code)
 
     def test_page_without_results(self):
         client = Client()

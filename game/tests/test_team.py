@@ -11,40 +11,40 @@ class TestTeamGetOrCreate(TestCase):
         self.users = [UserFactory() for id in range(4)]
 
     def test_team_creation(self):
-        self.assertEquals(Team.objects.count(), 0)
+        self.assertEqual(Team.objects.count(), 0)
         Team.objects.get_or_create_from_players(
             (self.users[0].id, self.users[1].id)
         )
-        self.assertEquals(Team.objects.count(), 1)
+        self.assertEqual(Team.objects.count(), 1)
 
         Team.objects.get_or_create_from_players(self.users[0].id)
-        self.assertEquals(Team.objects.count(), 2)
+        self.assertEqual(Team.objects.count(), 2)
 
         Team.objects.get_or_create_from_players(self.users[1].id)
-        self.assertEquals(Team.objects.count(), 3)
+        self.assertEqual(Team.objects.count(), 3)
 
     def test_team_uniqueness(self):
         """
         Test that calling get_or_create_from_players on the same set of players
         creates the team and then just returns it.
         """
-        self.assertEquals(Team.objects.count(), 0)
+        self.assertEqual(Team.objects.count(), 0)
         Team.objects.get_or_create_from_players(
             (self.users[0].id, self.users[1].id)
         )
-        self.assertEquals(Team.objects.count(), 1)
+        self.assertEqual(Team.objects.count(), 1)
 
         Team.objects.get_or_create_from_players(
             (self.users[0].id, self.users[1].id)
         )
-        self.assertEquals(Team.objects.count(), 1)
+        self.assertEqual(Team.objects.count(), 1)
 
         Team.objects.get_or_create_from_players(
             (self.users[1].id, self.users[0].id)
         )
-        self.assertEquals(Team.objects.count(), 1)
+        self.assertEqual(Team.objects.count(), 1)
 
         Team.objects.get_or_create_from_players(
             (self.users[1].id, self.users[2].id)
         )
-        self.assertEquals(Team.objects.count(), 2)
+        self.assertEqual(Team.objects.count(), 2)
