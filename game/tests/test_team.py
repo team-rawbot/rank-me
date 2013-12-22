@@ -8,7 +8,7 @@ class TestTeamGetOrCreate(TestCase):
     @classmethod
     def setUp(self):
         # Create 4 dummy users
-        self.users = [UserFactory(id=id) for id in range(4)]
+        self.users = [UserFactory() for id in range(4)]
 
     def test_team_creation(self):
         team, created = Team.objects.get_or_create_from_players(
@@ -66,4 +66,32 @@ class TestTeamGetOrCreate(TestCase):
         )
         self.assertTrue(created)
         self.assertEqual(Team.objects.count(), 2)
+        self.assertItemsEqual(team.users.all(), self.users[1:3])
+
+    def test_team_overlap(self):
+        """
+        Test that an overlapping team (eg. (0, 1, 2) vs (0, 1)) is reported as
+        a new team.
+        """
+        team, created = Team.objects.get_or_create_from_players(
+            (self.users[0].id, self.users[1].id)
+        )
+        self.assertTrue(created)
+        self.assertEqual(Team.objects.count(), 1)
+        self.assertItemsEqual(team.users.all(), self.users[0:2])
+
+        # Check that team (0, 1, 2) is different from (0, 1)
+        team, created = Team.objects.get_or_create_from_players(
+            (self.users[0].id, self.users[1].id, self.users[2].id)
+        )
+        self.assertTrue(created)
+        self.assertEqual(Team.objects.count(), 2)
+        self.assertItemsEqual(team.users.all(), self.users[0:3])
+
+        # Check that team (1, 2) is different from (0, 1, 2)
+        team, created = Team.objects.get_or_create_from_players(
+            (self.users[1].id, self.users[2].id)
+        )
+        self.assertTrue(created)
+        self.assertEqual(Team.objects.count(), 3)
         self.assertItemsEqual(team.users.all(), self.users[1:3])
