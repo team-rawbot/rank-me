@@ -120,6 +120,7 @@ INSTALLED_APPS = (
     'game',
     'django.contrib.admin',
     'django.contrib.admindocs',
+    'social.apps.django_app.default',
 )
 
 # A sample logging configuration. The only tangible logging
@@ -150,3 +151,24 @@ LOGGING = {
         },
     }
 }
+
+AUTHENTICATION_BACKENDS = (
+    'social.backends.twitter.TwitterOAuth',
+    'django.contrib.auth.backends.ModelBackend',
+)
+
+TEMPLATE_CONTEXT_PROCESSORS = (
+    'django.contrib.auth.context_processors.auth',
+    'django.core.context_processors.debug',
+    'django.core.context_processors.i18n',
+    'django.core.context_processors.media',
+    'django.core.context_processors.static',
+    'django.core.context_processors.tz',
+    'django.contrib.messages.context_processors.messages',
+    'social.apps.django_app.context_processors.backends',
+    'social.apps.django_app.context_processors.login_redirect',
+)
+
+SOCIAL_AUTH_TWITTER_KEY = 'ZdoPGglqLbhn6GM5tTFbw'
+SOCIAL_AUTH_TWITTER_SECRET = get_env_variable('SOCIAL_AUTH_TWITTER_SECRET')
+SOCIAL_AUTH_LOGIN_REDIRECT_URL = '/'

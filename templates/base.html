@@ -10,6 +10,15 @@
             <div class="navbar-inner">
                 <div class="container">
                     <a class="brand" href="/">Rank-me</a>
+                    {% if user and user.is_authenticated %}
+                    <p>Logged in as {{ user.username }}</p>
+                    <form method="post" action="{% url 'auth_logout' %}">
+                        {% csrf_token %}
+                        <input type="submit" value="Log out"/>
+                    </form>
+                    {% else %}
+                    <p><a href="{% url 'social:social.apps.django_app.views.auth' backend='twitter' %}">Log in</a></p>
+                    {% endif %}
                 </div>
             </div>
         </div>
