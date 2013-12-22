@@ -16,18 +16,21 @@ class TestTeamGetOrCreate(TestCase):
         )
         self.assertTrue(created)
         self.assertEqual(Team.objects.count(), 1)
+        self.assertItemsEqual(team.users.all(), self.users[0:2])
 
         team, created = Team.objects.get_or_create_from_players(
             self.users[0].id
         )
         self.assertTrue(created)
         self.assertEqual(Team.objects.count(), 2)
+        self.assertItemsEqual(team.users.all(), [self.users[0]])
 
         team, created = Team.objects.get_or_create_from_players(
             self.users[1].id
         )
         self.assertTrue(created)
         self.assertEqual(Team.objects.count(), 3)
+        self.assertItemsEqual(team.users.all(), [self.users[1]])
 
     def test_team_uniqueness(self):
         """
@@ -47,6 +50,7 @@ class TestTeamGetOrCreate(TestCase):
         )
         self.assertFalse(created)
         self.assertEqual(Team.objects.count(), 1)
+        self.assertItemsEqual(team.users.all(), self.users[0:2])
 
         # Check that team (1, 0) is equal to team (0, 1)
         team, created = Team.objects.get_or_create_from_players(
@@ -54,6 +58,7 @@ class TestTeamGetOrCreate(TestCase):
         )
         self.assertFalse(created)
         self.assertEqual(Team.objects.count(), 1)
+        self.assertItemsEqual(team.users.all(), self.users[0:2])
 
         # Check that team (1, 2) is different from team (0, 1)
         team, created = Team.objects.get_or_create_from_players(
@@ -61,3 +66,4 @@ class TestTeamGetOrCreate(TestCase):
         )
         self.assertTrue(created)
         self.assertEqual(Team.objects.count(), 2)
+        self.assertItemsEqual(team.users.all(), self.users[1:3])
