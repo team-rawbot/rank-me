@@ -29,14 +29,16 @@ class TeamManager(models.Manager):
             team = team.filter(users=player_id)
 
         if not team:
+            created = True
             team = self.create()
 
             for player_id in player_ids:
                 team.users.add(player_id)
         else:
+            created = False
             team = team.get()
 
-        return team
+        return (team, created)
 
 
 class Team(models.Model):
@@ -64,10 +66,10 @@ class GameManager(models.Manager):
             loser: the user id (or tuple of user ids) of the users who lost the
             game.
         """
-        return self.create(
-            winner=Team.objects.get_or_create_from_players(winner),
-            loser=Team.objects.get_or_create_from_players(loser)
-        )
+        winner, created = Team.objects.get_or_create_from_players(winner)
+        loser, created = Team.objects.get_or_create_from_players(loser)
+
+        return self.create(winner=winner, loser=loser)
 
 
 class Game(models.Model):
