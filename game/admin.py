@@ -1,6 +1,6 @@
 from django.contrib import admin
-from game.models import Game, Rank
+from game.models import Game, Team
 
 
 admin.site.register(Game)
-admin.site.register(Rank)
+admin.site.register(Team)

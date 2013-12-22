@@ -1,12 +1,12 @@
 from django.shortcuts import get_object_or_404, render, redirect
 
 from .forms import GameForm
-from .models import Game, Rank
+from .models import Game, Team
 
 
 def index(request):
     latest_results = Game.objects.get_latest()
-    score_board = Rank.objects.get_score_board()
+    score_board = Team.objects.get_score_board()
     context = {
         'latest_results': latest_results,
         'score_board': score_board
@@ -25,7 +25,10 @@ def add(request):
         form = GameForm(request.POST)
 
         if form.is_valid():
-            form.save()
+            Game.objects.announce(
+                form.cleaned_data['winner'],
+                form.cleaned_data['loser']
+            )
 
             return redirect('game_index')
     else:

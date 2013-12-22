@@ -1,3 +1,4 @@
 -r base.txt
 
+factory-boy==2.2.1
 psycopg2==2.5.1
