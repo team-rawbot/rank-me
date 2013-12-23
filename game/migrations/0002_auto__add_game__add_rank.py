@@ -2,7 +2,13 @@
 import datetime
 from south.db import db
 from south.v2 import SchemaMigration
+from django.contrib.auth import get_user_model
 from django.db import models
+
+User = get_user_model()
+
+user_orm_label = '%s.%s' % (User._meta.app_label, User._meta.object_name)
+user_model_label = '%s.%s' % (User._meta.app_label, User._meta.module_name)
 
 
 class Migration(SchemaMigration):
@@ -11,8 +17,10 @@ class Migration(SchemaMigration):
         # Adding model 'Game'
         db.create_table(u'game_game', (
             (u'id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
-            ('winner', self.gf('django.db.models.fields.related.ForeignKey')(related_name='+', to=orm['auth.User'])),
-            ('loser', self.gf('django.db.models.fields.related.ForeignKey')(related_name='+', to=orm['auth.User'])),
+            ('winner',
+                self.gf('django.db.models.fields.related.ForeignKey')(related_name='+', to=orm[user_orm_label])),
+            ('loser',
+                self.gf('django.db.models.fields.related.ForeignKey')(related_name='+', to=orm[user_orm_label])),
             ('date', self.gf('django.db.models.fields.DateTimeField')(default=datetime.datetime(2013, 7, 21, 0, 0))),
         ))
         db.send_create_signal(u'game', ['Game'])
@@ -20,13 +28,15 @@ class Migration(SchemaMigration):
         # Adding model 'Rank'
         db.create_table(u'game_rank', (
             (u'id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
-            ('user', self.gf('django.db.models.fields.related.ForeignKey')(related_name='+', to=orm['auth.User'])),
+            ('user',
+                self.gf('django.db.models.fields.related.ForeignKey')(related_name='+', to=orm[user_orm_label])),
             ('rank', self.gf('django.db.models.fields.IntegerField')(default=1000)),
         ))
         db.send_create_signal(u'game', ['Rank'])
 
 
     def backwards(self, orm):
+        import pdb; pdb.set_trace()
         # Deleting model 'Game'
         db.delete_table(u'game_game')
 
@@ -48,21 +58,17 @@ class Migration(SchemaMigration):
             u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'name': ('django.db.models.fields.CharField', [], {'max_length': '50'})
         },
-        u'auth.user': {
-            'Meta': {'object_name': 'User'},
-            'date_joined': ('django.db.models.fields.DateTimeField', [], {'default': 'datetime.datetime.now'}),
-            'email': ('django.db.models.fields.EmailField', [], {'max_length': '75', 'blank': 'True'}),
-            'first_name': ('django.db.models.fields.CharField', [], {'max_length': '30', 'blank': 'True'}),
-            'groups': ('django.db.models.fields.related.ManyToManyField', [], {'to': u"orm['auth.Group']", 'symmetrical': 'False', 'blank': 'True'}),
-            u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'is_active': ('django.db.models.fields.BooleanField', [], {'default': 'True'}),
-            'is_staff': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
-            'is_superuser': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
-            'last_login': ('django.db.models.fields.DateTimeField', [], {'default': 'datetime.datetime.now'}),
-            'last_name': ('django.db.models.fields.CharField', [], {'max_length': '30', 'blank': 'True'}),
-            'password': ('django.db.models.fields.CharField', [], {'max_length': '128'}),
-            'user_permissions': ('django.db.models.fields.related.ManyToManyField', [], {'to': u"orm['auth.Permission']", 'symmetrical': 'False', 'blank': 'True'}),
-            'username': ('django.db.models.fields.CharField', [], {'unique': 'True', 'max_length': '30'})
+        user_model_label: {
+            'Meta': {
+                'object_name': User.__name__,
+                'db_table': "'%s'" % User._meta.db_table
+            },
+            User._meta.pk.attname: (
+                'django.db.models.fields.AutoField', [], {
+                    'primary_key': 'True',
+                    'db_column': "'%s'" % User._meta.pk.column
+                }
+            ),
         },
         u'contenttypes.contenttype': {
             'Meta': {'ordering': "('name',)", 'unique_together': "(('app_label', 'model'),)", 'object_name': 'ContentType', 'db_table': "'django_content_type'"},
@@ -75,14 +81,17 @@ class Migration(SchemaMigration):
             'Meta': {'object_name': 'Game'},
             'date': ('django.db.models.fields.DateTimeField', [], {'default': 'datetime.datetime(2013, 7, 21, 0, 0)'}),
             u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'loser': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'+'", 'to': u"orm['auth.User']"}),
-            'winner': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'+'", 'to': u"orm['auth.User']"})
+            'loser': ('django.db.models.fields.related.ForeignKey', [],
+                {'related_name': "'+'", 'to': u"orm[user_orm_label]"}),
+            'winner': ('django.db.models.fields.related.ForeignKey', [],
+                {'related_name': "'+'", 'to': u"orm[user_orm_label]"})
         },
         u'game.rank': {
             'Meta': {'object_name': 'Rank'},
             u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'rank': ('django.db.models.fields.IntegerField', [], {'default': '1000'}),
-            'user': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'+'", 'to': u"orm['auth.User']"})
+            'user': ('django.db.models.fields.related.ForeignKey', [],
+                {'related_name': "'+'", 'to': u"orm[user_orm_label]"})
         }
     }
 

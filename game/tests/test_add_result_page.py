@@ -1,6 +1,7 @@
-from django.contrib.auth.models import User
+from django.contrib.auth import get_user_model
 from django.test import TestCase, Client
 
+User = get_user_model()
 
 class TestAddResultPage(TestCase):
     def test_form_validation(self):
