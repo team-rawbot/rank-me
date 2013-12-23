@@ -75,7 +75,7 @@ class GameManager(models.Manager):
 class Game(models.Model):
     winner = models.ForeignKey(Team, related_name='games_won')
     loser = models.ForeignKey(Team, related_name='games_lost')
-    date = models.DateTimeField(default=timezone.now())
+    date = models.DateTimeField(default=timezone.now)
 
     objects = GameManager()
 
