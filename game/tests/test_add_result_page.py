@@ -13,7 +13,12 @@ class TestAddResultPage(TestCase):
 
         client = Client()
 
-        # test form availability
+        # Unauthenticated users should be redirected to the login form to add a
+        # result
+        response = client.get('/results/add/')
+        self.assertEqual(302, response.status_code)
+
+        client.login(username='laurent', password='pass')
         response = client.get('/results/add/')
         self.assertEqual(200, response.status_code)
         self.assertContains(response, '<form id="add-result')
