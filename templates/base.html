@@ -1,3 +1,4 @@
+{% load i18n static %}
 <!DOCTYPE html>
 <html>
     <head>
@@ -10,15 +11,25 @@
             <div class="navbar-inner">
                 <div class="container">
                     <a class="brand" href="/">Rank-me</a>
-                    {% if user and user.is_authenticated %}
-                    <p>Logged in as {{ user.username }}</p>
-                    <form method="post" action="{% url 'auth_logout' %}">
-                        {% csrf_token %}
-                        <input type="submit" value="Log out"/>
-                    </form>
-                    {% else %}
-                    <p><a href="{% url 'social:social.apps.django_app.views.auth' backend='twitter' %}">Log in</a></p>
-                    {% endif %}
+                    <ul class="nav pull-right">
+                        {% if user and user.is_authenticated %}
+                        <li class="dropdown">
+                            <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                                {{ user.username }}
+                                <b class="caret"></b>
+                            </a>
+                            <ul class="dropdown-menu" role="menu">
+                                <li><a href="{% url 'auth_logout' %}">{% trans "Log out" %}</a></li>
+                            </ul>
+                        </li>
+                        {% else %}
+                        <li>
+                            <a href="{% url 'social:social.apps.django_app.views.auth' backend='twitter' %}">
+                                <img src="{% static "icons/sign_in_with_twitter.png" %}" alt="{% trans "Sign in with Twitter" %}"/>
+                            </a>
+                        </li>
+                        {% endif %}
+                    </ul>
                 </div>
             </div>
         </div>
@@ -27,6 +38,7 @@
             {% block content %}{% endblock %}
         </div>
 
-        <script src="/static/vendors/jquery/jquery.min.js"></script>
+        <script src="{% static "vendors/jquery/jquery.min.js" %}"></script>
+        <script src="{% static "vendors/bootstrap/js/bootstrap-dropdown.js" %}"></script>
     </body>
 </html>

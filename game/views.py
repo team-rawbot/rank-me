@@ -1,3 +1,4 @@
+from django.contrib.auth.decorators import login_required
 from django.shortcuts import get_object_or_404, render, redirect
 
 from .forms import GameForm
@@ -20,6 +21,7 @@ def detail(request, game_id):
     return render(request, 'game/detail.html', {'game': game})
 
 
+@login_required
 def add(request):
     if request.method == 'POST':
         form = GameForm(request.POST)

@@ -118,6 +118,7 @@ INSTALLED_APPS = (
     'django.contrib.staticfiles',
     'south',
     'game',
+    'user',
     'django.contrib.admin',
     'django.contrib.admindocs',
     'social.apps.django_app.default',
@@ -172,3 +173,18 @@ TEMPLATE_CONTEXT_PROCESSORS = (
 SOCIAL_AUTH_TWITTER_KEY = 'ZdoPGglqLbhn6GM5tTFbw'
 SOCIAL_AUTH_TWITTER_SECRET = get_env_variable('SOCIAL_AUTH_TWITTER_SECRET')
 SOCIAL_AUTH_LOGIN_REDIRECT_URL = '/'
+SOCIAL_AUTH_PIPELINE = (
+    'social.pipeline.social_auth.social_details',
+    'social.pipeline.social_auth.social_uid',
+    'social.pipeline.social_auth.auth_allowed',
+    'social.pipeline.social_auth.social_user',
+    'social.pipeline.user.get_username',
+    'social.pipeline.user.create_user',
+    'social.pipeline.social_auth.associate_user',
+    'social.pipeline.social_auth.load_extra_data',
+    'user.social.user_details',
+    'social.pipeline.user.user_details',
+)
+LOGIN_URL = '/login/twitter/'
+
+AUTH_USER_MODEL = 'user.User'
