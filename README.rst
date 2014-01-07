@@ -56,10 +56,12 @@ setting in the ``envdir`` directory (for example if you want to override the
 ``DEBUG`` setting, create a file named ``envdir/DEBUG`` and put the value of the
 setting in the file).
 
+* ALLOWED_HOSTS (1 host / line)
 * DATABASE_URL (see https://github.com/kennethreitz/dj-database-url for the syntax)
 * DEBUG (put an empty string in the file to set DEBUG to false, or 1 to set it to true)
 * SECRET_KEY
-* ALLOWED_HOSTS (1 host / line)
+* STATIC_ROOT
+* STATIC_URL
 
 
 Contribute
