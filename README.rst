@@ -59,6 +59,7 @@ setting in the file).
 * DATABASE_URL (see https://github.com/kennethreitz/dj-database-url for the syntax)
 * DEBUG (put an empty string in the file to set DEBUG to false, or 1 to set it to true)
 * SECRET_KEY
+* ALLOWED_HOSTS (1 host / line)
 
 
 Contribute
