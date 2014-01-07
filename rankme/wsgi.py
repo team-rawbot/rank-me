@@ -15,7 +15,11 @@ framework.
 """
 import os
 
-os.environ.setdefault("DJANGO_SETTINGS_MODULE", "rankme.settings")
+from . import get_project_root_path, import_env_vars
+
+import_env_vars(os.path.join(get_project_root_path(), 'envdir'))
+
+os.environ.setdefault("DJANGO_SETTINGS_MODULE", "rankme.settings.base")
 
 # This application object is used by any WSGI server configured to use this
 # file. This includes Django's development server, if the WSGI_APPLICATION

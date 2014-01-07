@@ -2,6 +2,7 @@
 import os
 import dj_database_url
 
+from .. import get_project_root_path
 from . import get_env_variable
 
 DEBUG = bool(get_env_variable('DEBUG', False))
@@ -17,7 +18,7 @@ DATABASES = {
     'default': dj_database_url.parse(get_env_variable('DATABASE_URL'))
 }
 
-BASE_PATH = os.path.abspath(os.path.join(os.path.dirname(__file__), '../..'))
+BASE_PATH = get_project_root_path()
 
 # Local time zone for this installation. Choices can be found here:
 # http://en.wikipedia.org/wiki/List_of_tz_zones_by_name
