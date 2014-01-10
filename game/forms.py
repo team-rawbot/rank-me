@@ -1,12 +1,12 @@
 from django import forms
-from django.contrib.auth.models import User
+from django.contrib.auth import get_user_model
 from django.core.exceptions import ValidationError
 from django.utils.translation import ugettext as _
 
 
 class GameForm(forms.Form):
-    winner = forms.ModelChoiceField(queryset=User.objects.all())
-    loser = forms.ModelChoiceField(queryset=User.objects.all())
+    winner = forms.ModelChoiceField(queryset=get_user_model().objects.all())
+    loser = forms.ModelChoiceField(queryset=get_user_model().objects.all())
 
     def clean(self):
         cleaned_data = super(GameForm, self).clean()

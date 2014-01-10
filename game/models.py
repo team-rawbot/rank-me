@@ -1,4 +1,4 @@
-from django.contrib.auth.models import User
+from django.conf import settings
 from django.core.exceptions import ValidationError
 from django.db import models
 from django.utils import timezone
@@ -42,7 +42,8 @@ class TeamManager(models.Manager):
 
 
 class Team(models.Model):
-    users = models.ManyToManyField(User, related_name='teams')
+    users = models.ManyToManyField(settings.AUTH_USER_MODEL,
+                                   related_name='teams')
     score = models.IntegerField(default=1000)
     stdev = models.FloatField('standard deviation', default=50)
 

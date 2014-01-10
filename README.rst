@@ -46,7 +46,6 @@ Compute LESS with grunt::
     # keep looking at changes and recompile when needed
     grunt
 
-
 Available settings
 ==================
 
@@ -62,7 +61,8 @@ setting in the file).
 * SECRET_KEY
 * STATIC_ROOT
 * STATIC_URL
-
+* SOCIAL_AUTH_TWITTER_KEY
+* SOCIAL_AUTH_TWITTER_SECRET
 
 Contribute
 ==========
