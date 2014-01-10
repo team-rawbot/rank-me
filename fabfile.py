@@ -51,6 +51,12 @@ def restart_process():
 
 
 @task
+def compile_less():
+    with cd(env.project_root):
+        run('grunt less')
+
+
+@task
 def deploy(tag):
     execute(push_tag, tag=tag)
 
@@ -58,5 +64,6 @@ def deploy(tag):
     execute(install_requirements)
     execute(install_static)
     execute(migrate_database)
+    execute(compile_less)
 
     execute(restart_process)
