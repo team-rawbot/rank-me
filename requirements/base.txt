@@ -9,3 +9,4 @@ requests-oauthlib==0.4.0
 requests==2.1.0
 South==0.8.4
 trueskill==0.4.1
+skills==0.2.0
