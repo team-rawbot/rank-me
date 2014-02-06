@@ -15,7 +15,6 @@ class RecalculateCommandTestCase(TestCase):
 
         Game.objects.announce(users[0], users[1])
         Game.objects.announce(users[0], users[1])
-        game = Game.objects.last()
 
         args = [25, 8]
         opts = {}
@@ -29,7 +28,8 @@ class RecalculateCommandTestCase(TestCase):
             Rating(loser_score.mu, loser_score.sigma)
         )
 
-        self.assertEqual(game.winner.score, winner_score.mu)
-        self.assertEqual(game.winner.stdev, winner_score.sigma)
-        self.assertEqual(game.loser.score, loser_score.mu)
-        self.assertEqual(game.loser.stdev, loser_score.sigma)
+        game = Game.objects.last()
+        self.assertAlmostEqual(game.winner.score, winner_score.mu)
+        self.assertAlmostEqual(game.winner.stdev, winner_score.sigma)
+        self.assertAlmostEqual(game.loser.score, loser_score.mu)
+        self.assertAlmostEqual(game.loser.stdev, loser_score.sigma)
