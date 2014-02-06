@@ -1,20 +1,19 @@
 from django.core.management.base import BaseCommand, CommandError
-from optparse import make_option
 
 from game.models import Game, Team
 
+
 class Command(BaseCommand):
-    args = '<score> <stdev>'
-    help = 'Recalcutes the standings by running all games in the db with the provided initial score and sigma'
+    args = "<score> <stdev>"
+    help = ("Recalcutes the standings by running all games in the db with the"
+            " provided initial score and sigma")
 
     def handle(self, *args, **options):
+        if len(args) != 2:
+            raise CommandError("Invalid number of arguments! You should"
+                               " provide 2: score and stdev")
 
-        if len(args) != 2 :
-            raise CommandError('Invalid number of arguments! You should provide 2: score and stdev')
-            return False
-
-        score = args[0]
-        stdev = args[1]
+        score, stdev = args
 
         teams = Team.objects.all()
         games = Game.objects.all()
@@ -24,9 +23,12 @@ class Command(BaseCommand):
         for game in games:
             game.update_score()
 
-        self.stdout.write("Recalculated the standings for {} games with an initial score of {} and an initial sigma of {}".format(
-            len(games),
-            score,
-            stdev
+        self.stdout.write(
+            "Recalculated the standings for {nb_games} games with an initial"
+            " score of {initial_score} and an initial sigma of"
+            " {initial_sigma}".format(
+                nb_games=len(games),
+                initial_score=score,
+                initial_sigma=stdev
             )
         )

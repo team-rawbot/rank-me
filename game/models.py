@@ -4,6 +4,7 @@ from django.db import models
 from django.utils import timezone
 from trueskill import Rating, rate_1vs1
 
+
 class TeamManager(models.Manager):
     def get_score_board(self):
         return self.get_query_set().order_by('-score')
@@ -96,18 +97,14 @@ class Game(models.Model):
         )
 
     def update_score(self):
-
         winner = self.winner
         loser = self.loser
-
-        team_winner = {1: (winner.score, winner.stdev)}
-        team_loser = {2: (loser.score, loser.stdev)}
 
         winner_new_score, loser_new_score = rate_1vs1(
             Rating(winner.score, winner.stdev),
             Rating(loser.score, loser.stdev)
         )
-        
+
         winner.score = winner_new_score.mu
         winner.stdev = winner_new_score.sigma
         winner.wins = winner.wins + 1
