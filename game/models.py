@@ -2,6 +2,7 @@ from django.conf import settings
 from django.core.exceptions import ValidationError
 from django.db import models
 from django.utils import timezone
+from trueskill import Rating, rate_1vs1
 
 
 class TeamManager(models.Manager):
@@ -44,8 +45,10 @@ class TeamManager(models.Manager):
 class Team(models.Model):
     users = models.ManyToManyField(settings.AUTH_USER_MODEL,
                                    related_name='teams')
-    score = models.IntegerField(default=1000)
-    stdev = models.FloatField('standard deviation', default=50)
+    score = models.FloatField('skills', default=1000)
+    stdev = models.FloatField('standard deviation', default=333)
+    wins = models.IntegerField(default=0)
+    defeats = models.IntegerField(default=0)
 
     objects = TeamManager()
 
@@ -92,3 +95,22 @@ class Game(models.Model):
             self.winner,
             self.loser
         )
+
+    def update_score(self):
+        winner = self.winner
+        loser = self.loser
+
+        winner_new_score, loser_new_score = rate_1vs1(
+            Rating(winner.score, winner.stdev),
+            Rating(loser.score, loser.stdev)
+        )
+
+        winner.score = winner_new_score.mu
+        winner.stdev = winner_new_score.sigma
+        winner.wins = winner.wins + 1
+        winner.save()
+
+        loser.score = loser_new_score.mu
+        loser.stdev = loser_new_score.sigma
+        loser.defeats = loser.defeats + 1
+        loser.save()
