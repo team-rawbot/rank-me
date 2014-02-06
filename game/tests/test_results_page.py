@@ -1,3 +1,5 @@
+# coding=UTF-8
+
 from django.contrib.auth import get_user_model
 from django.test import TestCase, Client
 from game.models import Game
@@ -44,13 +46,13 @@ class TestResultsPage(TestCase):
         self.assertContains(response, '<li class="game-item', 1)
 
         # specifically test ranking
-        self.assertContains(response, '<li class="score-item">laurent (1028)</li>')
-        self.assertContains(response, '<li class="score-item">rolf (971)</li>')
+        self.assertContains(response, '<li class="score-item" title="W: 1, L: 0, σ: 274.91539"><strong>laurent</strong> (1188.1)</li>')
+        self.assertContains(response, '<li class="score-item" title="W: 0, L: 1, σ: 274.91539"><strong>rolf</strong> (811.9)</li>')
 
         # create a 2nd game (as usual Laurent wins)
         game = Game.objects.announce(winner=laurent, loser=rolf)
         game.save()
 
         response = client.get('/results/')
-        self.assertContains(response, '<li class="score-item">laurent (1036)</li>')
-        self.assertContains(response, '<li class="score-item">rolf (962)</li>')
+        self.assertContains(response, '<li class="score-item" title="W: 2, L: 0, σ: 247.39318"><strong>laurent</strong> (1246.5)</li>')
+        self.assertContains(response, '<li class="score-item" title="W: 0, L: 2, σ: 247.39318"><strong>rolf</strong> (753.5)</li>')

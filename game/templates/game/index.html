@@ -13,7 +13,7 @@
                 {% if score_board %}
                     <ol class="score-board">
                         {% for team in score_board %}
-                            <li class="score-item">{{ team }} ({{ team.score }})</li>
+                            <li class="score-item" title="W: {{ team.wins }}, L: {{ team.defeats }}, σ: {{ team.stdev|floatformat:"5" }}"><strong>{{ team }}</strong> ({{ team.score|floatformat }})</li>
                         {% endfor %}
                     </ol>
                 {% else %}
