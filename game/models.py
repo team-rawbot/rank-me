@@ -100,6 +100,9 @@ class Game(models.Model):
         winner = self.winner
         loser = self.loser
 
+        winner_last_score = winner.score
+        loser_last_score = loser.score
+
         winner_new_score, loser_new_score = rate_1vs1(
             Rating(winner.score, winner.stdev),
             Rating(loser.score, loser.stdev)
@@ -114,3 +117,19 @@ class Game(models.Model):
         loser.stdev = loser_new_score.sigma
         loser.defeats = loser.defeats + 1
         loser.save()
+
+        HistoricalScore.objects.create(
+            game_id=self,
+            winner_score=winner.score,
+            loser_score=loser.score,
+            winner_last_score=winner_last_score,
+            loser_last_score=loser_last_score,
+        )
+
+
+class HistoricalScore(models.Model):
+    game_id = models.OneToOneField(Game)
+    winner_score = models.FloatField('Winner current score')
+    winner_last_score = models.FloatField('Winner last score', default=1000)
+    loser_score = models.FloatField('Loser current score')
+    loser_last_score = models.FloatField('Loser last score', default=1000)
