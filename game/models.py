@@ -7,7 +7,8 @@ from trueskill import Rating, rate_1vs1
 
 class TeamManager(models.Manager):
     def get_score_board(self):
-        return self.get_query_set().order_by('-score')
+        return (self.get_query_set().order_by('-score')
+                .prefetch_related('users'))
 
     def get_or_create_from_players(self, player_ids):
         """
@@ -57,8 +58,15 @@ class Team(models.Model):
 
 
 class GameManager(models.Manager):
+    def get_query_set(self):
+        return super(GameManager, self).get_query_set().select_related(
+            'winner', 'loser'
+        )
+
     def get_latest(self):
-        return self.get_query_set().order_by('-date')[:20]
+        return (self.get_query_set()
+                .prefetch_related('winner__users', 'loser__users')
+                .order_by('-date')[:20])
 
     def announce(self, winner, loser):
         """
