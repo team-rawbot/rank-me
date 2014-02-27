@@ -58,13 +58,9 @@ class Team(models.Model):
 
 
 class GameManager(models.Manager):
-    def get_query_set(self):
-        return super(GameManager, self).get_query_set().select_related(
-            'winner', 'loser'
-        )
-
     def get_latest(self):
         return (self.get_query_set()
+                .select_related('winner', 'loser')
                 .prefetch_related('winner__users', 'loser__users')
                 .order_by('-date')[:20])
 
