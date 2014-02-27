@@ -1,7 +1,11 @@
+from collections import OrderedDict
+
 from django.conf import settings
 from django.core.exceptions import ValidationError
 from django.db import models
 from django.utils import timezone
+from django.db.models import Q
+
 from trueskill import Rating, rate_1vs1
 
 
@@ -56,6 +60,32 @@ class Team(models.Model):
     def __unicode__(self):
         return u" / ".join([user.username for user in self.users.all()])
 
+    def get_results(self):
+        return Game.objects.filter(Q(winner = self) | Q(loser = self)).order_by('-date').select_related('winner', 'loser')
+
+    def get_wins(self):
+        return self.games_won.order_by('-date')
+
+    def get_losses(self):
+        return self.games_lost.order_by('-date')
+
+    def get_opponents(self):
+        return Team.objects.all().exclude(pk=self.id).order_by('-score')
+
+    def get_head2head(self):
+        head2head = {}
+
+        games = self.get_results()
+
+        for game in games:
+            opponent = game.winner if game.winner_id != self.id else game.loser
+
+            if opponent not in head2head:
+                head2head[opponent] = {'wins' : 0, 'losses' : 0}
+
+            head2head[opponent]['wins' if game.winner_id == self.id else 'losses'] += 1
+
+        return OrderedDict(sorted(head2head.items(), key=lambda t: -t[0].score))
 
 class GameManager(models.Manager):
     def get_latest(self):

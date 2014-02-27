@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+    <div class="row">
+        <div class="span6">
+            <div class="team">
+                <h2>{{ team }} ({{ team.score|floatformat }})</h2>
+                    <ul class="team-scoring">
+                        <li>W: {{ team.wins }}</li>
+                        <li>L: {{ team.defeats }}</li>
+                        <li>σ: {{ team.stdev|floatformat:"5" }}</li>
+                    </ul>
+            </div>
+        </div>
+
+        <div class="span6">
+            <h2>Head-to-Head</h2>
+            {% for opponent, results in head2head.iteritems %}
+                <div class="team">
+                    <h3><a href="{% url 'team_detail' opponent.id %}"><strong>{{ opponent }}</a></h3>
+                        <div class="head2head"><strong class="score">{{ results.wins }} - {{ results.losses }}</strong></div>
+                </div>
+                <hr>
+            {% endfor %}
+        </div>
+
+
+    </div>
+
+{% endblock %}
