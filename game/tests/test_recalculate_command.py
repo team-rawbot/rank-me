@@ -1,3 +1,5 @@
+from StringIO import StringIO
+
 from django.core.management import call_command
 from django.test import TestCase
 from trueskill import Rating, rate_1vs1
@@ -18,7 +20,8 @@ class RecalculateCommandTestCase(TestCase):
 
         args = [25, 8]
         opts = {}
-        call_command('recalculate', *args, **opts)
+        stdout = StringIO()
+        call_command('recalculate', stdout=stdout, *args, **opts)
 
         winner_score, loser_score = rate_1vs1(
             Rating(25, 8), Rating(25, 8)
