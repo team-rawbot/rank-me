@@ -16,12 +16,11 @@ class Command(BaseCommand):
         score, stdev = args
 
         teams = Team.objects.all()
-        games = Game.objects.all().order_by('date')
+        games = Game.objects.order_by('id')
 
         teams.update(score=score, stdev=stdev, wins=0, defeats=0)
 
         for game in games:
-
             game.update_score()
 
         self.stdout.write(
