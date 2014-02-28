@@ -5,24 +5,55 @@
     <div class="row">
         <div class="span6">
             <div class="team">
-                <h2>{{ team }} ({{ team.score|floatformat }})</h2>
+                <h1>{{ team }} ({{ team.score|floatformat }})</h1>
                     <ul class="team-scoring">
-                        <li>W: {{ team.wins }}</li>
-                        <li>L: {{ team.defeats }}</li>
-                        <li>σ: {{ team.stdev|floatformat:"5" }}</li>
+                        <li><strong>W</strong>: {{ team.wins }}</li>
+                        <li><strong>L</strong>: {{ team.defeats }}</li>
+                        <li><strong>σ</strong>: {{ team.stdev|floatformat:"5" }}</li>
+                        <li><strong>L10</strong>: {{ last_results.wins }} - {{ last_results.defeats }}</li>
+                        <li><strong>Longest Winning Streak</strong>: {{ longest_streak }}</li>
+
                     </ul>
+                <h2>last 10 games</h2>
+                <ul class="team-last-games">
+                    {% for game in last_results.games %}
+                        {% ifchanged game.date|date:"d F Y" %}
+                            {% if forloop.first != True %}</ul>{% endif %}<li class = "date">{{ game.date|date:"d F Y" }}<ul>
+                        {% endifchanged %}
+                        {% if game.winner == team %}
+                            <li>Win against <span class="loser">{{ game.loser }}</span></li>
+                        {% else %}
+                            <li>Defeat against <span class="winner">{{ game.winner }}</span></li>
+                        {% endif %}
+                    {% endfor %}
+                    </ul>
+                </ul>
             </div>
         </div>
 
         <div class="span6">
             <h2>Head-to-Head</h2>
+            <ul class="head2head">
             {% for opponent, results in head2head.iteritems %}
-                <div class="team">
-                    <h3><a href="{% url 'team_detail' opponent.id %}"><strong>{{ opponent }}</a></h3>
-                        <div class="head2head"><strong class="score">{{ results.wins }} - {{ results.losses }}</strong></div>
-                </div>
-                <hr>
+                <li class="team">
+                    <a href="{% url 'team_detail' opponent.id %}"><strong>{{ opponent }}</strong></a>: 
+                    {{ results.wins }} - {{ results.defeats }}
+                    <ul class="head2head-games hidden">
+                        {% for game in results.games %}
+                            {% ifchanged game.date|date:"d F Y" %}
+                                {% if forloop.first != True %}</ul>{% endif %}<li class = "date">{{ game.date|date:"d F Y" }}<ul>
+                            {% endifchanged %}
+                            {% if game.winner == team %}
+                                <li>Win</li>
+                            {% else %}
+                                <li>Defeat</span></li>
+                            {% endif %}
+                        {% endfor %}
+                        </ul>
+                    </ul>
+                </li>
             {% endfor %}
+            </ul>
         </div>
 
 

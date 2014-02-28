@@ -66,7 +66,7 @@ class Team(models.Model):
     def get_wins(self):
         return self.games_won.order_by('-date')
 
-    def get_losses(self):
+    def get_defeats(self):
         return self.games_lost.order_by('-date')
 
     def get_opponents(self):
@@ -81,11 +81,33 @@ class Team(models.Model):
             opponent = game.winner if game.winner_id != self.id else game.loser
 
             if opponent not in head2head:
-                head2head[opponent] = {'wins' : 0, 'losses' : 0}
+                head2head[opponent] = { 'wins' : 0, 'defeats' : 0, 'games' : [] }
 
-            head2head[opponent]['wins' if game.winner_id == self.id else 'losses'] += 1
+            head2head[opponent]['wins' if game.winner_id == self.id else 'defeats'] += 1
+            head2head[opponent]['games'].append(game)
 
         return OrderedDict(sorted(head2head.items(), key=lambda t: -t[0].score))
+
+    def get_last_results(self, count = 10):
+        games = self.get_results()[:count]
+        last_games = { 'wins' : 0, 'defeats' : 0, 'games' : [] }
+        for game in games:
+            last_games['wins' if game.winner_id == self.id else 'defeats'] += 1
+            last_games['games'].append(game)
+
+        return last_games
+
+    def get_longest_streak(self):
+        games = self.get_results()
+        wins_defeats_list = [ game.winner_id == self.id for game in games ]
+
+        from itertools import groupby    
+        if True in wins_defeats_list:
+            return max([sum(g) for k, g in groupby(wins_defeats_list) if k])
+        else:
+            return 0
+
+
 
 class GameManager(models.Manager):
     def get_latest(self):
