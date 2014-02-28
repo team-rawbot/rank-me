@@ -16,7 +16,7 @@ class Command(BaseCommand):
         score, stdev = args
 
         teams = Team.objects.all()
-        games = Game.objects.all()
+        games = Game.objects.order_by('id')
 
         teams.update(score=score, stdev=stdev, wins=0, defeats=0)
 
