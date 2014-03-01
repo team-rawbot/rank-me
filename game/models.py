@@ -1,4 +1,5 @@
 from collections import OrderedDict
+from itertools import groupby  
 
 from django.conf import settings
 from django.core.exceptions import ValidationError
@@ -101,7 +102,6 @@ class Team(models.Model):
         games = self.get_results()
         wins_defeats_list = [ game.winner_id == self.id for game in games ]
 
-        from itertools import groupby    
         if True in wins_defeats_list:
             return max([sum(g) for k, g in groupby(wins_defeats_list) if k])
         else:
