@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 
-{% load admin_urls %}
+{% load admin_urls historical_scores %}
 
 {% block content %}
 
@@ -39,4 +39,53 @@
             </div>
         </div>
     </div>
+    <div class="row">
+        {% historical_scores nb_games=50 %}
+    </div>
+{% endblock %}
+
+{% block extra_footer_js %}
+<script type="text/javascript">
+    $(function () {
+        $('#historical-scores-chart').highcharts({
+            title: {
+                text: 'Last {{ nb_games }} games',
+                x: -20 //center
+            },
+            xAxis: {
+                type: 'linear'
+            },
+            yAxis: {
+                title: {
+                    text: 'Score'
+                },
+                plotLines: [{
+                    value: 0,
+                    width: 1,
+                    color: '#808080'
+                }],
+                reversed: true,
+                gridLineColor: '#fff',
+                min: 1
+            },
+            tooltip: {
+                valueSuffix: ''
+            },
+            legend: {
+                layout: 'vertical',
+                align: 'right',
+                verticalAlign: 'middle',
+                borderWidth: 0
+            },
+            series: [
+                {% for team,position in team_position_evolution.items %}
+                    {
+                        name: '{{ team }}',
+                        data: {{ position }}
+                    },
+                {% endfor %}
+            ]
+});
+});
+</script>
 {% endblock %}
