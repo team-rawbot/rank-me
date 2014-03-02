@@ -6,7 +6,7 @@
         <div class="span6">
             <div class="team">
                 <h1>{{ team }} ({{ team.score|floatformat }})</h1>
-                    <ul class="team-scoring">
+                    <ul class="team-statistics">
                         <li><strong>W</strong>: {{ team.wins }}</li>
                         <li><strong>L</strong>: {{ team.defeats }}</li>
                         <li><strong>σ</strong>: {{ team.stdev|floatformat:"5" }}</li>
@@ -20,9 +20,9 @@
                             {% if forloop.first != True %}</ul>{% endif %}<li class = "date">{{ game.date|date:"d F Y" }}<ul>
                         {% endifchanged %}
                         {% if game.winner == team %}
-                            <li>Win against <span class="loser">{{ game.loser }}</span></li>
+                            <li class="game game-win">Win against <span class="loser">{{ game.loser }}</span></li>
                         {% else %}
-                            <li>Defeat against <span class="winner">{{ game.winner }}</span></li>
+                            <li class="game game-defeat">Defeat against <span class="winner">{{ game.winner }}</span></li>
                         {% endif %}
                     {% endfor %}
                     </ul>
@@ -43,9 +43,9 @@
                                 {% if forloop.first != True %}</ul>{% endif %}<li class = "date">{{ game.date|date:"d F Y" }}<ul>
                             {% endifchanged %}
                             {% if game.winner == team %}
-                                <li>Win</li>
+                                <li class="game game-win">Win</li>
                             {% else %}
-                                <li>Defeat</span></li>
+                                <li class="game game-defeat">Defeat</span></li>
                             {% endif %}
                         {% endfor %}
                         </ul>
