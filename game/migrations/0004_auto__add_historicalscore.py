@@ -11,11 +11,9 @@ class Migration(SchemaMigration):
         # Adding model 'HistoricalScore'
         db.create_table(u'game_historicalscore', (
             (u'id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
-            ('game_id', self.gf('django.db.models.fields.related.OneToOneField')(to=orm['game.Game'], unique=True)),
+            ('game', self.gf('django.db.models.fields.related.OneToOneField')(to=orm['game.Game'], unique=True)),
             ('winner_score', self.gf('django.db.models.fields.FloatField')()),
-            ('winner_last_score', self.gf('django.db.models.fields.FloatField')(default=1000)),
             ('loser_score', self.gf('django.db.models.fields.FloatField')()),
-            ('loser_last_score', self.gf('django.db.models.fields.FloatField')(default=1000)),
         ))
         db.send_create_signal(u'game', ['HistoricalScore'])
 
@@ -55,11 +53,9 @@ class Migration(SchemaMigration):
         },
         u'game.historicalscore': {
             'Meta': {'object_name': 'HistoricalScore'},
-            'game_id': ('django.db.models.fields.related.OneToOneField', [], {'to': u"orm['game.Game']", 'unique': 'True'}),
+            'game': ('django.db.models.fields.related.OneToOneField', [], {'to': u"orm['game.Game']", 'unique': 'True'}),
             u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'loser_last_score': ('django.db.models.fields.FloatField', [], {'default': '1000'}),
             'loser_score': ('django.db.models.fields.FloatField', [], {}),
-            'winner_last_score': ('django.db.models.fields.FloatField', [], {'default': '1000'}),
             'winner_score': ('django.db.models.fields.FloatField', [], {})
         },
         u'game.team': {
