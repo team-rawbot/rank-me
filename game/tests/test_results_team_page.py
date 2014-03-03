@@ -1,16 +1,15 @@
 # coding=UTF-8
 
 from django.contrib.auth import get_user_model
-from django.test import TestCase, Client
+from django.test import TestCase
 from game.models import Game
 
 User = get_user_model()
 
+
 class TestResultsTeamPage(TestCase):
-    
     def test_page_unavailability(self):
-        client = Client()
-        response = client.get('/results/team/1/')
+        response = self.client.get('/results/team/1/')
         self.assertEqual(404, response.status_code)
 
     def test_page_availability(self):
@@ -25,8 +24,7 @@ class TestResultsTeamPage(TestCase):
         game = Game.objects.announce(winner=sylvain, loser=christoph)
         game.save()
 
-        client = Client()
-        response = client.get('/results/team/1/')
+        response = self.client.get('/results/team/1/')
         self.assertEqual(200, response.status_code)
 
     def test_page_results(self):
@@ -47,14 +45,13 @@ class TestResultsTeamPage(TestCase):
         game = Game.objects.announce(winner=christoph, loser=sylvain)
         game.save()
 
-        client = Client()
-        response = client.get('/results/team/1/')
+        response = self.client.get('/results/team/1/')
 
         self.assertContains(response, '<ul class="team-statistics"')
         self.assertContains(response, '<ul class="head2head">')
         self.assertContains(response, '<li><strong>Longest Winning Streak</strong>: 2</li>')
 
-        response = client.get('/results/team/2/')
+        response = self.client.get('/results/team/2/')
 
         self.assertContains(response, '<ul class="team-statistics"')
         self.assertContains(response, '<ul class="head2head">')
