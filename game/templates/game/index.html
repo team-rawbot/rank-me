@@ -47,6 +47,17 @@
 {% block extra_footer_js %}
 <script type="text/javascript">
     $(function () {
+        function mapToPosition(element) {
+            return element.position;
+        };
+
+        var scores_by_team = {{ scores_by_team_json|safe }};
+
+        var positionSeries = [];
+        for (var team in scores_by_team) {
+            positionSeries.push({'name': team, 'data': scores_by_team[team].map(mapToPosition)});
+        }
+
         $('#historical-scores-chart').highcharts({
             title: {
                 text: 'Last {{ nb_games }} games',
@@ -77,15 +88,8 @@
                 verticalAlign: 'middle',
                 borderWidth: 0
             },
-            series: [
-                {% for team,position in team_position_evolution.items %}
-                    {
-                        name: '{{ team }}',
-                        data: {{ position }}
-                    },
-                {% endfor %}
-            ]
-});
-});
+            series: positionSeries
+        });
+    });
 </script>
 {% endblock %}
