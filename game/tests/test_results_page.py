@@ -45,14 +45,15 @@ class TestResultsPage(TestCase):
         self.assertContains(response, '<ul class="games')
         self.assertContains(response, '<li class="game-item', 1)
 
+
         # specifically test ranking
-        self.assertContains(response, '<li class="score-item" title="W: 1, L: 0, σ: 274.91539"><strong>laurent</strong> (1188.1)</li>')
-        self.assertContains(response, '<li class="score-item" title="W: 0, L: 1, σ: 274.91539"><strong>rolf</strong> (811.9)</li>')
+        self.assertContains(response, '<li class="score-item" title="W: 1, L: 0, σ: 7.16880"><strong>laurent</strong> (29.4)</li>')
+        self.assertContains(response, '<li class="score-item" title="W: 0, L: 1, σ: 7.16880"><strong>rolf</strong> (20.6)</li>')
 
         # create a 2nd game (as usual Laurent wins)
         game = Game.objects.announce(winner=laurent, loser=rolf)
         game.save()
 
         response = client.get('/results/')
-        self.assertContains(response, '<li class="score-item" title="W: 2, L: 0, σ: 247.39318"><strong>laurent</strong> (1246.5)</li>')
-        self.assertContains(response, '<li class="score-item" title="W: 0, L: 2, σ: 247.39318"><strong>rolf</strong> (753.5)</li>')
+        self.assertContains(response, '<li class="score-item" title="W: 2, L: 0, σ: 6.52104"><strong>laurent</strong> (31.2)</li>')
+        self.assertContains(response, '<li class="score-item" title="W: 0, L: 2, σ: 6.52104"><strong>rolf</strong> (18.8)</li>')
