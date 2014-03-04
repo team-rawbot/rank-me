@@ -1,6 +1,6 @@
 from django.core.management.base import BaseCommand, CommandError
 
-from game.models import Game, Team
+from game.models import Game, Team, HistoricalScore
 
 
 class Command(BaseCommand):
@@ -17,6 +17,9 @@ class Command(BaseCommand):
 
         teams = Team.objects.all()
         games = Game.objects.order_by('id')
+
+        # remove all HistoricalScores (will be auto-populated on game.save()
+        HistoricalScore.objects.all().delete()
 
         teams.update(score=score, stdev=stdev, wins=0, defeats=0)
 
