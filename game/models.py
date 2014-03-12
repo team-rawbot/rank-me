@@ -1,5 +1,6 @@
 import operator
 import json
+import six
 from trueskill import Rating, rate_1vs1
 from collections import OrderedDict
 from itertools import groupby
@@ -256,7 +257,7 @@ class HistoricalScoreManager(models.Manager):
                 team_scores.append(result)
                 scores_by_team[team] = team_scores
 
-            positions_for_game = sorted(all_skills_by_game.iteritems(), key=operator.itemgetter(1), reverse=True)
+            positions_for_game = sorted(six.iteritems(all_skills_by_game), key=operator.itemgetter(1), reverse=True)
             for idx, position in enumerate(positions_for_game, start=1):
                 scores_by_team[position[0]][-1]['position'] = idx
 
