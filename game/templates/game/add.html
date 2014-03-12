@@ -1,5 +1,9 @@
 {% extends "base.html" %}
 
+{% load static %}
+
+{% block body_class %}add-result{% endblock %}
+
 {% block content %}
     <h2>Add a new result</h2>
 
@@ -14,4 +18,8 @@
         {% endfor %}
         <p><input type="submit" value="Add result" class="btn btn-success" /></p>
     </form>
+{% endblock %}
+
+{% block extra_footer_js %}
+    <script src="{% static "assets/js/add_result.js" %}"></script>
 {% endblock %}
