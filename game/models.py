@@ -1,5 +1,7 @@
 import operator
 from trueskill import Rating, rate_1vs1
+from collections import OrderedDict
+from itertools import groupby
 
 from django.conf import settings
 from django.core.exceptions import ValidationError
@@ -56,11 +58,77 @@ class Team(models.Model):
 
     objects = TeamManager()
 
+    def __unicode__(self):
+        return self.get_name()
+
     def get_name(self):
         return u" / ".join([user.username for user in self.users.all()])
 
-    def __unicode__(self):
-        return self.get_name()
+    def get_games(self):
+        """
+        Fetch the list of games played by the team.
+        """
+        return (Game.objects.filter(Q(winner_id=self.id) | Q(loser_id=self.id))
+                .order_by('-date').select_related('winner', 'loser'))
+
+    def get_head2head(self):
+        """
+        Compute the amount of wins and defeats against all opponents the team
+        played against. The returned value is an OrderedDict since the teams
+        are ordered by their score.
+        """
+        head2head = {}
+
+        games = self.get_games()
+
+        for game in games:
+            opponent = game.get_opponent(self)
+
+            if opponent not in head2head:
+                head2head[opponent] = {
+                    'wins': 0,
+                    'defeats': 0,
+                    'games': []
+                }
+
+            stat_to_increase = (
+                'wins' if game.winner_id == self.id else 'defeats'
+            )
+            head2head[opponent][stat_to_increase] += 1
+            head2head[opponent]['games'].append(game)
+
+        return OrderedDict(
+            sorted(head2head.items(), key=lambda t: t[0].score, reverse=True)
+        )
+
+    def get_recent_stats(self, count=10):
+        """
+        Return a dictionary with the latest ``count`` played games and the
+        number of wins and defeats.
+        """
+        games = self.get_games()[:count]
+        last_games = {
+            'wins': 0,
+            'defeats': 0,
+            'games': []
+        }
+
+        for game in games:
+            last_games['wins' if game.winner_id == self.id else 'defeats'] += 1
+            last_games['games'].append(game)
+
+        return last_games
+
+    def get_longest_streak(self):
+        games = self.get_games()
+        # Create a list of booleans indicating won matches
+        wins_defeats_list = [game.winner_id == self.id for game in games]
+
+        if True in wins_defeats_list:
+            # Sum won matches series and keep the max
+            return max([sum(g) for k, g in groupby(wins_defeats_list) if k])
+        else:
+            return 0
 
 
 class GameManager(models.Manager):
@@ -130,6 +198,12 @@ class Game(models.Model):
             winner_score=winner.score,
             loser_score=loser.score,
         )
+
+    def get_opponent(self, team):
+        """
+        Return the opponent team relative to the given team.
+        """
+        return self.winner if self.winner_id != team.id else self.loser
 
 
 class HistoricalScoreManager(models.Manager):

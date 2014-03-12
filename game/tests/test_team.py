@@ -1,7 +1,7 @@
 from django.test import TestCase
 
 from .factories import UserFactory
-from ..models import Team
+from ..models import Game, Team
 
 
 class TestTeamGetOrCreate(TestCase):
@@ -104,3 +104,78 @@ class TestTeamGetOrCreate(TestCase):
         self.assertTrue(created)
         self.assertEqual(Team.objects.count(), 3)
         self.assertUsersEqual(team.users.all(), self.users[1:3])
+
+    def test_longest_streak(self):
+        christoph, laurent, rolf = (UserFactory() for i in range(3))
+
+        game = Game.objects.announce(christoph, rolf)
+        self.assertEqual(game.winner.get_longest_streak(), 1)
+        self.assertEqual(game.loser.get_longest_streak(), 0)
+        game = Game.objects.announce(christoph, rolf)
+        self.assertEqual(game.winner.get_longest_streak(), 2)
+        game = Game.objects.announce(christoph, laurent)
+        self.assertEqual(game.winner.get_longest_streak(), 3)
+
+        # C-C-C-Combo breaker
+        game = Game.objects.announce(rolf, christoph)
+        self.assertEqual(game.loser.get_longest_streak(), 3)
+        self.assertEqual(game.winner.get_longest_streak(), 1)
+
+        game = Game.objects.announce(christoph, rolf)
+        self.assertEqual(game.winner.get_longest_streak(), 3)
+        Game.objects.announce(christoph, rolf)
+        Game.objects.announce(christoph, rolf)
+        game = Game.objects.announce(christoph, laurent)
+        self.assertEqual(game.winner.get_longest_streak(), 4)
+
+    def test_head2head(self):
+        christoph, laurent, rolf = (UserFactory() for i in range(3))
+
+        game = Game.objects.announce(christoph, rolf)
+        winner_head2head = game.winner.get_head2head()
+        loser_head2head = game.loser.get_head2head()
+
+        self.assertNotIn(game.winner, winner_head2head)
+        self.assertNotIn(game.loser, loser_head2head)
+
+        self.assertEqual(winner_head2head[game.loser]['wins'], 1)
+        self.assertEqual(winner_head2head[game.loser]['defeats'], 0)
+        self.assertEqual(len(winner_head2head[game.loser]['games']), 1)
+
+        self.assertEqual(loser_head2head[game.winner]['wins'], 0)
+        self.assertEqual(loser_head2head[game.winner]['defeats'], 1)
+        self.assertEqual(len(loser_head2head[game.winner]['games']), 1)
+
+        game = Game.objects.announce(rolf, christoph)
+        winner_head2head = game.winner.get_head2head()
+        loser_head2head = game.loser.get_head2head()
+
+        self.assertEqual(winner_head2head[game.loser]['wins'], 1)
+        self.assertEqual(winner_head2head[game.loser]['defeats'], 1)
+
+        self.assertEqual(loser_head2head[game.winner]['wins'], 1)
+        self.assertEqual(loser_head2head[game.winner]['defeats'], 1)
+
+        game = Game.objects.announce(rolf, christoph)
+        winner_head2head = game.winner.get_head2head()
+        loser_head2head = game.loser.get_head2head()
+
+        self.assertEqual(winner_head2head[game.loser]['wins'], 2)
+        self.assertEqual(winner_head2head[game.loser]['defeats'], 1)
+
+        self.assertEqual(loser_head2head[game.winner]['wins'], 1)
+        self.assertEqual(loser_head2head[game.winner]['defeats'], 2)
+
+        game = Game.objects.announce(laurent, christoph)
+        winner_head2head = game.winner.get_head2head()
+        loser_head2head = game.loser.get_head2head()
+
+        self.assertEqual(winner_head2head[game.loser]['wins'], 1)
+        self.assertEqual(winner_head2head[game.loser]['defeats'], 0)
+
+        self.assertEqual(loser_head2head[game.winner]['wins'], 0)
+        self.assertEqual(loser_head2head[game.winner]['defeats'], 1)
+
+        # Since Laurent never played against rolf, it shouldn't be in the
+        # head2head
+        self.assertNotIn(rolf.teams.first(), winner_head2head)
