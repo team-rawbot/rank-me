@@ -106,7 +106,7 @@ class TestTeamGetOrCreate(TestCase):
         self.assertUsersEqual(team.users.all(), self.users[1:3])
 
     def test_longest_streak(self):
-        christoph, laurent, rolf = (UserFactory() for i in xrange(3))
+        christoph, laurent, rolf = (UserFactory() for i in range(3))
 
         game = Game.objects.announce(christoph, rolf)
         self.assertEqual(game.winner.get_longest_streak(), 1)
@@ -129,7 +129,7 @@ class TestTeamGetOrCreate(TestCase):
         self.assertEqual(game.winner.get_longest_streak(), 4)
 
     def test_head2head(self):
-        christoph, laurent, rolf = (UserFactory() for i in xrange(3))
+        christoph, laurent, rolf = (UserFactory() for i in range(3))
 
         game = Game.objects.announce(christoph, rolf)
         winner_head2head = game.winner.get_head2head()
