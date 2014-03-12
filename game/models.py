@@ -51,8 +51,8 @@ class TeamManager(models.Manager):
 class Team(models.Model):
     users = models.ManyToManyField(settings.AUTH_USER_MODEL,
                                    related_name='teams')
-    score = models.FloatField('skills', default=1000)
-    stdev = models.FloatField('standard deviation', default=333)
+    score = models.FloatField('skills', default=25)
+    stdev = models.FloatField('standard deviation', default=8.33)
     wins = models.IntegerField(default=0)
     defeats = models.IntegerField(default=0)
 
