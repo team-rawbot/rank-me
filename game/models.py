@@ -1,5 +1,5 @@
 from collections import OrderedDict
-from itertools import groupby  
+from itertools import groupby
 
 from django.conf import settings
 from django.core.exceptions import ValidationError
@@ -61,37 +61,55 @@ class Team(models.Model):
     def __unicode__(self):
         return u" / ".join([user.username for user in self.users.all()])
 
-    def get_results(self):
-        return Game.objects.filter(Q(winner = self) | Q(loser = self)).order_by('-date').select_related('winner', 'loser')
-
-    def get_wins(self):
-        return self.games_won.order_by('-date')
-
-    def get_defeats(self):
-        return self.games_lost.order_by('-date')
-
-    def get_opponents(self):
-        return Team.objects.all().exclude(pk=self.id).order_by('-score')
+    def get_games(self):
+        """
+        Fetch the list of games played by the team.
+        """
+        return (Game.objects.filter(Q(winner_id=self.id) | Q(loser_id=self.id))
+                .order_by('-date').select_related('winner', 'loser'))
 
     def get_head2head(self):
+        """
+        Compute the amount of wins and defeats against all opponents the team
+        played against. The returned value is an OrderedDict since the teams
+        are ordered by their score.
+        """
         head2head = {}
 
-        games = self.get_results()
+        games = self.get_games()
 
         for game in games:
-            opponent = game.winner if game.winner_id != self.id else game.loser
+            opponent = game.get_opponent(self)
 
             if opponent not in head2head:
-                head2head[opponent] = { 'wins' : 0, 'defeats' : 0, 'games' : [] }
+                head2head[opponent] = {
+                    'wins': 0,
+                    'defeats': 0,
+                    'games': []
+                }
 
-            head2head[opponent]['wins' if game.winner_id == self.id else 'defeats'] += 1
+            stat_to_increase = (
+                'wins' if game.winner_id == self.id else 'defeats'
+            )
+            head2head[opponent][stat_to_increase] += 1
             head2head[opponent]['games'].append(game)
 
-        return OrderedDict(sorted(head2head.items(), key=lambda t: -t[0].score))
+        return OrderedDict(
+            sorted(head2head.items(), key=lambda t: t[0].score, reverse=True)
+        )
 
-    def get_last_results(self, count = 10):
-        games = self.get_results()[:count]
-        last_games = { 'wins' : 0, 'defeats' : 0, 'games' : [] }
+    def get_recent_stats(self, count=10):
+        """
+        Return a dictionary with the latest ``count`` played games and the
+        number of wins and defeats.
+        """
+        games = self.get_games()[:count]
+        last_games = {
+            'wins': 0,
+            'defeats': 0,
+            'games': []
+        }
+
         for game in games:
             last_games['wins' if game.winner_id == self.id else 'defeats'] += 1
             last_games['games'].append(game)
@@ -99,14 +117,15 @@ class Team(models.Model):
         return last_games
 
     def get_longest_streak(self):
-        games = self.get_results()
-        wins_defeats_list = [ game.winner_id == self.id for game in games ]
+        games = self.get_games()
+        # Create a list of booleans indicating won matches
+        wins_defeats_list = [game.winner_id == self.id for game in games]
 
         if True in wins_defeats_list:
+            # Sum won matches series and keep the max
             return max([sum(g) for k, g in groupby(wins_defeats_list) if k])
         else:
             return 0
-
 
 
 class GameManager(models.Manager):
@@ -170,3 +189,9 @@ class Game(models.Model):
         loser.stdev = loser_new_score.sigma
         loser.defeats = loser.defeats + 1
         loser.save()
+
+    def get_opponent(self, team):
+        """
+        Return the opponent team relative to the given team.
+        """
+        return self.winner if self.winner_id != team.id else self.loser
