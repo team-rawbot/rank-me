@@ -13,19 +13,20 @@
                         <li><strong>L10</strong>: {{ last_results.wins }} - {{ last_results.defeats }}</li>
                         <li><strong>Longest Winning Streak</strong>: {{ longest_streak }}</li>
                     </ul>
-                <h2>last 10 games</h2>
+                <h2>Last 10 games</h2>
                 <ul class="team-last-games">
-                    {% for game in last_results.games %}
-                        {% ifchanged game.date|date:"d F Y" %}
-                            {% if forloop.first != True %}</ul>{% endif %}<li class = "date">{{ game.date|date:"d F Y" }}<ul>
-                        {% endifchanged %}
-                        {% if game.winner == team %}
-                            <li class="game game-win">Win against <span class="loser">{{ game.loser }}</span></li>
-                        {% else %}
-                            <li class="game game-defeat">Defeat against <span class="winner">{{ game.winner }}</span></li>
-                        {% endif %}
+                    {% regroup last_results.games by date|date:"d F Y" as last_games %}
+                    {% for game_dates in last_games %}
+                        <li class = "date">{{ game_dates.grouper }}<ul>
+                            {% for game in game_dates.list %}
+                                {% if game.winner == team %}
+                                    <li class="game game-win">Win against <span class="loser">{{ game.loser }}</span></li>
+                                {% else %}
+                                    <li class="game game-defeat">Defeat against <span class="winner">{{ game.winner }}</span></li>
+                                {% endif %}
+                            {% endfor %}
+                        </ul></li>
                     {% endfor %}
-                    </ul>
                 </ul>
             </div>
         </div>
