@@ -87,10 +87,10 @@
             }
         };
 
-        scores_by_team = {{ scores_by_team_json|safe }};
+        scores_by_team = {{ score_chart_data|safe }};
 
         drawChart(
-            '#historical-scores-chart',
+            '{{ container }}',
             getSeries(scores_by_team),
             getMinGameId(scores_by_team),
             getMaxGameId(scores_by_team)

@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 
-{% load admin_urls historical_scores %}
+{% load admin_urls %}
 
 {% block content %}
 
@@ -40,10 +40,10 @@
         </div>
     </div>
     <div class="row">
-        {% historical_scores nb_games=50 %}
+        <div id="score-chart-container" class="span12"></div>
     </div>
 {% endblock %}
 
 {% block extra_footer_js %}
-    {% include 'game/score_chart.html' with scores_by_team_json=scores_by_team_json %}
+    {% include 'game/score_chart.html' with container='#score-chart-container' scores_chart_data=scores_chart_data %}
 {% endblock %}

@@ -1,4 +1,5 @@
 import operator
+import json
 from trueskill import Rating, rate_1vs1
 from collections import OrderedDict
 from itertools import groupby
@@ -212,11 +213,12 @@ class HistoricalScoreManager(models.Manager):
                 .select_related('game', 'game__winner', 'game__loser')
                 .order_by('-id')[:nb_games])
 
-    def get_latest_results_by_team(self, nb_games=50):
+    def get_latest_results_by_team(self, nb_games=50, format=''):
         """
         Get nb_games latest scores for each team
 
         :param nb_games:int number of games
+        :param format:string [''/'json']
         :return:dict Dict with key=team and value=list of score objects
 
         {team_a: [{skill: xx, played: xx, game: game_id}, ...]}
@@ -258,6 +260,13 @@ class HistoricalScoreManager(models.Manager):
             for idx, position in enumerate(positions_for_game, start=1):
                 scores_by_team[position[0]][-1]['position'] = idx
 
+        if format == 'json':
+            json_result = {}
+            for team, results in scores_by_team.items():
+                json_result[team.get_name()] = results
+
+            return json.dumps(json_result)
+
         return scores_by_team
 
     def get_last_score_for_team(self, team, game):
@@ -266,7 +275,7 @@ class HistoricalScoreManager(models.Manager):
 
         :param team:Team
         :param game:Game
-        :return:skill
+        :return:float skill
         """
         historical_score_id = game.historical_score.id
         last_score = (self.get_queryset()
