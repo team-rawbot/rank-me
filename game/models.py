@@ -1,7 +1,6 @@
 import operator
 import json
 import six
-from trueskill import Rating, rate_1vs1
 from collections import OrderedDict
 from itertools import groupby
 
@@ -10,6 +9,7 @@ from django.core.exceptions import ValidationError
 from django.db import models
 from django.utils import timezone
 from django.db.models import Q
+from trueskill import Rating, rate_1vs1
 
 
 class TeamManager(models.Manager):
@@ -53,8 +53,9 @@ class TeamManager(models.Manager):
 class Team(models.Model):
     users = models.ManyToManyField(settings.AUTH_USER_MODEL,
                                    related_name='teams')
-    score = models.FloatField('skills', default=25)
-    stdev = models.FloatField('standard deviation', default=8.33)
+    score = models.FloatField('skills', default=settings.GAME_INITIAL_MU)
+    stdev = models.FloatField('standard deviation',
+                              default=settings.GAME_INITIAL_SIGMA)
     wins = models.IntegerField(default=0)
     defeats = models.IntegerField(default=0)
 
@@ -285,6 +286,9 @@ class HistoricalScoreManager(models.Manager):
                       .select_related('game__winner', 'game__loser', 'game')
                       .order_by('-id')
                       .first())
+
+        if last_score is None:
+            return settings.GAME_INITIAL_MU
 
         return last_score.winner_score if last_score.game.winner == team else last_score.loser_score
 

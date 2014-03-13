@@ -1,4 +1,5 @@
-from django.core.management.base import BaseCommand, CommandError
+from django.conf import settings
+from django.core.management.base import BaseCommand
 
 from game.models import Game, Team, HistoricalScore
 
@@ -9,11 +10,15 @@ class Command(BaseCommand):
             " provided initial score and sigma")
 
     def handle(self, *args, **options):
-        if len(args) != 2:
-            raise CommandError("Invalid number of arguments! You should"
-                               " provide 2: score and stdev")
+        try:
+            score = args[0]
+        except IndexError:
+            score = settings.GAME_INITIAL_MU
 
-        score, stdev = args
+        try:
+            stdev = args[1]
+        except IndexError:
+            stdev = settings.GAME_INITIAL_SIGMA
 
         teams = Team.objects.all()
         games = Game.objects.order_by('id')
