@@ -1,13 +1,13 @@
 {% extends "base.html" %}
 
-{% load admin_urls %}
+{% load static %}
 
 {% block content %}
 
     <a href="{% url 'game_add' %}" class="btn btn-success">Add a result</a>
 
     <div class="row">
-        <div class="span6">
+        <div class="span3">
             <div class="scores">
                 <h2>Scores</h2>
                 {% if score_board %}
@@ -22,21 +22,27 @@
             </div>
         </div>
 
-        <div class="span6">
-            <div class="latest-results">
-                {% if latest_results %}
-                    <h2>Last 20 games</h2>
-                    <ul class="games">
+        <div id="score-chart-container" class="span9 hidden-phone"
+            data-scores="{{ score_chart_data }}"></div>
+    </div>
+    <div class="row">
+        <div class="latest-results">
+            {% if latest_results %}
+                <h2>Last 20 games</h2>
+                <ul class="games">
                     {% for result in latest_results %}
                         <li class="game-item">
                             <a href="{% url 'game_detail' result.id %}">{{ result }} - {{ result.date }}</a>
                         </li>
                     {% endfor %}
-                    </ul>
-                {% else %}
-                    <p>No result yet.</p>
-                {% endif %}
-            </div>
+                </ul>
+            {% else %}
+                <p>No result yet.</p>
+            {% endif %}
         </div>
     </div>
+{% endblock %}
+
+{% block extra_footer_js %}
+    <script src="{% static "assets/js/score_chart.js" %}"></script>
 {% endblock %}

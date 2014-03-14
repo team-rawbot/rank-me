@@ -2,16 +2,20 @@ from django.contrib.auth.decorators import login_required
 from django.shortcuts import get_object_or_404, render, redirect
 
 from .forms import GameForm
-from .models import Game, Team
+from .models import Game, Team, HistoricalScore
 
 
 def index(request):
     latest_results = Game.objects.get_latest()
     score_board = Team.objects.get_score_board()
+    score_chart_data = HistoricalScore.objects.get_latest_results_by_team(50, True)
+
     context = {
         'latest_results': latest_results,
-        'score_board': score_board
+        'score_board': score_board,
+        'score_chart_data': score_chart_data,
     }
+
     return render(request, 'game/index.html', context)
 
 

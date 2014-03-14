@@ -1,3 +1,6 @@
+import operator
+import json
+import six
 from collections import OrderedDict
 from itertools import groupby
 
@@ -6,7 +9,6 @@ from django.core.exceptions import ValidationError
 from django.db import models
 from django.utils import timezone
 from django.db.models import Q
-
 from trueskill import Rating, rate_1vs1
 
 
@@ -51,14 +53,18 @@ class TeamManager(models.Manager):
 class Team(models.Model):
     users = models.ManyToManyField(settings.AUTH_USER_MODEL,
                                    related_name='teams')
-    score = models.FloatField('skills', default=25)
-    stdev = models.FloatField('standard deviation', default=8.33)
+    score = models.FloatField('skills', default=settings.GAME_INITIAL_MU)
+    stdev = models.FloatField('standard deviation',
+                              default=settings.GAME_INITIAL_SIGMA)
     wins = models.IntegerField(default=0)
     defeats = models.IntegerField(default=0)
 
     objects = TeamManager()
 
     def __unicode__(self):
+        return self.get_name()
+
+    def get_name(self):
         return u" / ".join([user.username for user in self.users.all()])
 
     def get_games(self):
@@ -190,8 +196,106 @@ class Game(models.Model):
         loser.defeats = loser.defeats + 1
         loser.save()
 
+        HistoricalScore.objects.create(
+            game=self,
+            winner_score=winner.score,
+            loser_score=loser.score,
+        )
+
     def get_opponent(self, team):
         """
         Return the opponent team relative to the given team.
         """
         return self.winner if self.winner_id != team.id else self.loser
+
+
+class HistoricalScoreManager(models.Manager):
+    def get_latest(self, nb_games):
+        return (self.get_queryset()
+                .select_related('game', 'game__winner', 'game__loser')
+                .order_by('-id')[:nb_games])
+
+    def get_latest_results_by_team(self, nb_games, return_json=False):
+        """
+        Get nb_games latest scores for each team
+
+        :param nb_games:int number of games
+        :param return_json:boolean
+        :return:dict Dict with key=team and value=list of score objects
+
+        {team_a: [{skill: xx, played: xx, game: game_id}, ...]}
+        """
+        scores_by_team = {}
+
+        teams = Team.objects.all().select_related('winner', 'loser')
+
+        scores = self.get_latest(nb_games)
+        scores = sorted(scores, key=lambda score: score.id)
+        for score in scores:
+            all_skills_by_game = {}
+            for team in teams:
+                team_scores = scores_by_team.get(team, [])
+
+                result = {'game': score.game_id}
+
+                if team.id == score.game.winner_id:
+                    result['skill'] = score.winner_score
+                    result['win'] = True
+                    result['played'] = True
+                elif team.id == score.game.loser_id:
+                    result['skill'] = score.loser_score
+                    result['win'] = False
+                    result['played'] = True
+                else:
+                    result['played'] = False
+                    if len(team_scores) == 0:
+                        result['skill'] = self.get_last_score_for_team(team, scores[0].game)
+                    else:
+                        result['skill'] = team_scores[-1]['skill']
+
+                all_skills_by_game[team] = result['skill']
+
+                team_scores.append(result)
+                scores_by_team[team] = team_scores
+
+            positions_for_game = sorted(six.iteritems(all_skills_by_game), key=operator.itemgetter(1), reverse=True)
+            for idx, position in enumerate(positions_for_game, start=1):
+                scores_by_team[position[0]][-1]['position'] = idx
+
+        if return_json:
+            json_result = {}
+            for team, results in scores_by_team.items():
+                json_result[team.get_name()] = results
+
+            return json.dumps(json_result)
+
+        return scores_by_team
+
+    def get_last_score_for_team(self, team, game):
+        """
+        Returns the latest skill before game :game for team :team
+
+        :param team:Team
+        :param game:Game
+        :return:float skill
+        """
+        historical_score_id = game.historical_score.id
+        last_score = (self.get_queryset()
+                      .filter(Q(game__winner=team) | Q(game__loser=team))
+                      .filter(id__lte=historical_score_id)
+                      .select_related('game__winner', 'game__loser', 'game')
+                      .order_by('-id')
+                      .first())
+
+        if last_score is None:
+            return settings.GAME_INITIAL_MU
+
+        return last_score.winner_score if last_score.game.winner == team else last_score.loser_score
+
+
+class HistoricalScore(models.Model):
+    game = models.OneToOneField(Game, related_name='historical_score')
+    winner_score = models.FloatField('Winner current score')
+    loser_score = models.FloatField('Loser current score')
+
+    objects = HistoricalScoreManager()
