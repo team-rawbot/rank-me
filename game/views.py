@@ -8,7 +8,7 @@ from .models import Game, Team, HistoricalScore
 def index(request):
     latest_results = Game.objects.get_latest()
     score_board = Team.objects.get_score_board()
-    score_chart_data = HistoricalScore.objects.get_latest_results_by_team(50, 'json')
+    score_chart_data = HistoricalScore.objects.get_latest_results_by_team(50, True)
 
     context = {
         'latest_results': latest_results,

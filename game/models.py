@@ -210,17 +210,17 @@ class Game(models.Model):
 
 
 class HistoricalScoreManager(models.Manager):
-    def get_latest(self, nb_games=50):
+    def get_latest(self, nb_games):
         return (self.get_queryset()
                 .select_related('game', 'game__winner', 'game__loser')
                 .order_by('-id')[:nb_games])
 
-    def get_latest_results_by_team(self, nb_games=50, format=''):
+    def get_latest_results_by_team(self, nb_games, return_json=False):
         """
         Get nb_games latest scores for each team
 
         :param nb_games:int number of games
-        :param format:string [''/'json']
+        :param return_json:boolean
         :return:dict Dict with key=team and value=list of score objects
 
         {team_a: [{skill: xx, played: xx, game: game_id}, ...]}
@@ -236,7 +236,7 @@ class HistoricalScoreManager(models.Manager):
             for team in teams:
                 team_scores = scores_by_team.get(team, [])
 
-                result = {'game': score.game.id}
+                result = {'game': score.game_id}
 
                 if team.id == score.game.winner_id:
                     result['skill'] = score.winner_score
@@ -262,7 +262,7 @@ class HistoricalScoreManager(models.Manager):
             for idx, position in enumerate(positions_for_game, start=1):
                 scores_by_team[position[0]][-1]['position'] = idx
 
-        if format == 'json':
+        if return_json:
             json_result = {}
             for team, results in scores_by_team.items():
                 json_result[team.get_name()] = results
