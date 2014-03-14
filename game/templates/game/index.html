@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 
-{% load admin_urls %}
+{% load static %}
 
 {% block content %}
 
@@ -22,7 +22,8 @@
             </div>
         </div>
 
-        <div id="score-chart-container" class="span9 hidden-phone"></div>
+        <div id="score-chart-container" class="span9 hidden-phone"
+            data-scores="{{ score_chart_data }}"></div>
     </div>
     <div class="row">
         <div class="latest-results">
@@ -43,5 +44,5 @@
 {% endblock %}
 
 {% block extra_footer_js %}
-    {% include 'game/score_chart.html' with container='#score-chart-container' scores_chart_data=scores_chart_data %}
+    <script src="{% static "assets/js/score_chart.js" %}"></script>
 {% endblock %}
