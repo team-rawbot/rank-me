@@ -11,7 +11,8 @@ var ScoreChart = (function ($) {
             'x': element['game'],
             'y': element['position'],
             'marker': {
-                'radius': element['played']? 5:0
+                'radius': element['played']? 5:0,
+                'fillColor': element['win']? null:'#fff'
             }
         };
     };
@@ -58,6 +59,29 @@ var ScoreChart = (function ($) {
                 verticalAlign: 'middle',
                 borderWidth: 0
             },
+            colors: [
+                '#1f77b4',
+                '#aec7e8',
+                '#ff7f0e',
+                '#ffbb78',
+                '#637939',
+                '#8ca252',
+                '#b5cf6b',
+                '#cedb9c',
+                '#8c6d31',
+                '#bd9e39',
+                '#e7ba52',
+                '#e7cb94',
+                '#843c39',
+                '#ad494a',
+                '#d6616b',
+                '#e7969c',
+                '#7b4173',
+                '#a55194',
+                '#ce6dbd',
+                '#de9ed6'
+
+            ],
             series: positionSeries
         });
     };
@@ -71,6 +95,8 @@ var ScoreChart = (function ($) {
                 'name': team,
                 'data': team_scores.map(mapToPosition),
                 'marker': {
+                    'lineColor': null,
+                    'lineWidth': '2px',
                     'symbol': 'circle'
                 }
             });
