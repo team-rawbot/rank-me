@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 
-{% load admin_urls static %}
+{% load admin_urls %}
 
 {% block body_class %}home{% endblock %}
 
@@ -41,8 +41,4 @@
             </div>
         </div>
     </div>
-{% endblock %}
-
-{% block extra_footer_js %}
-    <script src="{% static "assets/js/add_result.js" %}"></script>
 {% endblock %}
