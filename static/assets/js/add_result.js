@@ -20,7 +20,7 @@ $(function () {
     });
 
     var selectOptionFromText = function(select, text) {
-        $(select + ' option:contains(' + text + ')').each(function(){
+        $(select + ' option').each(function(){
             if ($(this).text() == text) {
                 $(this).attr('selected', 'selected');
                 return false;
