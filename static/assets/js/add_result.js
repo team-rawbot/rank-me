@@ -1,27 +1,23 @@
 $(function () {
     // focus "add result" button on load
-    if ($('body').hasClass('home')) {
-        $('#add-result-button').focus();
-    }
+    $('body.home #add-result-button').focus();
 
-    if ($('body').hasClass('add-result')) {
-        $('body').keydown(function(event) {
-            var username = $('#nav-user-name').text();
+    $('body.add-result').keydown(function(event) {
+        var username = $('#nav-user-name').text();
 
-            // press 'w' to set yourself as winner
-            if (event.keyCode == 87) {
-                if (!selectOptionFromText('#id_winner', username)) {
-                    $('#id_loser').focus();
-                }
+        // press 'w' to set yourself as winner
+        if (event.keyCode == 87) {
+            if (!selectOptionFromText('#id_winner', username)) {
+                $('#id_loser').focus();
             }
-            // press 'l' to set yourself as loser
-            else if (event.keyCode == 76) {
-                if (!selectOptionFromText('#id_loser', username)) {
-                    $('#id_winner').focus();
-                }
+        }
+        // press 'l' to set yourself as loser
+        else if (event.keyCode == 76) {
+            if (!selectOptionFromText('#id_loser', username)) {
+                $('#id_winner').focus();
             }
-        });
-    }
+        }
+    });
 
     var selectOptionFromText = function(select, text) {
         $(select + ' option:contains(' + text + ')').each(function(){
