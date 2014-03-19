@@ -6,7 +6,7 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <link href="{% static "main.css" %}" rel="stylesheet" media="screen">
     </head>
-    <body>
+    <body class="{% block body_class %}{% endblock %}">
         <div class="navbar navbar-fixed-top">
             <div class="navbar-inner">
                 <div class="container">
@@ -15,7 +15,7 @@
                         {% if user and user.is_authenticated %}
                         <li class="dropdown">
                             <a class="dropdown-toggle" data-toggle="dropdown" href="#">
-                                {{ user.username }}
+                                <span id="nav-user-name">{{ user.username }}</span>
                                 <b class="caret"></b>
                             </a>
                             <ul class="dropdown-menu" role="menu">
@@ -43,6 +43,7 @@
         <script src="http://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.5.2/underscore-min.js"></script>
         <script src="http://code.highcharts.com/highcharts.js"></script>
         <script src="http://code.highcharts.com/modules/exporting.js"></script>
+        <script src="{% static "assets/js/add_result.js" %}"></script>
 
         {% block extra_footer_js %}{% endblock %}
     </body>
