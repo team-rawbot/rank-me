@@ -20,12 +20,17 @@ $(function () {
     });
 
     var selectOptionFromText = function(select, text) {
+        var optionFound = false;
+
         $(select + ' option').each(function(){
             if ($(this).text() == text) {
                 $(this).attr('selected', 'selected');
+                optionFound = true;
+
                 return false;
             }
-            return true;
         });
+
+        return optionFound;
     };
 });
