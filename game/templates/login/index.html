@@ -4,13 +4,12 @@
 {% block body_class %}add-result{% endblock %}
 
 {% block content %}
-  <div class="row">
-    <div class="span6">
-      <h2>Create an account or login</h2>
-      
-      <a href="{% url 'social:social.apps.django_app.views.auth' backend='twitter' %}">
-          <img src="{% static "icons/sign_in_with_twitter.png" %}" alt="{% trans "Sign in with Twitter" %}" />
-      </a>
+    <div class="row">
+        <div class="col-md-6">
+            <h2>Create an account or login</h2>
+            <a href="{% url 'social:social.apps.django_app.views.auth' backend='twitter' %}">
+                <img src="{% static "icons/sign_in_with_twitter.png" %}" alt="{% trans "Sign in with Twitter" %}" />
+            </a>
+        </div>
     </div>
-  </div>
 {% endblock %}

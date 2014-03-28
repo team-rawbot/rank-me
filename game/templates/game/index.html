@@ -9,7 +9,7 @@
     <a href="{% url 'game_add' %}" id="add-result-button" class="btn btn-success">Add a result</a>
 
     <div class="row">
-        <div class="span3">
+        <div class="col-md-3">
             <div class="scores">
                 <h2>Scores</h2>
                 {% if score_board %}
@@ -24,11 +24,10 @@
             </div>
         </div>
 
-        <div id="score-chart-container" class="span9 hidden-phone"
-            data-scores="{{ score_chart_data }}"></div>
+        <div id="score-chart-container" class="col-md-9 hidden-phone" data-scores="{{ score_chart_data }}"></div>
     </div>
     <div class="row">
-        <div class="span12">
+        <div class="col-md-12">
           <div class="latest-results">
               {% if latest_results %}
                   <h2>Last 20 games</h2>

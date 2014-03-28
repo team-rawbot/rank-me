@@ -3,7 +3,7 @@
 {% block content %}
 
     <div class="row">
-        <div class="span6">
+        <div class="col-md-6">
             <div class="team">
                 <h1>{{ team }} ({{ team.score|floatformat }})</h1>
                     <ul class="team-statistics">
@@ -31,7 +31,7 @@
             </div>
         </div>
 
-        <div class="span6">
+        <div class="col-md-6">
             <h2>Head-to-Head</h2>
             <ul class="head2head">
             {% for opponent, results in head2head.iteritems %}
@@ -55,8 +55,5 @@
             {% endfor %}
             </ul>
         </div>
-
-
     </div>
-
 {% endblock %}
