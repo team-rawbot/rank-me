@@ -5,8 +5,8 @@ from django.utils.translation import ugettext as _
 
 
 class GameForm(forms.Form):
-    winner = forms.ModelChoiceField(queryset=get_user_model().objects.all())
-    loser = forms.ModelChoiceField(queryset=get_user_model().objects.all())
+    winner = forms.ModelChoiceField(queryset=get_user_model().objects.all().order_by('username'))
+    loser = forms.ModelChoiceField(queryset=get_user_model().objects.all().order_by('username'))
 
     def clean(self):
         cleaned_data = super(GameForm, self).clean()
