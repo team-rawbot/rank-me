@@ -13,21 +13,15 @@
                     <a class="brand" href="/">Rank-me</a>
                     <ul class="nav pull-right">
                         {% if user and user.is_authenticated %}
-                        <li class="dropdown">
-                            <a class="dropdown-toggle" data-toggle="dropdown" href="#">
-                                <span id="nav-user-name">{{ user.username }}</span>
-                                <b class="caret"></b>
-                            </a>
-                            <ul class="dropdown-menu" role="menu">
-                                <li><a href="{% url 'auth_logout' %}">{% trans "Log out" %}</a></li>
-                            </ul>
-                        </li>
-                        {% else %}
-                        <li>
-                            <a href="{% url 'social:social.apps.django_app.views.auth' backend='twitter' %}">
-                                <img src="{% static "icons/sign_in_with_twitter.png" %}" alt="{% trans "Sign in with Twitter" %}"/>
-                            </a>
-                        </li>
+                          <li class="dropdown">
+                              <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                                  <span id="nav-user-name">{{ user.username }}</span>
+                                  <b class="caret"></b>
+                              </a>
+                              <ul class="dropdown-menu" role="menu">
+                                  <li><a href="{% url 'auth_logout' %}">{% trans "Log out" %}</a></li>
+                              </ul>
+                          </li>
                         {% endif %}
                     </ul>
                 </div>

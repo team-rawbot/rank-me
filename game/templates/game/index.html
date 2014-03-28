@@ -28,19 +28,21 @@
             data-scores="{{ score_chart_data }}"></div>
     </div>
     <div class="row">
-        <div class="latest-results">
-            {% if latest_results %}
-                <h2>Last 20 games</h2>
-                <ul class="games">
-                    {% for result in latest_results %}
-                        <li class="game-item">
-                            <a href="{% url 'game_detail' result.id %}">{{ result }} - {{ result.date }}</a>
-                        </li>
-                    {% endfor %}
-                </ul>
-            {% else %}
-                <p>No result yet.</p>
-            {% endif %}
+        <div class="span12">
+          <div class="latest-results">
+              {% if latest_results %}
+                  <h2>Last 20 games</h2>
+                  <ul class="games">
+                      {% for result in latest_results %}
+                          <li class="game-item">
+                              <a href="{% url 'game_detail' result.id %}">{{ result }} - {{ result.date }}</a>
+                          </li>
+                      {% endfor %}
+                  </ul>
+              {% else %}
+                  <p>No result yet.</p>
+              {% endif %}
+          </div>
         </div>
     </div>
 {% endblock %}
