@@ -6,21 +6,38 @@ from game.models import Game
 
 User = get_user_model()
 
-
 class TestResultsPage(TestCase):
     def test_page_availability(self):
-        client = Client()
+        client = self.client
         response = client.get('/results/')
         self.assertEqual(200, response.status_code)
 
     def test_page_without_results(self):
-        client = Client()
+        rolf = User.objects.create_user('rolf', 'rolf@test.com', 'pass')
+        rolf.save()
+
+        client = self.client
+        client.login(username='rolf', password='pass')
         response = client.get('/results/')
         self.assertContains(response, '<div class="scores"')
         self.assertContains(response, 'No scores registered yet')
         self.assertNotContains(response, '<ul class="score-board"')
         self.assertContains(response, '<div class="latest-results"')
         self.assertContains(response, 'No result yet')
+
+    """
+    User accesses the results page only when logged
+    """
+    def test_login(self):
+        client = self.client
+        response = client.get('/results/')
+        self.assertNotContains(response, '<div class="scores"')
+
+        rolf = User.objects.create_user('rolf', 'rolf@test.com', 'pass')
+        rolf.save()
+        client.login(username='rolf', password='pass')
+        response = client.get('/results/')
+        self.assertContains(response, '<div class="scores"')
 
     def test_page_with_results(self):
         # create 2 users (automatically creates corresponding teams)
@@ -34,7 +51,9 @@ class TestResultsPage(TestCase):
         game = Game.objects.announce(winner=laurent, loser=rolf)
         game.save()
 
-        client = Client()
+        client = self.client
+
+        client.login(username='rolf', password='pass')
         response = client.get('/results/')
 
         self.assertContains(response, '<div class="scores"')
@@ -44,7 +63,6 @@ class TestResultsPage(TestCase):
         self.assertContains(response, '<div class="latest-results"')
         self.assertContains(response, '<ul class="games')
         self.assertContains(response, '<li class="game-item', 1)
-
 
         # specifically test ranking
         self.assertContains(response, '<li class="score-item" title="W: 1, L: 0')
