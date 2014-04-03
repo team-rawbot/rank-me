@@ -1,24 +1,24 @@
 from django.contrib.auth import get_user_model
 from django.test import TestCase, Client
 
+from .factories import UserFactory
+
 User = get_user_model()
 
 class TestAddResultPage(TestCase):
     def test_form_validation(self):
         # create 2 users
-        laurent = User.objects.create_user('laurent', 'laurent@test.com', 'pass')
-        laurent.save()
-        rolf = User.objects.create_user('rolf', 'rolf@test.com', 'pass')
-        rolf.save()
+        laurent = UserFactory()
+        rolf = UserFactory()
 
-        client = Client()
+        client = self.client
 
         # Unauthenticated users should be redirected to the login form to add a
         # result
         response = client.get('/results/add/')
         self.assertEqual(302, response.status_code)
 
-        client.login(username='laurent', password='pass')
+        client.login(username=laurent.username, password='password')
         response = client.get('/results/add/')
         self.assertEqual(200, response.status_code)
         self.assertContains(response, '<form id="add-result')

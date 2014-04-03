@@ -4,6 +4,8 @@ from django.contrib.auth import get_user_model
 from django.test import TestCase, Client
 from game.models import Game
 
+from .factories import UserFactory
+
 User = get_user_model()
 
 class TestResultsPage(TestCase):
@@ -13,12 +15,12 @@ class TestResultsPage(TestCase):
         self.assertEqual(200, response.status_code)
 
     def test_page_without_results(self):
-        rolf = User.objects.create_user('rolf', 'rolf@test.com', 'pass')
-        rolf.save()
+        john = UserFactory()
 
         client = self.client
-        client.login(username='rolf', password='pass')
+        client.login(username=john.username, password='password')
         response = client.get('/results/')
+
         self.assertContains(response, '<div class="scores"')
         self.assertContains(response, 'No scores registered yet')
         self.assertNotContains(response, '<ul class="score-board"')
@@ -33,19 +35,16 @@ class TestResultsPage(TestCase):
         response = client.get('/results/')
         self.assertNotContains(response, '<div class="scores"')
 
-        rolf = User.objects.create_user('rolf', 'rolf@test.com', 'pass')
-        rolf.save()
-        client.login(username='rolf', password='pass')
+        john = UserFactory()
+
+        client.login(username=john.username, password='password')
         response = client.get('/results/')
         self.assertContains(response, '<div class="scores"')
 
     def test_page_with_results(self):
         # create 2 users (automatically creates corresponding teams)
-        laurent = User.objects.create_user('laurent', 'laurent@test.com', 'pass')
-        laurent.save()
-
-        rolf = User.objects.create_user('rolf', 'rolf@test.com', 'pass')
-        rolf.save()
+        laurent = UserFactory()
+        rolf = UserFactory()
 
         # create 1 game
         game = Game.objects.announce(winner=laurent, loser=rolf)
@@ -53,7 +52,7 @@ class TestResultsPage(TestCase):
 
         client = self.client
 
-        client.login(username='rolf', password='pass')
+        client.login(username=rolf.username, password='password')
         response = client.get('/results/')
 
         self.assertContains(response, '<div class="scores"')
