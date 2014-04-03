@@ -10,7 +10,7 @@ from django.db import models
 from django.utils import timezone
 from django.db.models import Q
 from trueskill import Rating, rate_1vs1
-
+from slacker import Slacker
 
 class TeamManager(models.Manager):
     def get_score_board(self):
@@ -153,6 +153,10 @@ class GameManager(models.Manager):
         """
         winner, created = Team.objects.get_or_create_from_players(winner)
         loser, created = Team.objects.get_or_create_from_players(loser)
+
+        # Announce result on slack channel #rankme
+        slack = Slacker('xoxp-2194754682-2214440813-2267852845-5e27aa')
+        slack.chat.post_message('#rankme', "test")
 
         return self.create(winner=winner, loser=loser)
 
