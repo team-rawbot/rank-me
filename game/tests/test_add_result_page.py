@@ -1,9 +1,10 @@
 from django.contrib.auth import get_user_model
-from django.test import TestCase, Client
+from django.test import TestCase
 
 from .factories import UserFactory
 
 User = get_user_model()
+
 
 class TestAddResultPage(TestCase):
     def test_form_validation(self):
@@ -11,33 +12,31 @@ class TestAddResultPage(TestCase):
         laurent = UserFactory()
         rolf = UserFactory()
 
-        client = self.client
-
         # Unauthenticated users should be redirected to the login form to add a
         # result
-        response = client.get('/results/add/')
+        response = self.client.get('/results/add/')
         self.assertEqual(302, response.status_code)
 
-        client.login(username=laurent.username, password='password')
-        response = client.get('/results/add/')
+        self.client.login(username=laurent.username, password='password')
+        response = self.client.get('/results/add/')
         self.assertEqual(200, response.status_code)
         self.assertContains(response, '<form id="add-result')
 
         # test form validation
 
         # no user is specified
-        response = client.post('/results/add/', {})
+        response = self.client.post('/results/add/', {})
         self.assertFormError(response, 'form', 'loser', 'This field is required.')
         self.assertFormError(response, 'form', 'winner', 'This field is required.')
 
         # only winner is specified
-        response = client.post('/results/add/', {'winner': laurent.id})
+        response = self.client.post('/results/add/', {'winner': laurent.id})
         self.assertFormError(response, 'form', 'loser', 'This field is required.')
 
         # winner and loser are the same user
-        response = client.post('/results/add/', {'winner': laurent.id, 'loser': laurent.id})
+        response = self.client.post('/results/add/', {'winner': laurent.id, 'loser': laurent.id})
         self.assertFormError(response, 'form', None, 'Winner and loser can\'t be the same player!')
 
         # no error should be redirected to results page
-        response = client.post('/results/add/', {'winner': laurent.id, 'loser': rolf.id}, follow=True)
+        response = self.client.post('/results/add/', {'winner': laurent.id, 'loser': rolf.id}, follow=True)
         self.assertRedirects(response, '/results/', 302, 200)

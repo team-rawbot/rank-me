@@ -1,25 +1,24 @@
 # coding=UTF-8
 
 from django.contrib.auth import get_user_model
-from django.test import TestCase, Client
+from django.test import TestCase
 from game.models import Game
 
 from .factories import UserFactory
 
 User = get_user_model()
 
+
 class TestResultsPage(TestCase):
     def test_page_availability(self):
-        client = self.client
-        response = client.get('/results/')
+        response = self.client.get('/results/')
         self.assertEqual(200, response.status_code)
 
     def test_page_without_results(self):
         john = UserFactory()
 
-        client = self.client
-        client.login(username=john.username, password='password')
-        response = client.get('/results/')
+        self.client.login(username=john.username, password='password')
+        response = self.client.get('/results/')
 
         self.assertContains(response, '<div class="scores"')
         self.assertContains(response, 'No scores registered yet')
@@ -31,14 +30,13 @@ class TestResultsPage(TestCase):
     User accesses the results page only when logged
     """
     def test_login(self):
-        client = self.client
-        response = client.get('/results/')
+        response = self.client.get('/results/')
         self.assertNotContains(response, '<div class="scores"')
 
         john = UserFactory()
 
-        client.login(username=john.username, password='password')
-        response = client.get('/results/')
+        self.client.login(username=john.username, password='password')
+        response = self.client.get('/results/')
         self.assertContains(response, '<div class="scores"')
 
     def test_page_with_results(self):
@@ -50,10 +48,8 @@ class TestResultsPage(TestCase):
         game = Game.objects.announce(winner=laurent, loser=rolf)
         game.save()
 
-        client = self.client
-
-        client.login(username=rolf.username, password='password')
-        response = client.get('/results/')
+        self.client.login(username=rolf.username, password='password')
+        response = self.client.get('/results/')
 
         self.assertContains(response, '<div class="scores"')
         self.assertNotContains(response, 'No scores registered yet')
@@ -70,6 +66,6 @@ class TestResultsPage(TestCase):
         # create a 2nd game (as sometimes Laurent wins)
         game = Game.objects.announce(winner=laurent, loser=rolf)
 
-        response = client.get('/results/')
+        response = self.client.get('/results/')
         self.assertContains(response, '<li class="score-item" title="W: 2, L: 0')
         self.assertContains(response, '<li class="score-item" title="W: 0, L: 2')
