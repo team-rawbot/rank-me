@@ -45,6 +45,12 @@ Compute LESS with grunt::
 
     # keep looking at changes and recompile when needed
     grunt
+    
+Deployment
+==========
+
+* Create a git tag
+* fab deploy:{{tag}}
 
 Available settings
 ==================
