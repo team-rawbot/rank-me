@@ -63,6 +63,7 @@ setting in the file).
 * STATIC_URL
 * SOCIAL_AUTH_TWITTER_KEY
 * SOCIAL_AUTH_TWITTER_SECRET
+* SLACK_API_TOKEN
 
 Contribute
 ==========
