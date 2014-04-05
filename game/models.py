@@ -221,7 +221,8 @@ class Game(models.Model):
                 team_ranking_changed.send(
                     sender=self,
                     team=team,
-                    old_ranking=old_rankings[team],
+                    old_ranking=(old_rankings[team]
+                                 if team in old_rankings else None),
                     new_ranking=new_rankings[team]
                 )
 
