@@ -122,6 +122,7 @@ INSTALLED_APPS = (
     'south',
     'game',
     'user',
+    'slack',
     'django.contrib.admin',
     'django.contrib.admindocs',
     'social.apps.django_app.default',
@@ -194,3 +195,5 @@ AUTH_USER_MODEL = 'user.User'
 
 GAME_INITIAL_MU = 25
 GAME_INITIAL_SIGMA = 8.333
+
+SLACK_CHANNEL = '#rankme'
