@@ -1,13 +1,7 @@
-from django.db.models.signals import post_save
-from django.dispatch import receiver
-
-from .models import Game
+from django.dispatch import Signal
 
 
-@receiver(post_save, sender=Game)
-def update_score(sender, **kwargs):
-    if not kwargs['created']:
-        return
-
-    game = kwargs['instance']
-    game.update_score()
+game_played = Signal()
+team_ranking_changed = Signal(providing_args=[
+    'team', 'old_ranking', 'new_ranking'
+])

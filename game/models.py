@@ -10,12 +10,19 @@ from django.db import models
 from django.utils import timezone
 from django.db.models import Q
 from trueskill import Rating, rate_1vs1
-from slacker import Slacker
+
+from .signals import game_played, team_ranking_changed
 
 class TeamManager(models.Manager):
     def get_score_board(self):
         return (self.get_query_set().order_by('-score')
                 .prefetch_related('users'))
+
+    def get_ranking_by_team(self):
+        score_board = self.get_score_board()
+        return dict(zip(
+            score_board, range(1, len(score_board) + 1)
+        ))
 
     def get_or_create_from_players(self, player_ids):
         """
@@ -154,10 +161,6 @@ class GameManager(models.Manager):
         winner, created = Team.objects.get_or_create_from_players(winner)
         loser, created = Team.objects.get_or_create_from_players(loser)
 
-        # Announce result on slack channel #rankme
-        slack = Slacker('xoxp-2194754682-2214440813-2267852845-5e27aa')
-        slack.chat.post_message('#rankme', "test")
-
         return self.create(winner=winner, loser=loser)
 
 
@@ -181,9 +184,20 @@ class Game(models.Model):
             self.loser
         )
 
+    def save(self, *args, **kwargs):
+        created = self.pk is None
+
+        super(Game, self).save(*args, **kwargs)
+
+        if created:
+            game_played.send(sender=self)
+            self.update_score()
+
     def update_score(self):
         winner = self.winner
         loser = self.loser
+
+        old_rankings = Team.objects.get_ranking_by_team()
 
         winner_new_score, loser_new_score = rate_1vs1(
             Rating(winner.score, winner.stdev),
@@ -199,6 +213,17 @@ class Game(models.Model):
         loser.stdev = loser_new_score.sigma
         loser.defeats = loser.defeats + 1
         loser.save()
+
+        new_rankings = Team.objects.get_ranking_by_team()
+
+        for team in [winner, loser]:
+            if old_rankings[team] != new_rankings[team]:
+                team_ranking_changed.send(
+                    sender=self,
+                    team=team,
+                    old_ranking=old_rankings[team],
+                    new_ranking=new_rankings[team]
+                )
 
         HistoricalScore.objects.create(
             game=self,
