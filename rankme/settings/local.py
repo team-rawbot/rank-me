@@ -41,5 +41,5 @@ LOGGING = {
     }
 }
 
-SLACK_API_TOKEN = 'notsotoken'
+SLACK_API_TOKEN = get_env_variable('SLACK_API_TOKEN')
 SLACK_DEBUG = True
