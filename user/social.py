@@ -1,6 +1,4 @@
 def user_details(strategy, details, response, user=None, *args, **kwargs):
-    details['avatar'] = response['profile_image_url']
-
-    return {
-        'details': details
-    }
+    user_profile = user.get_profile()
+    user_profile.avatar = response['profile_image_url']
+    user_profile.save()
