@@ -299,3 +299,16 @@ class HistoricalScore(models.Model):
     loser_score = models.FloatField('Loser current score')
 
     objects = HistoricalScoreManager()
+
+
+class CompetitionTeam(models.Model):
+    competition = models.ForeignKey('Competition')
+    team = models.ForeignKey(Team)
+    score = models.FloatField('skills', default=settings.GAME_INITIAL_MU)
+    stdev = models.FloatField('standard deviation',
+                              default=settings.GAME_INITIAL_SIGMA)
+
+
+class Competition(models.Model):
+    teams = models.ManyToManyField(Team, through=CompetitionTeam)
+    games = models.ManyToManyField(Game)
