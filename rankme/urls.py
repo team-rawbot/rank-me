@@ -18,6 +18,7 @@ urlpatterns = patterns('',
     url(r'^$', views.index, name='homepage'),
     url(r'^results/', include('game.urls')),
     url(r'^admin/', include(admin.site.urls)),
+    url(r'^competition/$', views.create_competition, name='create_competition'),
 
     url('', include('social.apps.django_app.urls', namespace='social')),
     url(r'^logout/$', 'django.contrib.auth.views.logout', {

@@ -1,8 +1,8 @@
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import get_object_or_404, render, redirect
 
-from .forms import GameForm
-from .models import Game, Team, HistoricalScore
+from .forms import GameForm, CompetitionForm
+from .models import Game, Team, HistoricalScore, Competition
 
 
 def index(request):
@@ -26,12 +26,14 @@ def index(request):
         return render(request, 'user/login.html')
 
 
+@login_required
 def detail(request, game_id):
     game = get_object_or_404(Game, pk=game_id)
 
     return render(request, 'game/detail.html', {'game': game})
 
 
+@login_required
 def team(request, team_id):
     team = get_object_or_404(Team, pk=team_id)
     head2head = team.get_head2head()
@@ -46,6 +48,24 @@ def team(request, team_id):
     }
 
     return render(request, 'game/team.html', context)
+
+
+@login_required
+def create_competition(request):
+    if request.method == 'POST':
+        form = CompetitionForm(request.POST)
+
+        if form.is_valid():
+            Competition.objects.create(
+                name = form.cleaned_data['name'],
+                description = form.cleaned_data['description'],
+                start_date = form.cleaned_data['start_date'],
+                end_date = form.cleaned_data['end_date'],
+            )
+
+    form = CompetitionForm()
+
+    return render(request, 'competition/new.html', {'form': form})
 
 
 @login_required

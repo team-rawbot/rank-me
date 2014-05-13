@@ -1,8 +1,8 @@
+import datetime
 from django import forms
 from django.contrib.auth import get_user_model
 from django.core.exceptions import ValidationError
 from django.utils.translation import ugettext as _
-
 
 class GameForm(forms.Form):
     winner = forms.ModelChoiceField(queryset=get_user_model().objects.all().order_by('username'))
@@ -20,3 +20,9 @@ class GameForm(forms.Form):
             )
 
         return cleaned_data
+
+class CompetitionForm(forms.Form):
+    name = forms.CharField(label='Name')
+    description = forms.CharField(label='Description')
+    start_date = forms.DateField(initial=datetime.date.today)
+    end_date = forms.DateField(initial=datetime.date.today)
