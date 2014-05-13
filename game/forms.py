@@ -26,3 +26,12 @@ class CompetitionForm(forms.Form):
     description = forms.CharField(label='Description')
     start_date = forms.DateField(initial=datetime.date.today)
     end_date = forms.DateField(initial=datetime.date.today)
+
+    def clean(self):
+        cleaned_data = super(CompetitionForm, self).clean()
+        name = cleaned_data.get('name', None)
+
+        if name is None:
+            raise ValidationError(_("Name is mandatory"))
+
+        return cleaned_data

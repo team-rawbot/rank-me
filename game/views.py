@@ -63,7 +63,9 @@ def create_competition(request):
                 end_date = form.cleaned_data['end_date'],
             )
 
-    form = CompetitionForm()
+            return redirect('game_index')
+    else:
+        form = CompetitionForm()
 
     return render(request, 'competition/new.html', {'form': form})
 
