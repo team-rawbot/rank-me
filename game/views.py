@@ -19,6 +19,7 @@ def index(request):
             'latest_results': latest_results,
             'score_board': score_board,
             'score_chart_data': score_chart_data,
+            'competitions': Competition.objects.all(),
         }
 
         return render(request, 'game/index.html', context)
@@ -69,6 +70,10 @@ def create_competition(request):
 
     return render(request, 'competition/new.html', {'form': form})
 
+
+@login_required
+def view_competition(request, competition_id):
+    pass
 
 @login_required
 def add(request):
