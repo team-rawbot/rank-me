@@ -4,11 +4,12 @@ from django.shortcuts import get_object_or_404, render, redirect
 from .forms import GameForm
 from .models import Game, Team, HistoricalScore
 
-"""
-User logged in => homepage
-User not logged => login page
-"""
+
 def index(request):
+    """
+    User logged in => homepage
+    User not logged => login page
+    """
     if request.user.is_authenticated():
         latest_results = Game.objects.get_latest()
         score_board = Team.objects.get_score_board()
@@ -22,8 +23,7 @@ def index(request):
 
         return render(request, 'game/index.html', context)
     else:
-        context = {}
-        return render(request, 'login/index.html', context)
+        return render(request, 'user/login.html')
 
 
 def detail(request, game_id):
