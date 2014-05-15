@@ -16,6 +16,7 @@
                           <li class="dropdown">
                               <a class="dropdown-toggle" data-toggle="dropdown" href="#">
                                   <span id="nav-user-name">{{ user.username }}</span>
+                                  {% include 'game/_player_avatar.html' with user=user %}
                                   <b class="caret"></b>
                               </a>
                               <ul class="dropdown-menu" role="menu">
