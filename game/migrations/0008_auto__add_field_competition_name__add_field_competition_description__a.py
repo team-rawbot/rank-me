@@ -28,6 +28,10 @@ class Migration(SchemaMigration):
                       self.gf('django.db.models.fields.DateTimeField')(null=True),
                       keep_default=False)
 
+        orm['game.Competition'].objects.filter(pk=1).update(
+            name='Default competition'
+        )
+
 
     def backwards(self, orm):
         # Deleting field 'Competition.name'

@@ -35,7 +35,6 @@ class Migration(SchemaMigration):
         db.create_unique(m2m_table_name, ['competition_id', 'game_id'])
 
         default_competition = orm['game.Competition']()
-        default_competition.name = 'Default competition'
         default_competition.save()
 
         for team in orm['game.Team'].objects.all():
