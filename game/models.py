@@ -134,6 +134,37 @@ class Team(models.Model):
             return 0
 
 
+    def get_stats_per_weeks(self):
+        """
+        Return games weekly statistics with the current team match number, and also as
+         an average for the whole teams that have been playing that week
+        """
+        games_per_weeks = {}
+        for game in Game.objects.all():
+            week = str(game.date.year) + '.' + str(game.date.isocalendar()[1])
+            if not week in games_per_weeks:
+                games_per_weeks[week] = []
+            games_per_weeks[week].append(game)
+
+        stats_per_weeks = {}
+        for week, games in games_per_weeks.items():
+            stats_per_weeks[week] = {
+                'total_count': 0,
+                'team_count': 0
+            }
+            players = {}
+            for game in games:
+                stats_per_weeks[week]['total_count'] +=1
+                players[game.winner] = True
+                players[game.loser] = True
+                if (game.winner == self or game.loser == self):
+                    stats_per_weeks[week]['team_count'] +=1
+            stats_per_weeks[week]['player_count'] = len(players)
+            stats_per_weeks[week]['avg_game_per_team'] = float(stats_per_weeks[week]['total_count']*2) / stats_per_weeks[week]['player_count']
+
+        return sorted(stats_per_weeks.iteritems())
+
+
 class GameManager(models.Manager):
     def get_latest(self):
         return (self.get_query_set()

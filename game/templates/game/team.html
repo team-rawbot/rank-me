@@ -6,6 +6,29 @@
         <div class="span6">
             <div class="team">
                 <h1>{{ team }} ({{ team.score|floatformat }})</h1>
+
+                <h2>Game per weeks</h2>
+                <table id="game-per-weeks" border="1">
+                    <thead>
+                        <tr>
+                            <td>Week</td>
+                            <td>Nb game played by {{ team.get_name }}</td>
+                            <td>Total game</td>
+                            <td>All team avg</td>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for week, stats in stats_per_week %}
+                            <tr>
+                                <td>{{ week }}</td>
+                                <td>{{ stats.team_count }}</td>
+                                <td>{{ stats.total_count }}</td>
+                                <td>{{ stats.avg_game_per_team }}</td></tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+
+                <h2>Statistics</h2>
                     <ul class="team-statistics">
                         <li><strong>W</strong>: {{ team.wins }}</li>
                         <li><strong>L</strong>: {{ team.defeats }}</li>

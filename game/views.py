@@ -34,15 +34,13 @@ def detail(request, game_id):
 
 def team(request, team_id):
     team = get_object_or_404(Team, pk=team_id)
-    head2head = team.get_head2head()
-    last_results = team.get_recent_stats(10)
-    longest_streak = team.get_longest_streak()
 
     context = {
         'team': team,
-        'head2head': head2head,
-        'last_results': last_results,
-        'longest_streak': longest_streak,
+        'head2head': team.get_head2head(),
+        'last_results': team.get_recent_stats(10),
+        'longest_streak': team.get_longest_streak(),
+        'stats_per_week' : team.get_stats_per_weeks()
     }
 
     return render(request, 'game/team.html', context)
