@@ -190,7 +190,7 @@ SOCIAL_AUTH_PIPELINE = (
 )
 LOGIN_URL = '/login/twitter/'
 
-AUTH_USER_MODEL = 'user.User'
-
 GAME_INITIAL_MU = 25
 GAME_INITIAL_SIGMA = 8.333
+
+AUTH_PROFILE_MODULE = 'user.UserProfile'
