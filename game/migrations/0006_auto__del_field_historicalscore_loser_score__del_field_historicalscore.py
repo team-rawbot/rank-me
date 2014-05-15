@@ -6,6 +6,7 @@ from django.db import models
 
 
 class Migration(SchemaMigration):
+    no_dry_run = True
 
     def forwards(self, orm):
         orm['game.HistoricalScore'].objects.all().delete()
@@ -39,6 +40,9 @@ class Migration(SchemaMigration):
         db.alter_column(u'game_historicalscore', 'game_id', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['game.Game']))
         # Deleting field 'Team.wins'
         db.delete_column(u'game_team', 'wins')
+
+        # Deleting field 'Team.wins'
+        db.delete_column(u'game_team', 'defeats')
 
         # Deleting field 'Team.score'
         db.delete_column(u'game_team', 'score')
@@ -75,6 +79,11 @@ class Migration(SchemaMigration):
 
         # Adding field 'Team.wins'
         db.add_column(u'game_team', 'wins',
+                      self.gf('django.db.models.fields.IntegerField')(default=0),
+                      keep_default=False)
+
+        # Adding field 'Team.defeats'
+        db.add_column(u'game_team', 'defeats',
                       self.gf('django.db.models.fields.IntegerField')(default=0),
                       keep_default=False)
 
