@@ -15,7 +15,13 @@
                 {% if score_board %}
                     <ol class="score-board">
                         {% for team in score_board %}
-                            <li class="score-item" title="W: {{ team.wins }}, L: {{ team.defeats }}, σ: {{ team.stdev|floatformat:"5" }}"><a href="{% url 'team_detail' team.id %}"><strong>{{ team }}</strong> ({{ team.score|floatformat }})</a></li>
+                            <li class="score-item" title="W: {{ team.wins }}, L: {{ team.defeats }}, σ: {{ team.stdev|floatformat:"5" }}">
+                                <a href="{% url 'team_detail' team.id %}">
+                                    {% for player in team.users.all %}
+                                        {% include 'game/_player_avatar.html' with user=player %}
+                                    {% endfor %}
+                                    <strong>{{ team }}</strong> ({{ team.score|floatformat }})</a>
+                            </li>
                         {% endfor %}
                     </ol>
                 {% else %}
@@ -33,9 +39,9 @@
               {% if latest_results %}
                   <h2>Last 20 games</h2>
                   <ul class="games">
-                      {% for result in latest_results %}
+                      {% for game in latest_results %}
                           <li class="game-item">
-                              <a href="{% url 'game_detail' result.id %}">{{ result }} - {{ result.date }}</a>
+                              {% include 'game/_score_detail.html' %}
                           </li>
                       {% endfor %}
                   </ul>

@@ -2,7 +2,6 @@
 
 {% block content %}
 
-<p><span class="winner">{{ game.winner }}</span> beats <span class="loser">{{ game.loser }}</span></p>
-<p>{{ game.date }}</p>
+{% include 'game/_score_detail.html' %}
 
 {% endblock %}
