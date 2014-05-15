@@ -2,7 +2,7 @@ from django.contrib.auth import get_user_model
 from django.core.urlresolvers import reverse
 from django.test import TestCase
 
-from game.models import Game
+from game.models import Competition, Game
 
 from .factories import UserFactory
 
@@ -10,6 +10,9 @@ User = get_user_model()
 
 
 class TestResultsTeamPage(TestCase):
+    def setUp(self):
+        self.default_competition = Competition.objects.get_default_competition()
+
     def test_page_unavailability(self):
         response = self.client.get(
             reverse('team_detail', kwargs={'team_id': 1})
@@ -22,7 +25,9 @@ class TestResultsTeamPage(TestCase):
         christoph = UserFactory()
 
         # create 1 game
-        game = Game.objects.announce(winner=sylvain, loser=christoph)
+        game = Game.objects.announce(
+            sylvain, christoph, self.default_competition
+        )
 
         response = self.client.get(
             reverse('team_detail', kwargs={'team_id': game.winner_id})
@@ -35,9 +40,11 @@ class TestResultsTeamPage(TestCase):
         christoph = UserFactory()
 
         # create 3 game
-        Game.objects.announce(winner=sylvain, loser=christoph)
-        Game.objects.announce(winner=sylvain, loser=christoph)
-        game = Game.objects.announce(winner=christoph, loser=sylvain)
+        Game.objects.announce(sylvain, christoph, self.default_competition)
+        Game.objects.announce(sylvain, christoph, self.default_competition)
+        game = Game.objects.announce(
+            christoph, sylvain, self.default_competition
+        )
 
         christoph_team_id = game.winner_id
         sylvain_team_id = game.loser_id

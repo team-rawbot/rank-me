@@ -2,7 +2,7 @@
 
 from django.contrib.auth import get_user_model
 from django.test import TestCase
-from game.models import Game
+from game.models import Competition, Game
 
 from .factories import UserFactory
 
@@ -40,12 +40,14 @@ class TestResultsPage(TestCase):
         self.assertContains(response, '<div class="scores"')
 
     def test_page_with_results(self):
+        default_competition = Competition.objects.get_default_competition()
+
         # create 2 users (automatically creates corresponding teams)
         laurent = UserFactory()
         rolf = UserFactory()
 
         # create 1 game
-        game = Game.objects.announce(winner=laurent, loser=rolf)
+        game = Game.objects.announce(laurent, rolf, default_competition)
         game.save()
 
         self.client.login(username=rolf.username, password='password')
@@ -58,14 +60,3 @@ class TestResultsPage(TestCase):
         self.assertContains(response, '<div class="latest-results"')
         self.assertContains(response, '<ul class="games')
         self.assertContains(response, '<li class="game-item', 1)
-
-        # specifically test ranking
-        self.assertContains(response, '<li class="score-item" title="W: 1, L: 0')
-        self.assertContains(response, '<li class="score-item" title="W: 0, L: 1')
-
-        # create a 2nd game (as sometimes Laurent wins)
-        game = Game.objects.announce(winner=laurent, loser=rolf)
-
-        response = self.client.get('/results/')
-        self.assertContains(response, '<li class="score-item" title="W: 2, L: 0')
-        self.assertContains(response, '<li class="score-item" title="W: 0, L: 2')

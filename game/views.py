@@ -2,7 +2,7 @@ from django.contrib.auth.decorators import login_required
 from django.shortcuts import get_object_or_404, render, redirect
 
 from .forms import GameForm, CompetitionForm
-from .models import Game, Team, HistoricalScore, Competition
+from .models import Competition, Game, HistoricalScore, Score, Team
 
 
 def index(request):
@@ -11,9 +11,13 @@ def index(request):
     User not logged => login page
     """
     if request.user.is_authenticated():
-        latest_results = Game.objects.get_latest()
-        score_board = Team.objects.get_score_board()
-        score_chart_data = HistoricalScore.objects.get_latest_results_by_team(50, True)
+        default_competition = Competition.objects.get_default_competition()
+
+        latest_results = Game.objects.get_latest(default_competition)
+        score_board = Score.objects.get_score_board(default_competition)
+        score_chart_data = HistoricalScore.objects.get_latest_results_by_team(
+            50, default_competition, True
+        )
 
         context = {
             'latest_results': latest_results,
@@ -36,10 +40,12 @@ def detail(request, game_id):
 
 @login_required
 def team(request, team_id):
+    default_competition = Competition.objects.get_default_competition()
+
     team = get_object_or_404(Team, pk=team_id)
-    head2head = team.get_head2head()
+    head2head = team.get_head2head(default_competition)
     last_results = team.get_recent_stats(10)
-    longest_streak = team.get_longest_streak()
+    longest_streak = team.get_longest_streak(default_competition)
 
     context = {
         'team': team,
@@ -83,7 +89,8 @@ def add(request):
         if form.is_valid():
             Game.objects.announce(
                 form.cleaned_data['winner'],
-                form.cleaned_data['loser']
+                form.cleaned_data['loser'],
+                Competition.objects.get_default_competition()
             )
 
             return redirect('game_index')

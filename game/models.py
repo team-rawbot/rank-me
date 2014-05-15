@@ -13,10 +13,6 @@ from trueskill import Rating, rate_1vs1
 
 
 class TeamManager(models.Manager):
-    def get_score_board(self):
-        return (self.get_query_set().order_by('-score')
-                .prefetch_related('users'))
-
     def get_or_create_from_players(self, player_ids):
         """
         Return the team associated to the given players, creating it first if
@@ -53,11 +49,6 @@ class TeamManager(models.Manager):
 class Team(models.Model):
     users = models.ManyToManyField(settings.AUTH_USER_MODEL,
                                    related_name='teams')
-    score = models.FloatField('skills', default=settings.GAME_INITIAL_MU)
-    stdev = models.FloatField('standard deviation',
-                              default=settings.GAME_INITIAL_SIGMA)
-    wins = models.IntegerField(default=0)
-    defeats = models.IntegerField(default=0)
 
     objects = TeamManager()
 
@@ -67,14 +58,20 @@ class Team(models.Model):
     def get_name(self):
         return u" / ".join([user.username for user in self.users.all()])
 
-    def get_games(self):
+    def get_games(self, competition):
         """
-        Fetch the list of games played by the team.
+        Fetch the list of games played by the team, optionally filtered by
+        competition.
         """
-        return (Game.objects.filter(Q(winner_id=self.id) | Q(loser_id=self.id))
-                .order_by('-date').select_related('winner', 'loser'))
+        games = Game.objects.filter(
+            Q(winner_id=self.id) | Q(loser_id=self.id)
+        ).filter(competitions=competition).order_by('-date').select_related(
+            'winner', 'loser'
+        )
 
-    def get_head2head(self):
+        return games
+
+    def get_head2head(self, competition):
         """
         Compute the amount of wins and defeats against all opponents the team
         played against. The returned value is an OrderedDict since the teams
@@ -82,7 +79,7 @@ class Team(models.Model):
         """
         head2head = {}
 
-        games = self.get_games()
+        games = self.get_games(competition)
 
         for game in games:
             opponent = game.get_opponent(self)
@@ -101,15 +98,16 @@ class Team(models.Model):
             head2head[opponent]['games'].append(game)
 
         return OrderedDict(
-            sorted(head2head.items(), key=lambda t: t[0].score, reverse=True)
+            sorted(head2head.items(), key=lambda t:
+                t[0].scores.filter(competition=competition), reverse=True)
         )
 
-    def get_recent_stats(self, count=10):
+    def get_recent_stats(self, competition, count=10):
         """
         Return a dictionary with the latest ``count`` played games and the
         number of wins and defeats.
         """
-        games = self.get_games()[:count]
+        games = self.get_games(competition)[:count]
         last_games = {
             'wins': 0,
             'defeats': 0,
@@ -122,8 +120,8 @@ class Team(models.Model):
 
         return last_games
 
-    def get_longest_streak(self):
-        games = self.get_games()
+    def get_longest_streak(self, competition):
+        games = self.get_games(competition)
         # Create a list of booleans indicating won matches
         wins_defeats_list = [game.winner_id == self.id for game in games]
 
@@ -133,15 +131,38 @@ class Team(models.Model):
         else:
             return 0
 
+    def get_or_create_score(self, competition):
+        try:
+            score = Score.objects.get(
+                team=self,
+                competition=competition
+            )
+        except Score.DoesNotExist:
+            score = Score.objects.create(
+                team=self,
+                competition=competition,
+                score=settings.GAME_INITIAL_MU,
+                stdev=settings.GAME_INITIAL_SIGMA
+            )
+
+        return score
+
 
 class GameManager(models.Manager):
-    def get_latest(self):
-        return (self.get_query_set()
-                .select_related('winner', 'loser')
-                .prefetch_related('winner__users', 'loser__users')
-                .order_by('-date')[:20])
+    def get_latest(self, competition=None):
+        games = (self.get_query_set()
+                 .select_related('winner', 'loser')
+                 .prefetch_related('winner__users', 'loser__users')
+                 .order_by('-date'))
 
-    def announce(self, winner, loser):
+        if competition is not None:
+            games = games.filter(competitions=competition)
+
+        games = games[:20]
+
+        return games
+
+    def announce(self, winner, loser, competition):
         """
         Announce the results of a new game.
 
@@ -154,7 +175,12 @@ class GameManager(models.Manager):
         winner, created = Team.objects.get_or_create_from_players(winner)
         loser, created = Team.objects.get_or_create_from_players(loser)
 
-        return self.create(winner=winner, loser=loser)
+        game = self.create(winner=winner, loser=loser)
+        game.competitions.add(competition)
+
+        game.update_score()
+
+        return game
 
 
 class Game(models.Model):
@@ -181,26 +207,36 @@ class Game(models.Model):
         winner = self.winner
         loser = self.loser
 
-        winner_new_score, loser_new_score = rate_1vs1(
-            Rating(winner.score, winner.stdev),
-            Rating(loser.score, loser.stdev)
-        )
+        for competition in self.competitions.all():
+            winner_score = winner.get_or_create_score(competition)
+            loser_score = loser.get_or_create_score(competition)
 
-        winner.score = winner_new_score.mu
-        winner.stdev = winner_new_score.sigma
-        winner.wins = winner.wins + 1
-        winner.save()
+            winner_new_score, loser_new_score = rate_1vs1(
+                Rating(winner_score.score, winner_score.stdev),
+                Rating(loser_score.score, loser_score.stdev)
+            )
 
-        loser.score = loser_new_score.mu
-        loser.stdev = loser_new_score.sigma
-        loser.defeats = loser.defeats + 1
-        loser.save()
+            winner_score.score = winner_new_score.mu
+            winner_score.stdev = winner_new_score.sigma
+            winner_score.save()
 
-        HistoricalScore.objects.create(
-            game=self,
-            winner_score=winner.score,
-            loser_score=loser.score,
-        )
+            loser_score.score = loser_new_score.mu
+            loser_score.stdev = loser_new_score.sigma
+            loser_score.save()
+
+            HistoricalScore.objects.create(
+                game=self,
+                score=winner_score.score,
+                team=winner,
+                competition=competition
+            )
+
+            HistoricalScore.objects.create(
+                game=self,
+                score=loser_score.score,
+                team=loser,
+                competition=competition
+            )
 
     def get_opponent(self, team):
         """
@@ -210,12 +246,14 @@ class Game(models.Model):
 
 
 class HistoricalScoreManager(models.Manager):
-    def get_latest(self, nb_games):
+    def get_latest(self, nb_games, competition):
         return (self.get_queryset()
                 .select_related('game', 'game__winner', 'game__loser')
+                .filter(game__competitions=competition)
                 .order_by('-id')[:nb_games])
 
-    def get_latest_results_by_team(self, nb_games, return_json=False):
+    def get_latest_results_by_team(self, nb_games, competition,
+                                   return_json=False):
         """
         Get nb_games latest scores for each team
 
@@ -225,31 +263,32 @@ class HistoricalScoreManager(models.Manager):
 
         {team_a: [{skill: xx, played: xx, game: game_id}, ...]}
         """
+        games = (Game.objects.filter(competitions=competition)
+                 .order_by('-id')
+                 .prefetch_related('historical_scores')[:nb_games])
+        teams = Team.objects.all().select_related('winner', 'loser')
         scores_by_team = {}
 
-        teams = Team.objects.all().select_related('winner', 'loser')
-
-        scores = self.get_latest(nb_games)
-        scores = sorted(scores, key=lambda score: score.id)
-        for score in scores:
+        for game in reversed(games):
             all_skills_by_game = {}
+
             for team in teams:
                 team_scores = scores_by_team.get(team, [])
+                result = {'game': game.id}
 
-                result = {'game': score.game_id}
+                if team.id in [game.winner_id, game.loser_id]:
+                    result['skill'] = game.historical_scores.get(
+                        team=team, competition=competition
+                    ).score
 
-                if team.id == score.game.winner_id:
-                    result['skill'] = score.winner_score
-                    result['win'] = True
-                    result['played'] = True
-                elif team.id == score.game.loser_id:
-                    result['skill'] = score.loser_score
-                    result['win'] = False
+                    result['win'] = team.id == game.winner_id
                     result['played'] = True
                 else:
                     result['played'] = False
                     if len(team_scores) == 0:
-                        result['skill'] = self.get_last_score_for_team(team, scores[0].game)
+                        result['skill'] = self.get_last_score_for_team(
+                            team, games[0], competition
+                        )
                     else:
                         result['skill'] = team_scores[-1]['skill']
 
@@ -271,7 +310,7 @@ class HistoricalScoreManager(models.Manager):
 
         return scores_by_team
 
-    def get_last_score_for_team(self, team, game):
+    def get_last_score_for_team(self, team, game, competition):
         """
         Returns the latest skill before game :game for team :team
 
@@ -279,10 +318,11 @@ class HistoricalScoreManager(models.Manager):
         :param game:Game
         :return:float skill
         """
-        historical_score_id = game.historical_score.id
+        historical_score_id = game.historical_scores.filter(
+            competition=competition
+        ).order_by('id').first().id
         last_score = (self.get_queryset()
-                      .filter(Q(game__winner=team) | Q(game__loser=team))
-                      .filter(id__lte=historical_score_id)
+                      .filter(team=team, id__lte=historical_score_id)
                       .select_related('game__winner', 'game__loser', 'game')
                       .order_by('-id')
                       .first())
@@ -290,29 +330,45 @@ class HistoricalScoreManager(models.Manager):
         if last_score is None:
             return settings.GAME_INITIAL_MU
 
-        return last_score.winner_score if last_score.game.winner == team else last_score.loser_score
+        return last_score.score
 
 
-class HistoricalScore(models.Model):
-    game = models.OneToOneField(Game, related_name='historical_score')
-    winner_score = models.FloatField('Winner current score')
-    loser_score = models.FloatField('Loser current score')
-
-    objects = HistoricalScoreManager()
+class ScoreManager(models.Manager):
+    def get_score_board(self, competition):
+        return (self.get_query_set().filter(competition=competition)
+                .order_by('-score').prefetch_related('team__users'))
 
 
-class CompetitionTeam(models.Model):
+class Score(models.Model):
     competition = models.ForeignKey('Competition')
-    team = models.ForeignKey(Team)
+    team = models.ForeignKey(Team, related_name='scores')
     score = models.FloatField('skills', default=settings.GAME_INITIAL_MU)
     stdev = models.FloatField('standard deviation',
                               default=settings.GAME_INITIAL_SIGMA)
 
+    objects = ScoreManager()
+
+
+class HistoricalScore(models.Model):
+    game = models.ForeignKey(Game, related_name='historical_scores')
+    competition = models.ForeignKey('Competition')
+    team = models.ForeignKey(Team, related_name='historical_scores')
+    score = models.FloatField('Current team score')
+
+    objects = HistoricalScoreManager()
+
+
+class CompetitionManager(models.Manager):
+    def get_default_competition(self):
+        return self.get_queryset().get(pk=1)
+
 
 class Competition(models.Model):
-    name = models.CharField(max_length = 255)
+    name = models.CharField(max_length=255)
     description = models.TextField(blank=True)
     start_date = models.DateTimeField(default=timezone.now)
     end_date = models.DateTimeField(null=True)
-    teams = models.ManyToManyField(Team, through=CompetitionTeam)
-    games = models.ManyToManyField(Game)
+    teams = models.ManyToManyField(Team, through=Score)
+    games = models.ManyToManyField(Game, related_name='competitions')
+
+    objects = CompetitionManager()
