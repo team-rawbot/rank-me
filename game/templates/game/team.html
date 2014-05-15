@@ -20,9 +20,13 @@
                         <li class = "date">{{ game_dates.grouper }}<ul>
                             {% for game in game_dates.list %}
                                 {% if game.winner == team %}
-                                    <li class="game game-win">Win against <span class="loser">{{ game.loser }}</span></li>
+                                    <li class="game game-win">Win against <span class="loser">
+                                        <a href="{% url 'team_detail' game.loser.id %}">{{ game.loser }}</a>
+                                    </span></li>
                                 {% else %}
-                                    <li class="game game-defeat">Defeat against <span class="winner">{{ game.winner }}</span></li>
+                                    <li class="game game-defeat">Defeat against <span class="winner">
+                                        <a href="{% url 'team_detail' game.winner.id %}">{{ game.winner }}</a>
+                                    </span></li>
                                 {% endif %}
                             {% endfor %}
                         </ul></li>
