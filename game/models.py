@@ -348,6 +348,11 @@ class Score(models.Model):
 
     objects = ScoreManager()
 
+    class Meta:
+        unique_together = (
+            ('competition', 'team'),
+        )
+
 
 class HistoricalScore(models.Model):
     game = models.ForeignKey(Game, related_name='historical_scores')
@@ -356,6 +361,11 @@ class HistoricalScore(models.Model):
     score = models.FloatField('Current team score')
 
     objects = HistoricalScoreManager()
+
+    class Meta:
+        unique_together = (
+            ('team', 'game', 'competition'),
+        )
 
 
 class CompetitionManager(models.Manager):

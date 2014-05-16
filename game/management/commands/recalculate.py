@@ -21,9 +21,9 @@ class Command(BaseCommand):
             stdev = settings.GAME_INITIAL_SIGMA
 
         scores = Score.objects.all()
-        games = Game.objects.order_by('id')
+        games = Game.objects.prefetch_related('competitions').order_by('id')
 
-        # remove all HistoricalScores (will be auto-populated on game.save()
+        # remove all HistoricalScores
         HistoricalScore.objects.all().delete()
 
         scores.update(score=score, stdev=stdev)
