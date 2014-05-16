@@ -1,28 +1,34 @@
 {% extends "base.html" %}
 
+{% load i18n %}
+
 {% block content %}
 
     <div class="row">
         <div class="span6">
             <div class="team">
                 <h1>{{ team }} ({{ score.score|floatformat }})</h1>
-                    <ul class="team-statistics">
-                        <li><strong>W</strong>: {{ wins }}</li>
-                        <li><strong>L</strong>: {{ defeats }}</li>
-                        <li><strong>σ</strong>: {{ score.stdev|floatformat:"5" }}</li>
-                        <li><strong>L10</strong>: {{ last_results.wins }} - {{ last_results.defeats }}</li>
-                        <li><strong>Longest Winning Streak</strong>: {{ longest_streak }}</li>
-                    </ul>
-                <h2>Last 10 games</h2>
+                <ul class="team-statistics">
+                    <li><strong>W</strong>: {{ wins }}</li>
+                    <li><strong>L</strong>: {{ defeats }}</li>
+                    <li><strong>σ</strong>: {{ score.stdev|floatformat:"5" }}</li>
+                    <li><strong>L10</strong>: {{ last_results.wins }} - {{ last_results.defeats }}</li>
+                    <li><strong>{% trans "Longest Winning Streak" %}</strong>: {{ longest_streak }}</li>
+                </ul>
+                <h2>{% trans "Last 10 games" %}</h2>
                 <ul class="team-last-games">
                     {% regroup last_results.games by date|date:"d F Y" as last_games %}
                     {% for game_dates in last_games %}
                         <li class = "date">{{ game_dates.grouper }}<ul>
                             {% for game in game_dates.list %}
                                 {% if game.winner == team %}
-                                    <li class="game game-win">Win against <span class="loser">{{ game.loser }}</span></li>
+                                    <li class="game game-win">
+                                        {% blocktrans with loser=game.loser %}Win against <span class="loser">{{ loser }}</span>{% endblocktrans %}
+                                    </li>
                                 {% else %}
-                                    <li class="game game-defeat">Defeat against <span class="winner">{{ game.winner }}</span></li>
+                                    <li class="game game-defeat">
+                                        {% blocktrans with winner=game.winner %}Defeat against <span class="winner">{{ winner }}</span>{% endblocktrans %}
+                                    </li>
                                 {% endif %}
                             {% endfor %}
                         </ul></li>
@@ -32,7 +38,7 @@
         </div>
 
         <div class="span6">
-            <h2>Head-to-Head</h2>
+            <h2>{% trans "Head-to-Head" %}</h2>
             <ul class="head2head">
             {% for opponent, results in head2head.iteritems %}
                 <li class="team">
@@ -44,9 +50,9 @@
                                 {% if forloop.first != True %}</ul>{% endif %}<li class = "date">{{ game.date|date:"d F Y" }}<ul>
                             {% endifchanged %}
                             {% if game.winner == team %}
-                                <li class="game game-win">Win</li>
+                                <li class="game game-win">{% trans "Win" %}</li>
                             {% else %}
-                                <li class="game game-defeat">Defeat</span></li>
+                                <li class="game game-defeat">{% trans "Defeat" %}</span></li>
                             {% endif %}
                         {% endfor %}
                         </ul>
@@ -55,8 +61,5 @@
             {% endfor %}
             </ul>
         </div>
-
-
     </div>
-
 {% endblock %}

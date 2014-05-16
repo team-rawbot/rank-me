@@ -1,9 +1,11 @@
 {% extends "base.html" %}
 
+{% load i18n %}
+
 {% block body_class %}add-result{% endblock %}
 
 {% block content %}
-    <h2>Add a new result in competition "{{ competition }}"</h2>
+    <h2>{% blocktrans %}Add a new result in competition "{{ competition }}"{% endblocktrans %}</h2>
 
     <form id="add-result" action="" method="post">
         {{ form.non_field_errors }}
@@ -14,6 +16,6 @@
                 {{ field.errors }}
             </div>
         {% endfor %}
-        <p><input type="submit" value="Add result" class="btn btn-success" /></p>
+        <p><input type="submit" value="{% trans "Add result" %}" class="btn btn-success" /></p>
     </form>
 {% endblock %}

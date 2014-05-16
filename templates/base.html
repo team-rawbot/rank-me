@@ -14,13 +14,13 @@
                     <ul class="nav pull-right">
                         <li class="dropdown">
                             <a class="dropdown-toggle" data-toggle="dropdown" href="#">
-                                Competitions
+                                {% trans "Competitions" %}
                                 <b class="caret"></b>
                             </a>
                             <ul class="dropdown-menu" role="menu">
                                 {% competitions_list %}
                                 <li class="divider"></li>
-                                <li><a href="{% url "competition_add" %}">Create new...</a></li>
+                                <li><a href="{% url "competition_add" %}">{% trans "Create new..." %}</a></li>
                             </ul>
                         </li>
                         {% if user and user.is_authenticated %}
