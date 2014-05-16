@@ -70,12 +70,7 @@ def create_competition(request):
         form = CompetitionForm(request.POST)
 
         if form.is_valid():
-            Competition.objects.create(
-                name = form.cleaned_data['name'],
-                description = form.cleaned_data['description'],
-                start_date = form.cleaned_data['start_date'],
-                end_date = form.cleaned_data['end_date'],
-            )
+            form.save()
 
             return redirect('game_index')
     else:
@@ -87,6 +82,7 @@ def create_competition(request):
 @login_required
 def view_competition(request, competition_id):
     pass
+
 
 @login_required
 def add(request):
