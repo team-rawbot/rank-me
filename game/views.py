@@ -96,7 +96,7 @@ def add(request):
                 Competition.objects.get_default_competition()
             )
 
-            return redirect('game_index')
+            return redirect('homepage')
     else:
         form = GameForm()
 

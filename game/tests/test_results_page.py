@@ -11,14 +11,14 @@ User = get_user_model()
 
 class TestResultsPage(TestCase):
     def test_page_availability(self):
-        response = self.client.get('/results/')
+        response = self.client.get('/')
         self.assertEqual(200, response.status_code)
 
     def test_page_without_results(self):
         john = UserFactory()
 
         self.client.login(username=john.username, password='password')
-        response = self.client.get('/results/')
+        response = self.client.get('/')
 
         self.assertContains(response, '<div class="scores"')
         self.assertContains(response, 'No scores registered yet')
@@ -30,13 +30,13 @@ class TestResultsPage(TestCase):
     User accesses the results page only when logged
     """
     def test_login(self):
-        response = self.client.get('/results/')
+        response = self.client.get('/')
         self.assertNotContains(response, '<div class="scores"')
 
         john = UserFactory()
 
         self.client.login(username=john.username, password='password')
-        response = self.client.get('/results/')
+        response = self.client.get('/')
         self.assertContains(response, '<div class="scores"')
 
     def test_page_with_results(self):
@@ -51,7 +51,7 @@ class TestResultsPage(TestCase):
         game.save()
 
         self.client.login(username=rolf.username, password='password')
-        response = self.client.get('/results/')
+        response = self.client.get('/')
 
         self.assertContains(response, '<div class="scores"')
         self.assertNotContains(response, 'No scores registered yet')
