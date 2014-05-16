@@ -60,8 +60,7 @@ class Team(models.Model):
 
     def get_games(self, competition):
         """
-        Fetch the list of games played by the team, optionally filtered by
-        competition.
+        Fetch the list of games played by the team, filtered by competition.
         """
         games = Game.objects.filter(
             Q(winner_id=self.id) | Q(loser_id=self.id)
@@ -146,6 +145,15 @@ class Team(models.Model):
             )
 
         return score
+
+    def get_wins(self, competition):
+        return self.games_won.filter(competitions=competition).count()
+
+    def get_defeats(self, competition):
+        return self.games_lost.filter(competitions=competition).count()
+
+    def get_score(self, competition):
+        return self.scores.get(competition=competition)
 
 
 class GameManager(models.Manager):

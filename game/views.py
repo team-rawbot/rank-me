@@ -44,14 +44,21 @@ def team(request, team_id):
 
     team = get_object_or_404(Team, pk=team_id)
     head2head = team.get_head2head(default_competition)
-    last_results = team.get_recent_stats(10)
+    last_results = team.get_recent_stats(default_competition, 10)
     longest_streak = team.get_longest_streak(default_competition)
+
+    wins = team.get_wins(default_competition)
+    defeats = team.get_defeats(default_competition)
+    score = team.get_score(default_competition)
 
     context = {
         'team': team,
         'head2head': head2head,
         'last_results': last_results,
         'longest_streak': longest_streak,
+        'wins': wins,
+        'defeats': defeats,
+        'score': score
     }
 
     return render(request, 'game/team.html', context)

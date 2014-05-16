@@ -5,11 +5,11 @@
     <div class="row">
         <div class="span6">
             <div class="team">
-                <h1>{{ team }} ({{ team.score|floatformat }})</h1>
+                <h1>{{ team }} ({{ score.score|floatformat }})</h1>
                     <ul class="team-statistics">
-                        <li><strong>W</strong>: {{ team.wins }}</li>
-                        <li><strong>L</strong>: {{ team.defeats }}</li>
-                        <li><strong>σ</strong>: {{ team.stdev|floatformat:"5" }}</li>
+                        <li><strong>W</strong>: {{ wins }}</li>
+                        <li><strong>L</strong>: {{ defeats }}</li>
+                        <li><strong>σ</strong>: {{ score.stdev|floatformat:"5" }}</li>
                         <li><strong>L10</strong>: {{ last_results.wins }} - {{ last_results.defeats }}</li>
                         <li><strong>Longest Winning Streak</strong>: {{ longest_streak }}</li>
                     </ul>
