@@ -98,8 +98,11 @@ class Team(models.Model):
             head2head[opponent]['games'].append(game)
 
         return OrderedDict(
-            sorted(head2head.items(), key=lambda t:
-                t[0].scores.filter(competition=competition), reverse=True)
+            sorted(
+                head2head.items(),
+                key=lambda t: t[0].scores.get(competition=competition).score,
+                reverse=True
+            )
         )
 
     def get_recent_stats(self, competition, count=10):

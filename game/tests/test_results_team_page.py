@@ -12,8 +12,14 @@ User = get_user_model()
 class TestResultsTeamPage(TestCase):
     def setUp(self):
         self.default_competition = Competition.objects.get_default_competition()
+        self.user = UserFactory()
+
+    def login(self):
+        self.client.login(username=self.user.username, password='password')
 
     def test_page_unavailability(self):
+        self.login()
+
         response = self.client.get(
             reverse('team_detail', kwargs={'team_id': 1})
         )
@@ -29,6 +35,7 @@ class TestResultsTeamPage(TestCase):
             sylvain, christoph, self.default_competition
         )
 
+        self.login()
         response = self.client.get(
             reverse('team_detail', kwargs={'team_id': game.winner_id})
         )
@@ -49,6 +56,7 @@ class TestResultsTeamPage(TestCase):
         christoph_team_id = game.winner_id
         sylvain_team_id = game.loser_id
 
+        self.login()
         response = self.client.get(
             reverse('team_detail', kwargs={'team_id': sylvain_team_id})
         )
