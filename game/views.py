@@ -8,9 +8,12 @@ from .models import Competition, Game, HistoricalScore, Score, Team
 
 @login_required
 def index(request):
-    return redirect(reverse('competition_detail', kwargs={
-        'competition_slug': 'default-competition'
-    }))
+    if request.user.is_authenticated():
+        return redirect(reverse('competition_detail', kwargs={
+            'competition_slug': 'default-competition'
+        }))
+    else:
+        return render('user/login.html')
 
 
 @login_required

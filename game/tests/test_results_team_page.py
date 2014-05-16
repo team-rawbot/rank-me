@@ -20,9 +20,10 @@ class TestResultsTeamPage(TestCase):
     def test_page_unavailability(self):
         self.login()
 
-        response = self.client.get(
-            reverse('team_detail', kwargs={'team_id': 1})
-        )
+        response = self.client.get(reverse('team_detail', kwargs={
+            'team_id': 1,
+            'competition_slug': self.default_competition.slug
+        }))
         self.assertEqual(404, response.status_code)
 
     def test_page_availability(self):
@@ -36,9 +37,10 @@ class TestResultsTeamPage(TestCase):
         )
 
         self.login()
-        response = self.client.get(
-            reverse('team_detail', kwargs={'team_id': game.winner_id})
-        )
+        response = self.client.get( reverse('team_detail', kwargs={
+            'team_id': game.winner_id,
+            'competition_slug': self.default_competition.slug
+        }))
         self.assertEqual(200, response.status_code)
 
     def test_page_results(self):
@@ -57,17 +59,19 @@ class TestResultsTeamPage(TestCase):
         sylvain_team_id = game.loser_id
 
         self.login()
-        response = self.client.get(
-            reverse('team_detail', kwargs={'team_id': sylvain_team_id})
-        )
+        response = self.client.get(reverse('team_detail', kwargs={
+            'team_id': sylvain_team_id,
+            'competition_slug': self.default_competition.slug
+        }))
 
         self.assertContains(response, '<ul class="team-statistics"')
         self.assertContains(response, '<ul class="head2head">')
         self.assertContains(response, '<li><strong>Longest Winning Streak</strong>: 2</li>')
 
-        response = self.client.get(
-            reverse('team_detail', kwargs={'team_id': christoph_team_id})
-        )
+        response = self.client.get(reverse('team_detail', kwargs={
+            'team_id': christoph_team_id,
+            'competition_slug': self.default_competition.slug
+        }))
 
         self.assertContains(response, '<ul class="team-statistics"')
         self.assertContains(response, '<ul class="head2head">')
