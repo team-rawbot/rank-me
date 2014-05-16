@@ -17,7 +17,7 @@
       </a>
       <ul class="dropdown-menu">
           {% for competition in competitions %}
-              <li><a href="{% url 'view_competition' id=competition.id %}">{{ competition.name }}</a></li>
+              <li><a href="{% url 'view_competition' slug=competition.slug %}">{{ competition.name }}</a></li>
           {% endfor %}
       </ul>
     </div>

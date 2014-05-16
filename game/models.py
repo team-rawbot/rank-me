@@ -7,8 +7,9 @@ from itertools import groupby
 from django.conf import settings
 from django.core.exceptions import ValidationError
 from django.db import models
-from django.utils import timezone
 from django.db.models import Q
+from django.template.defaultfilters import slugify
+from django.utils import timezone
 from trueskill import Rating, rate_1vs1
 
 
@@ -398,5 +399,12 @@ class Competition(models.Model):
     end_date = models.DateTimeField(null=True, blank=True)
     teams = models.ManyToManyField(Team, through=Score)
     games = models.ManyToManyField(Game, related_name='competitions')
+    slug = models.SlugField()
 
     objects = CompetitionManager()
+
+    def save(self, *args, **kwargs):
+        if not self.slug:
+            self.slug = slugify(self.name)
+
+        super(Competition, self).save(*args, **kwargs)

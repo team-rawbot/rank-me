@@ -80,7 +80,7 @@ def create_competition(request):
 
 
 @login_required
-def view_competition(request, competition_id):
+def view_competition(request, slug):
     pass
 
 
