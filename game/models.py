@@ -406,6 +406,9 @@ class Competition(models.Model):
 
     objects = CompetitionManager()
 
+    def __unicode__(self):
+        return self.name
+
     def save(self, *args, **kwargs):
         if not self.slug:
             self.slug = slugify(self.name)

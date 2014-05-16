@@ -5,22 +5,10 @@
 {% block body_class %}home{% endblock %}
 
 {% block content %}
+    <h1>{{ competition }}</h1>
 
-    <a href="{% url 'game_add' %}" id="add-result-button" class="btn btn-success">Add a result</a>
+    <a href="{% url 'game_add' competition_slug=competition.slug %}" id="add-result-button" class="btn btn-success">Add a result</a>
 
-    <a href="{% url 'competition_add' %}" id="create-competition-button" class="btn btn-success">Create competition</a>
-    
-    <div class="btn-group">
-      <a class="btn dropdown-toggle" data-toggle="dropdown" href="#">
-        Competitions
-        <span class="caret"></span>
-      </a>
-      <ul class="dropdown-menu">
-          {% for competition in competitions %}
-              <li><a href="{% url 'competition_detail' slug=competition.slug %}">{{ competition.name }}</a></li>
-          {% endfor %}
-      </ul>
-    </div>
 
     <div class="row">
         <div class="span3">
@@ -49,7 +37,7 @@
                   <ul class="games">
                       {% for result in latest_results %}
                           <li class="game-item">
-                              <a href="{% url 'game_detail' result.id %}">{{ result }} - {{ result.date }}</a>
+                              <a href="{% url 'game_detail' game_id=result.id competition_slug=competition.slug %}">{{ result }} - {{ result.date }}</a>
                           </li>
                       {% endfor %}
                   </ul>
@@ -64,3 +52,4 @@
 {% block extra_footer_js %}
     <script src="{% static "assets/js/score_chart.js" %}"></script>
 {% endblock %}
+

@@ -1,34 +1,16 @@
 from django.contrib.auth.decorators import login_required
+from django.core.urlresolvers import reverse
 from django.shortcuts import get_object_or_404, render, redirect
 
 from .forms import GameForm, CompetitionForm
 from .models import Competition, Game, HistoricalScore, Score, Team
 
 
+@login_required
 def index(request):
-    """
-    User logged in => homepage
-    User not logged => login page
-    """
-    if request.user.is_authenticated():
-        default_competition = Competition.objects.get_default_competition()
-
-        latest_results = Game.objects.get_latest(default_competition)
-        score_board = Score.objects.get_score_board(default_competition)
-        score_chart_data = HistoricalScore.objects.get_latest_results_by_team(
-            50, default_competition, True
-        )
-
-        context = {
-            'latest_results': latest_results,
-            'score_board': score_board,
-            'score_chart_data': score_chart_data,
-            'competitions': Competition.objects.all(),
-        }
-
-        return render(request, 'game/index.html', context)
-    else:
-        return render(request, 'user/login.html')
+    return redirect(reverse('competition_detail', kwargs={
+        'competition_slug': 'default-competition'
+    }))
 
 
 @login_required
@@ -80,12 +62,33 @@ def create_competition(request):
 
 
 @login_required
-def view_competition(request, slug):
-    pass
+def view_competition(request, competition_slug):
+    """
+    User logged in => homepage
+    User not logged => login page
+    """
+    competition = get_object_or_404(Competition, slug=competition_slug)
+
+    latest_results = Game.objects.get_latest(competition)
+    score_board = Score.objects.get_score_board(competition)
+    score_chart_data = HistoricalScore.objects.get_latest_results_by_team(
+        50, competition, True
+    )
+
+    context = {
+        'latest_results': latest_results,
+        'score_board': score_board,
+        'score_chart_data': score_chart_data,
+        'competition': competition,
+    }
+
+    return render(request, 'competition/detail.html', context)
 
 
 @login_required
-def add(request):
+def add(request, competition_slug):
+    competition = get_object_or_404(Competition, slug=competition_slug)
+
     if request.method == 'POST':
         form = GameForm(request.POST)
 
@@ -93,11 +96,16 @@ def add(request):
             Game.objects.announce(
                 form.cleaned_data['winner'],
                 form.cleaned_data['loser'],
-                Competition.objects.get_default_competition()
+                competition
             )
 
-            return redirect('homepage')
+            return redirect(reverse('competition_detail', kwargs={
+                'competition_slug': competition.slug
+            }))
     else:
         form = GameForm()
 
-    return render(request, 'game/add.html', {'form': form})
+    return render(request, 'game/add.html', {
+        'form': form,
+        'competition': competition,
+    })
