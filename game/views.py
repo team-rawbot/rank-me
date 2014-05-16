@@ -14,14 +14,14 @@ def index(request):
 
 
 @login_required
-def detail(request, game_id):
+def game_detail(request, game_id):
     game = get_object_or_404(Game, pk=game_id)
 
     return render(request, 'game/detail.html', {'game': game})
 
 
 @login_required
-def team(request, team_id):
+def team_detail(request, team_id):
     default_competition = Competition.objects.get_default_competition()
 
     team = get_object_or_404(Team, pk=team_id)
@@ -47,7 +47,7 @@ def team(request, team_id):
 
 
 @login_required
-def create_competition(request):
+def competition_add(request):
     if request.method == 'POST':
         form = CompetitionForm(request.POST)
 
@@ -62,7 +62,7 @@ def create_competition(request):
 
 
 @login_required
-def view_competition(request, competition_slug):
+def competition_detail(request, competition_slug):
     """
     User logged in => homepage
     User not logged => login page
@@ -86,7 +86,7 @@ def view_competition(request, competition_slug):
 
 
 @login_required
-def add(request, competition_slug):
+def game_add(request, competition_slug):
     competition = get_object_or_404(Competition, slug=competition_slug)
 
     if request.method == 'POST':
