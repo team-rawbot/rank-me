@@ -285,9 +285,19 @@ class HistoricalScoreManager(models.Manager):
                 result = {'game': game.id}
 
                 if team.id in [game.winner_id, game.loser_id]:
-                    result['skill'] = game.historical_scores.get(
-                        team=team, competition=competition
-                    ).score
+                    team_historical_score = None
+                    # We don't use get() here so we don't hit the database
+                    # since historical scores are prefetched
+                    for historical_score in game.historical_scores.all():
+                        if (historical_score.team_id == team.id
+                                and historical_score.competition_id ==
+                                competition.id):
+                            team_historical_score = historical_score
+                            break
+
+                    assert team_historical_score is not None
+
+                    result['skill'] = team_historical_score.score
 
                     result['win'] = team.id == game.winner_id
                     result['played'] = True
