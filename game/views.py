@@ -21,17 +21,17 @@ def game_detail(request, game_id):
 
 
 @login_required
-def team_detail(request, team_id):
-    default_competition = Competition.objects.get_default_competition()
-
+def team_detail(request, competition_slug, team_id):
+    competition = get_object_or_404(Competition, slug=competition_slug)
     team = get_object_or_404(Team, pk=team_id)
-    head2head = team.get_head2head(default_competition)
-    last_results = team.get_recent_stats(default_competition, 10)
-    longest_streak = team.get_longest_streak(default_competition)
 
-    wins = team.get_wins(default_competition)
-    defeats = team.get_defeats(default_competition)
-    score = team.get_score(default_competition)
+    head2head = team.get_head2head(competition)
+    last_results = team.get_recent_stats(competition, 10)
+    longest_streak = team.get_longest_streak(competition)
+
+    wins = team.get_wins(competition)
+    defeats = team.get_defeats(competition)
+    score = team.get_score(competition)
 
     context = {
         'team': team,
@@ -40,7 +40,8 @@ def team_detail(request, team_id):
         'longest_streak': longest_streak,
         'wins': wins,
         'defeats': defeats,
-        'score': score
+        'score': score,
+        'competition': competition,
     }
 
     return render(request, 'game/team.html', context)

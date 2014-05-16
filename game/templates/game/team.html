@@ -36,7 +36,7 @@
             <ul class="head2head">
             {% for opponent, results in head2head.iteritems %}
                 <li class="team">
-                    <a href="{% url 'team_detail' opponent.id %}"><strong>{{ opponent }}</strong></a>: 
+                    <a href="{% url 'team_detail' team_id=opponent.id competition_slug=competition.slug %}"><strong>{{ opponent }}</strong></a>:
                     {{ results.wins }} - {{ results.defeats }}
                     <ul class="head2head-games hidden">
                         {% for game in results.games %}
