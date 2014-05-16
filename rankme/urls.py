@@ -8,18 +8,9 @@ from game import views
 admin.autodiscover()
 
 urlpatterns = patterns('',
-    # Examples:
-    # url(r'^$', 'rankme.views.home', name='home'),
-    # url(r'^rankme/', include('rankme.foo.urls')),
-
-    # Uncomment the admin/doc line below to enable admin documentation:
-    # url(r'^admin/doc/', include('django.contrib.admindocs.urls')),
-
-    url(r'^$', views.index, name='homepage'),
-    url(r'^results/', include('game.urls')),
     url(r'^admin/', include(admin.site.urls)),
-    url(r'^competition/new/$', views.create_competition, name='create_competition'),
-    url(r'^competition/(?P<slug>[\w-]+)/$', views.view_competition, name='view_competition'),
+    url(r'^$', views.index, name='homepage'),
+    url(r'', include('game.urls')),
 
     url('', include('social.apps.django_app.urls', namespace='social')),
     url(r'^logout/$', 'django.contrib.auth.views.logout', {

@@ -8,7 +8,7 @@
 
     <a href="{% url 'game_add' %}" id="add-result-button" class="btn btn-success">Add a result</a>
 
-    <a href="{% url 'create_competition' %}" id="create-competition-button" class="btn btn-success">Create competition</a>
+    <a href="{% url 'competition_add' %}" id="create-competition-button" class="btn btn-success">Create competition</a>
     
     <div class="btn-group">
       <a class="btn dropdown-toggle" data-toggle="dropdown" href="#">
@@ -17,7 +17,7 @@
       </a>
       <ul class="dropdown-menu">
           {% for competition in competitions %}
-              <li><a href="{% url 'view_competition' slug=competition.slug %}">{{ competition.name }}</a></li>
+              <li><a href="{% url 'competition_detail' slug=competition.slug %}">{{ competition.name }}</a></li>
           {% endfor %}
       </ul>
     </div>
