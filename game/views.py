@@ -56,9 +56,10 @@ def competition_add(request):
         form = CompetitionForm(request.POST)
 
         if form.is_valid():
-            form.save()
+            competition = form.save()
 
-            return redirect('game_index')
+            return redirect('competition_detail',
+                            competition_slug=competition.slug)
     else:
         form = CompetitionForm()
 
