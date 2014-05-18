@@ -142,7 +142,7 @@ class Team(models.Model):
         """
         games_per_week = defaultdict(list)
         for game in Game.objects.all():
-            week = '%s.%s' % (game.date.year, game.date.isocalendar()[1])
+            week = '%s.%02d' % (game.date.year, game.date.isocalendar()[1])
             games_per_week[week].append(game)
 
         stats_per_week = {}
