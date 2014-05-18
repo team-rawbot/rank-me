@@ -1,6 +1,6 @@
 distribute==0.7.3
 dj-database-url==0.3.0
-Django==1.6.2
+Django==1.6.5
 oauthlib==0.6.1
 python-oauth2==0.6.0
 python-openid==2.2.5
