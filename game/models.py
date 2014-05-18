@@ -1,7 +1,7 @@
 import operator
 import json
 import six
-from collections import OrderedDict
+from collections import defaultdict, OrderedDict
 from itertools import groupby
 
 from django.conf import settings
@@ -72,7 +72,8 @@ class Team(models.Model):
         Fetch the list of games played by the team.
         """
         return (Game.objects.filter(Q(winner_id=self.id) | Q(loser_id=self.id))
-                .order_by('-date').select_related('winner', 'loser'))
+                .order_by('-date').select_related('winner', 'loser')
+                .prefetch_related('winner__users', 'loser__users'))
 
     def get_head2head(self):
         """
@@ -133,36 +134,39 @@ class Team(models.Model):
         else:
             return 0
 
-
-    def get_stats_per_weeks(self):
+    def get_stats_per_week(self):
         """
-        Return games weekly statistics with the current team match number, and also as
-         an average for the whole teams that have been playing that week
+        Return games weekly statistics with the current team match number, and
+        also as an average for the whole teams that have been playing that
+        week.
         """
-        games_per_weeks = {}
+        games_per_week = defaultdict(list)
         for game in Game.objects.all():
-            week = str(game.date.year) + '.' + str(game.date.isocalendar()[1])
-            if not week in games_per_weeks:
-                games_per_weeks[week] = []
-            games_per_weeks[week].append(game)
+            week = '%s.%s' % (game.date.year, game.date.isocalendar()[1])
+            games_per_week[week].append(game)
 
-        stats_per_weeks = {}
-        for week, games in games_per_weeks.items():
-            stats_per_weeks[week] = {
-                'total_count': 0,
-                'team_count': 0
+        stats_per_week = {}
+        for week, games in games_per_week.items():
+            players = set()
+            stats_per_week[week] = {
+                'total_count': len(games),
+                'team_count': 0,
             }
-            players = {}
-            for game in games:
-                stats_per_weeks[week]['total_count'] +=1
-                players[game.winner] = True
-                players[game.loser] = True
-                if (game.winner == self or game.loser == self):
-                    stats_per_weeks[week]['team_count'] +=1
-            stats_per_weeks[week]['player_count'] = len(players)
-            stats_per_weeks[week]['avg_game_per_team'] = float(stats_per_weeks[week]['total_count']*2) / stats_per_weeks[week]['player_count']
 
-        return sorted(stats_per_weeks.iteritems())
+            for game in games:
+                players.add(game.winner_id)
+                players.add(game.loser_id)
+
+                if self.id in [game.winner_id, game.loser_id]:
+                    stats_per_week[week]['team_count'] += 1
+
+            stats_per_week[week]['player_count'] = len(players)
+            stats_per_week[week]['avg_game_per_team'] = (
+                float(stats_per_week[week]['total_count'] * 2)
+                / stats_per_week[week]['player_count']
+            )
+
+        return sorted(stats_per_week.iteritems())
 
 
 class GameManager(models.Manager):
@@ -258,7 +262,7 @@ class HistoricalScoreManager(models.Manager):
         """
         scores_by_team = {}
 
-        teams = Team.objects.all().select_related('winner', 'loser')
+        teams = Team.objects.all().prefetch_related('users')
 
         scores = self.get_latest(nb_games)
         scores = sorted(scores, key=lambda score: score.id)

@@ -40,7 +40,7 @@ def team(request, team_id):
         'head2head': team.get_head2head(),
         'last_results': team.get_recent_stats(10),
         'longest_streak': team.get_longest_streak(),
-        'stats_per_week' : team.get_stats_per_weeks()
+        'stats_per_week': team.get_stats_per_week()
     }
 
     return render(request, 'game/team.html', context)
