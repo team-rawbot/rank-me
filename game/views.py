@@ -17,13 +17,6 @@ def index(request):
 
 
 @login_required
-def game_detail(request, competition_slug, game_id):
-    game = get_object_or_404(Game, pk=game_id)
-
-    return render(request, 'game/detail.html', {'game': game})
-
-
-@login_required
 def team_detail(request, competition_slug, team_id):
     competition = get_object_or_404(Competition, slug=competition_slug)
     team = get_object_or_404(Team, pk=team_id)

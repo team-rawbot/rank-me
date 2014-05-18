@@ -4,9 +4,7 @@
     {% include 'game/_player_avatar.html' with user=player %}
 {% endfor %}
 
-<a href="{% url 'game_detail' game_id=game.id competition_slug=competition.slug %}">
-    <span class="winner">{{ game.winner }}</span> {% trans "beats" %} <span class="loser">{{ game.loser }}</span>
-</a>
+<span class="winner">{{ game.winner }}</span> {% trans "beats" %} <span class="loser">{{ game.loser }}</span>
 
 {% for player in game.loser.users.all %}
     {% include 'game/_player_avatar.html' with user=player %}
