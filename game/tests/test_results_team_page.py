@@ -47,7 +47,7 @@ class TestResultsTeamPage(TestCase):
         )
 
         self.assertContains(response, '<ul class="team-statistics"')
-        self.assertContains(response, '<ul class="head2head">')
+        self.assertContains(response, '<table id="head-2-head-results"')
         self.assertContains(response, '<li><strong>Longest Winning Streak</strong>: 2</li>')
 
         response = self.client.get(
@@ -55,5 +55,5 @@ class TestResultsTeamPage(TestCase):
         )
 
         self.assertContains(response, '<ul class="team-statistics"')
-        self.assertContains(response, '<ul class="head2head">')
+        self.assertContains(response, '<table id="head-2-head-results"')
         self.assertContains(response, '<li><strong>Longest Winning Streak</strong>: 1</li>')

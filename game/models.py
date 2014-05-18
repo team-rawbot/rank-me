@@ -166,7 +166,7 @@ class Team(models.Model):
                 / stats_per_week[week]['player_count']
             )
 
-        return sorted(stats_per_week.iteritems())
+        return sorted(stats_per_week.items())
 
 
 class GameManager(models.Manager):
