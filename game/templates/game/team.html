@@ -46,11 +46,13 @@
                             {% for game in game_dates.list %}
                                 {% if game.winner == team %}
                                     <li class="game game-win">
-                                        {% blocktrans with loser=game.loser %}Win against <span class="loser">{{ loser }}</span>{% endblocktrans %}
+                                        {% url 'team_general_detail' team_id=game.loser.id as loser_url %}
+                                        {% blocktrans with loser=game.loser %}Win against <span class="loser"><a href="{{ loser_url }}">{{ loser }}</a></span>{% endblocktrans %}
                                     </li>
                                 {% else %}
                                     <li class="game game-defeat">
-                                        {% blocktrans with winner=game.winner %}Defeat against <span class="winner">{{ winner }}</span>{% endblocktrans %}
+                                        {% url 'team_general_detail' team_id=game.winner.id as winner_url %}
+                                        {% blocktrans with winner=game.winner %}Defeat against <span class="winner"><a href="{{ winner_url }}">{{ winner }}</a></span>{% endblocktrans %}
                                     </li>
                                 {% endif %}
                             {% endfor %}

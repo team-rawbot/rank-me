@@ -52,6 +52,13 @@ def team_detail(request, competition_slug, team_id):
 
 
 @login_required
+def team_general_detail(request, team_id):
+    team = get_object_or_404(Team, pk=team_id)
+
+    return render(request, 'game/team_general.html', {'team': team})
+
+
+@login_required
 def competition_add(request):
     if request.method == 'POST':
         form = CompetitionForm(request.POST)
