@@ -50,18 +50,18 @@ $(function() {
 
     // Collect data from the HTML table
     var data = {labels:[], games:[], avg:[]};
-    $('#game-per-weeks tbody tr').each(function(){
+    $('#games-per-week tbody tr').each(function(){
         data.labels.push($(this).find('td:nth-child(1)').text());
         data.games.push(parseInt($(this).find('td:nth-child(2)').text()));
         data.avg.push(parseFloat($(this).find('td:nth-child(4)').text()));
     });
 
     // Replace the table by the graph div
-    $('#game-per-weeks')
-        .after('<div id="game-per-week-charts" />')
+    $('#games-per-week')
+        .after('<div id="games-per-week-charts" />')
         .remove();
 
-    $('#game-per-week-charts').highcharts({
+    $('#games-per-week-charts').highcharts({
         chart: {
             type: 'column',
             margin:[0,0,50,0],
