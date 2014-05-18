@@ -16,8 +16,14 @@
                 <h2>{% trans "Scores" %}</h2>
                 {% if score_board %}
                     <ol class="score-board">
-                        {% for team in score_board %}
-                            <li class="score-item"><a href="{% url 'team_detail' team_id=team.team_id competition_slug=competition.slug %}"><strong>{{ team.team }}</strong> ({{ team.score|floatformat }})</a></li>
+                        {% for score in score_board %}
+                            <li class="score-item">
+                                <a href="{% url 'team_detail' team_id=score.team_id competition_slug=competition.slug  %}">
+                                    {% for player in score.team.users.all %}
+                                        {% include 'game/_player_avatar.html' with user=player %}
+                                    {% endfor %}
+                                    <strong>{{ score.team }}</strong> ({{ score.score|floatformat }})</a>
+                            </li>
                         {% endfor %}
                     </ol>
                 {% else %}
@@ -35,9 +41,9 @@
               {% if latest_results %}
                   <h2>{% trans "Last 20 games" %}</h2>
                   <ul class="games">
-                      {% for result in latest_results %}
+                      {% for game in latest_results %}
                           <li class="game-item">
-                              <a href="{% url 'game_detail' game_id=result.id competition_slug=competition.slug %}">{{ result }} - {{ result.date }}</a>
+                              {% include 'game/_score_detail.html' %}
                           </li>
                       {% endfor %}
                   </ul>

@@ -45,6 +45,7 @@ def team_detail(request, competition_slug, team_id):
         'defeats': defeats,
         'score': score,
         'competition': competition,
+        'stats_per_week': team.get_stats_per_week()
     }
 
     return render(request, 'game/team.html', context)
