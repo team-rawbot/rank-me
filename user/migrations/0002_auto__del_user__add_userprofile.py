@@ -18,7 +18,6 @@ class Migration(SchemaMigration):
         db.send_create_signal(u'user', ['UserProfile'])
 
         if u'auth_user' not in connection.introspection.table_names():
-            print('no auth_user')
             for user in orm['user.User'].objects.all():
                 # Can't use get_or_create() here because sqlite doesn't support
                 # atomic transactions
@@ -36,7 +35,6 @@ class Migration(SchemaMigration):
 
             db.delete_column(u'auth_user', u'avatar'),
         else:
-            print('auth_user')
             db.delete_table(u'user_user')
             db.delete_table(u'user_user_groups')
             db.delete_table(u'user_user_user_permissions')

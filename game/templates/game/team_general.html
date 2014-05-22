@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h1>{{ team }}</h1>
+
+<ul>
+    {% for score in team.scores.all %}
+    <li><a href="{% url 'team_detail' competition_slug=score.competition.slug team_id=team.id %}">{{ score.competition }}: {{ score.score }}</a></li>
+    {% endfor %}
+</ul>
+
+{% endblock %}

@@ -3,10 +3,16 @@ from django.contrib.auth import get_user_model
 from django.core.exceptions import ValidationError
 from django.utils.translation import ugettext as _
 
+from .models import Competition
+
 
 class GameForm(forms.Form):
-    winner = forms.ModelChoiceField(queryset=get_user_model().objects.all().order_by('username'))
-    loser = forms.ModelChoiceField(queryset=get_user_model().objects.all().order_by('username'))
+    winner = forms.ModelChoiceField(
+        queryset=get_user_model().objects.all().order_by('username')
+    )
+    loser = forms.ModelChoiceField(
+        queryset=get_user_model().objects.all().order_by('username')
+    )
 
     def clean(self):
         cleaned_data = super(GameForm, self).clean()
@@ -20,3 +26,9 @@ class GameForm(forms.Form):
             )
 
         return cleaned_data
+
+
+class CompetitionForm(forms.ModelForm):
+    class Meta:
+        model = Competition
+        fields = ('name', 'description', 'start_date', 'end_date')
