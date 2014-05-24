@@ -378,7 +378,8 @@ class HistoricalScoreManager(models.Manager):
             competition=competition
         ).order_by('id').first().id
         last_score = (self.get_queryset()
-                      .filter(team=team, id__lte=historical_score_id)
+                      .filter(team=team, id__lte=historical_score_id,
+                              competition=competition)
                       .select_related('game__winner', 'game__loser', 'game')
                       .order_by('-id')
                       .first())
