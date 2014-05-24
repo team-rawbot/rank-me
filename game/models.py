@@ -312,7 +312,14 @@ class HistoricalScoreManager(models.Manager):
         games = (Game.objects.filter(competitions=competition)
                  .order_by('-id')
                  .prefetch_related('historical_scores')[:nb_games])
-        teams = Team.objects.all().select_related('winner', 'loser')
+
+        teams = (Team.objects
+                 .filter(
+                     Q(games_won__competitions=competition) |
+                     Q(games_lost__competitions=competition)
+                 )
+                 .distinct()
+                 .select_related('winner', 'loser'))
         scores_by_team = {}
 
         for game in reversed(games):
