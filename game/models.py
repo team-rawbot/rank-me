@@ -226,6 +226,7 @@ class GameManager(models.Manager):
         game = self.create(winner=winner, loser=loser)
         game.competitions.add(competition)
 
+        game_played.send(sender=game)
         game.update_score()
 
         return game
@@ -250,15 +251,6 @@ class Game(models.Model):
             self.winner,
             self.loser
         )
-
-    def save(self, *args, **kwargs):
-        created = self.pk is None
-
-        super(Game, self).save(*args, **kwargs)
-
-        if created:
-            game_played.send(sender=self)
-            self.update_score()
 
     def update_score(self):
         winner = self.winner
@@ -307,7 +299,8 @@ class Game(models.Model):
                         team=team,
                         old_ranking=(old_rankings[team]
                                      if team in old_rankings else None),
-                        new_ranking=new_rankings[team]
+                        new_ranking=new_rankings[team],
+                        competition=competition
                     )
 
     def get_opponent(self, team):
