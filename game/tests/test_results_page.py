@@ -43,7 +43,7 @@ class TestResultsPage(RankMeTestCase):
         response = self.client.get(reverse('competition_detail', kwargs={
             'competition_slug': self.default_competition.slug
         }))
-        self.assertEquals(302, response.status_code)
+        self.assertEqual(302, response.status_code)
 
         john = UserFactory()
 
