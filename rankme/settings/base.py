@@ -123,6 +123,7 @@ INSTALLED_APPS = (
     'south',
     'game',
     'user',
+    'slack',
     'django.contrib.admin',
     'django.contrib.admindocs',
     'social.apps.django_app.default',
@@ -193,5 +194,9 @@ LOGIN_URL = '/login/twitter/'
 
 GAME_INITIAL_MU = 25
 GAME_INITIAL_SIGMA = 8.333
+
+SLACK_CHANNEL = '#rankme'
+SLACK_API_TOKEN = get_env_variable('SLACK_API_TOKEN', '')
+SLACK_DEBUG = False
 
 AUTH_PROFILE_MODULE = 'user.UserProfile'

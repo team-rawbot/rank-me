@@ -3,15 +3,18 @@ import pytz
 
 from django.conf import settings
 from django.core.urlresolvers import reverse
-from django.test import TestCase
 from django.utils import timezone
+
+from rankme.utils import RankMeTestCase
 
 from ..models import Competition
 from .factories import UserFactory
 
 
-class TestCompetition(TestCase):
+class TestCompetition(RankMeTestCase):
     def setUp(self):
+        super(TestCompetition, self).setUp()
+
         self.user = UserFactory()
         self.client.login(username=self.user.username, password='password')
 

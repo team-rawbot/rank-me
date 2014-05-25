@@ -1,4 +1,7 @@
-from django.db.models.signals import post_save
-from django.dispatch import receiver
+from django.dispatch import Signal
 
-from .models import Game
+
+game_played = Signal()
+team_ranking_changed = Signal(providing_args=[
+    'team', 'old_ranking', 'new_ranking', 'competition'
+])

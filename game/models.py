@@ -12,6 +12,8 @@ from django.template.defaultfilters import slugify
 from django.utils import timezone
 from trueskill import Rating, rate_1vs1
 
+from .signals import game_played, team_ranking_changed
+
 
 class TeamManager(models.Manager):
     def get_or_create_from_players(self, player_ids):
@@ -224,6 +226,7 @@ class GameManager(models.Manager):
         game = self.create(winner=winner, loser=loser)
         game.competitions.add(competition)
 
+        game_played.send(sender=game)
         game.update_score()
 
         return game
@@ -254,6 +257,8 @@ class Game(models.Model):
         loser = self.loser
 
         for competition in self.competitions.all():
+            old_rankings = Score.objects.get_ranking_by_team(competition)
+
             winner_score = winner.get_or_create_score(competition)
             loser_score = loser.get_or_create_score(competition)
 
@@ -283,6 +288,20 @@ class Game(models.Model):
                 team=loser,
                 competition=competition
             )
+
+            new_rankings = Score.objects.get_ranking_by_team(competition)
+
+            for team in [winner, loser]:
+                if (team not in old_rankings or
+                        old_rankings[team] != new_rankings[team]):
+                    team_ranking_changed.send(
+                        sender=self,
+                        team=team,
+                        old_ranking=(old_rankings[team]
+                                     if team in old_rankings else None),
+                        new_ranking=new_rankings[team],
+                        competition=competition
+                    )
 
     def get_opponent(self, team):
         """
@@ -401,6 +420,14 @@ class ScoreManager(models.Manager):
     def get_score_board(self, competition):
         return (self.get_query_set().filter(competition=competition)
                 .order_by('-score').prefetch_related('team__users'))
+
+    def get_ranking_by_team(self, competition):
+        score_board = self.get_score_board(competition)
+
+        return dict(zip(
+            [score.team for score in score_board],
+            range(1, len(score_board) + 1)
+        ))
 
 
 class Score(models.Model):

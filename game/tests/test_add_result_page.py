@@ -1,6 +1,7 @@
 from django.contrib.auth import get_user_model
 from django.core.urlresolvers import reverse
-from django.test import TestCase
+
+from rankme.utils import RankMeTestCase
 
 from .factories import UserFactory
 from ..models import Competition
@@ -8,7 +9,7 @@ from ..models import Competition
 User = get_user_model()
 
 
-class TestAddResultPage(TestCase):
+class TestAddResultPage(RankMeTestCase):
     def test_form_validation(self):
         competition = Competition.objects.get_default_competition()
         game_add_url = reverse('game_add', kwargs={

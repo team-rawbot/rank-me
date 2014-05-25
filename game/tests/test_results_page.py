@@ -2,16 +2,18 @@
 
 from django.contrib.auth import get_user_model
 from django.core.urlresolvers import reverse
-from django.test import TestCase
 from game.models import Competition, Game
+
+from rankme.utils import RankMeTestCase
 
 from .factories import UserFactory
 
 User = get_user_model()
 
 
-class TestResultsPage(TestCase):
+class TestResultsPage(RankMeTestCase):
     def setUp(self):
+        super(TestResultsPage, self).setUp()
         self.default_competition = Competition.objects.get_default_competition()
 
     def test_page_availability(self):
@@ -41,7 +43,7 @@ class TestResultsPage(TestCase):
         response = self.client.get(reverse('competition_detail', kwargs={
             'competition_slug': self.default_competition.slug
         }))
-        self.assertEquals(302, response.status_code)
+        self.assertEqual(302, response.status_code)
 
         john = UserFactory()
 
