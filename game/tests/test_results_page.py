@@ -2,16 +2,18 @@
 
 from django.contrib.auth import get_user_model
 from django.core.urlresolvers import reverse
-from django.test import TestCase
 from game.models import Competition, Game
+
+from rankme.utils import RankMeTestCase
 
 from .factories import UserFactory
 
 User = get_user_model()
 
 
-class TestResultsPage(TestCase):
+class TestResultsPage(RankMeTestCase):
     def setUp(self):
+        super(TestResultsPage, self).setUp()
         self.default_competition = Competition.objects.get_default_competition()
 
     def test_page_availability(self):

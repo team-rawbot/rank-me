@@ -1,15 +1,12 @@
-from django.test import TestCase
-
-import mock
 import slack
 
 from game.models import Competition, Game
 from game.tests.factories import UserFactory
+from rankme.utils import RankMeTestCase
 
 
-class SlackTest(TestCase):
-    @mock.patch('slack.Slacker')
-    def test_message_sending(self, Slacker):
+class SlackTest(RankMeTestCase):
+    def test_message_sending(self):
         users = [UserFactory() for id in range(2)]
         default_competition = Competition.objects.get_default_competition()
 

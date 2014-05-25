@@ -1,17 +1,19 @@
 from django.dispatch import receiver
-from django.test import TestCase
 from django.utils import timezone
 
 import mock
+
+from rankme.utils import RankMeTestCase
 
 from .factories import UserFactory
 from ..models import Competition, Game
 from ..signals import game_played
 
 
-class TestGameAnnouncement(TestCase):
-    @classmethod
+class TestGameAnnouncement(RankMeTestCase):
     def setUp(self):
+        super(TestGameAnnouncement, self).setUp()
+
         # Create 4 dummy users
         self.users = [UserFactory() for id in range(4)]
         self.default_competition = Competition.objects.get_default_competition()

@@ -1,16 +1,18 @@
 from django.dispatch import receiver
-from django.test import TestCase
 
 import mock
+
+from rankme.utils import RankMeTestCase
 
 from .factories import UserFactory
 from ..models import Competition, Game, Team
 from ..signals import team_ranking_changed
 
 
-class TestTeamGetOrCreate(TestCase):
-    @classmethod
+class TestTeamGetOrCreate(RankMeTestCase):
     def setUp(self):
+        super(TestTeamGetOrCreate, self).setUp()
+
         # Create 4 dummy users
         self.users = [UserFactory() for id in range(4)]
         self.default_competition = Competition.objects.get_default_competition()
@@ -205,9 +207,10 @@ class TestTeamGetOrCreate(TestCase):
         self.assertNotIn(rolf.teams.first(), winner_head2head)
 
 
-class TestTeamSignals(TestCase):
-    @classmethod
+class TestTeamSignals(RankMeTestCase):
     def setUp(self):
+        super(TestTeamSignals, self).setUp()
+
         self.default_competition = Competition.objects.get_default_competition()
 
     def test_team_ranking_changed_signal(self):

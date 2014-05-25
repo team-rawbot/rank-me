@@ -1,10 +1,10 @@
-from django.test import TestCase
+from rankme.utils import RankMeTestCase
 
 from .factories import UserFactory
 from ..models import Competition, HistoricalScore, Game
 
 
-class TestHistoricalScore(TestCase):
+class TestHistoricalScore(RankMeTestCase):
     def test_historical_score(self):
         users = [UserFactory() for _ in range(3)]
         default_competition = Competition.objects.get_default_competition()
