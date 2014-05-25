@@ -1,0 +1,60 @@
+{% extends "base.html" %}
+
+{% load static i18n %}
+
+{% block body_class %}home{% endblock %}
+
+{% block content %}
+    <h1>{{ competition }}</h1>
+
+    <a href="{% url 'game_add' competition_slug=competition.slug %}" id="add-result-button" class="btn btn-success">{% trans "Add a result" %}</a>
+
+
+    <div class="row">
+        <div class="span3">
+            <div class="scores">
+                <h2>{% trans "Scores" %}</h2>
+                {% if score_board %}
+                    <ol class="score-board">
+                        {% for score in score_board %}
+                            <li class="score-item">
+                                <a href="{% url 'team_detail' team_id=score.team_id competition_slug=competition.slug  %}">
+                                    {% for player in score.team.users.all %}
+                                        {% include 'game/_player_avatar.html' with user=player %}
+                                    {% endfor %}
+                                    <strong>{{ score.team }}</strong> ({{ score.score|floatformat }})</a>
+                            </li>
+                        {% endfor %}
+                    </ol>
+                {% else %}
+                    <p>{% trans "No scores registered yet." %}</p>
+                {% endif %}
+            </div>
+        </div>
+
+        <div id="score-chart-container" class="span9 hidden-phone"
+            data-scores="{{ score_chart_data }}"></div>
+    </div>
+    <div class="row">
+        <div class="span12">
+          <div class="latest-results">
+              {% if latest_results %}
+                  <h2>{% trans "Last 20 games" %}</h2>
+                  <ul class="games">
+                      {% for game in latest_results %}
+                          <li class="game-item">
+                              {% include 'game/_score_detail.html' %}
+                          </li>
+                      {% endfor %}
+                  </ul>
+              {% else %}
+                  <p>{% trans "No result yet." %}</p>
+              {% endif %}
+          </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block extra_footer_js %}
+    <script src="{% static "assets/js/score_chart.js" %}"></script>
+{% endblock %}

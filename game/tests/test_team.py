@@ -1,7 +1,7 @@
 from django.test import TestCase
 
 from .factories import UserFactory
-from ..models import Game, Team
+from ..models import Competition, Game, Team
 
 
 class TestTeamGetOrCreate(TestCase):
@@ -9,6 +9,7 @@ class TestTeamGetOrCreate(TestCase):
     def setUp(self):
         # Create 4 dummy users
         self.users = [UserFactory() for id in range(4)]
+        self.default_competition = Competition.objects.get_default_competition()
 
     def assertUsersEqual(self, first, second):
         def users_to_id_list(users):
@@ -108,32 +109,50 @@ class TestTeamGetOrCreate(TestCase):
     def test_longest_streak(self):
         christoph, laurent, rolf = (UserFactory() for i in range(3))
 
-        game = Game.objects.announce(christoph, rolf)
-        self.assertEqual(game.winner.get_longest_streak(), 1)
-        self.assertEqual(game.loser.get_longest_streak(), 0)
-        game = Game.objects.announce(christoph, rolf)
-        self.assertEqual(game.winner.get_longest_streak(), 2)
-        game = Game.objects.announce(christoph, laurent)
-        self.assertEqual(game.winner.get_longest_streak(), 3)
+        game = Game.objects.announce(christoph, rolf, self.default_competition)
+        self.assertEqual(
+            game.winner.get_longest_streak(self.default_competition), 1
+        )
+        self.assertEqual(
+            game.loser.get_longest_streak(self.default_competition), 0
+        )
+        game = Game.objects.announce(christoph, rolf, self.default_competition)
+        self.assertEqual(
+            game.winner.get_longest_streak(self.default_competition), 2
+        )
+        game = Game.objects.announce(christoph, laurent,
+                                     self.default_competition)
+        self.assertEqual(
+            game.winner.get_longest_streak(self.default_competition), 3
+        )
 
         # C-C-C-Combo breaker
-        game = Game.objects.announce(rolf, christoph)
-        self.assertEqual(game.loser.get_longest_streak(), 3)
-        self.assertEqual(game.winner.get_longest_streak(), 1)
+        game = Game.objects.announce(rolf, christoph, self.default_competition)
+        self.assertEqual(
+            game.loser.get_longest_streak(self.default_competition), 3
+        )
+        self.assertEqual(
+            game.winner.get_longest_streak(self.default_competition), 1
+        )
 
-        game = Game.objects.announce(christoph, rolf)
-        self.assertEqual(game.winner.get_longest_streak(), 3)
-        Game.objects.announce(christoph, rolf)
-        Game.objects.announce(christoph, rolf)
-        game = Game.objects.announce(christoph, laurent)
-        self.assertEqual(game.winner.get_longest_streak(), 4)
+        game = Game.objects.announce(christoph, rolf, self.default_competition)
+        self.assertEqual(
+            game.winner.get_longest_streak(self.default_competition), 3
+        )
+        Game.objects.announce(christoph, rolf, self.default_competition)
+        Game.objects.announce(christoph, rolf, self.default_competition)
+        game = Game.objects.announce(christoph, laurent,
+                                     self.default_competition)
+        self.assertEqual(
+            game.winner.get_longest_streak(self.default_competition), 4
+        )
 
     def test_head2head(self):
         christoph, laurent, rolf = (UserFactory() for i in range(3))
 
-        game = Game.objects.announce(christoph, rolf)
-        winner_head2head = game.winner.get_head2head()
-        loser_head2head = game.loser.get_head2head()
+        game = Game.objects.announce(christoph, rolf, self.default_competition)
+        winner_head2head = game.winner.get_head2head(self.default_competition)
+        loser_head2head = game.loser.get_head2head(self.default_competition)
 
         self.assertNotIn(game.winner, winner_head2head)
         self.assertNotIn(game.loser, loser_head2head)
@@ -146,9 +165,9 @@ class TestTeamGetOrCreate(TestCase):
         self.assertEqual(loser_head2head[game.winner]['defeats'], 1)
         self.assertEqual(len(loser_head2head[game.winner]['games']), 1)
 
-        game = Game.objects.announce(rolf, christoph)
-        winner_head2head = game.winner.get_head2head()
-        loser_head2head = game.loser.get_head2head()
+        game = Game.objects.announce(rolf, christoph, self.default_competition)
+        winner_head2head = game.winner.get_head2head(self.default_competition)
+        loser_head2head = game.loser.get_head2head(self.default_competition)
 
         self.assertEqual(winner_head2head[game.loser]['wins'], 1)
         self.assertEqual(winner_head2head[game.loser]['defeats'], 1)
@@ -156,9 +175,9 @@ class TestTeamGetOrCreate(TestCase):
         self.assertEqual(loser_head2head[game.winner]['wins'], 1)
         self.assertEqual(loser_head2head[game.winner]['defeats'], 1)
 
-        game = Game.objects.announce(rolf, christoph)
-        winner_head2head = game.winner.get_head2head()
-        loser_head2head = game.loser.get_head2head()
+        game = Game.objects.announce(rolf, christoph, self.default_competition)
+        winner_head2head = game.winner.get_head2head(self.default_competition)
+        loser_head2head = game.loser.get_head2head(self.default_competition)
 
         self.assertEqual(winner_head2head[game.loser]['wins'], 2)
         self.assertEqual(winner_head2head[game.loser]['defeats'], 1)
@@ -166,9 +185,10 @@ class TestTeamGetOrCreate(TestCase):
         self.assertEqual(loser_head2head[game.winner]['wins'], 1)
         self.assertEqual(loser_head2head[game.winner]['defeats'], 2)
 
-        game = Game.objects.announce(laurent, christoph)
-        winner_head2head = game.winner.get_head2head()
-        loser_head2head = game.loser.get_head2head()
+        game = Game.objects.announce(laurent, christoph,
+                                     self.default_competition)
+        winner_head2head = game.winner.get_head2head(self.default_competition)
+        loser_head2head = game.loser.get_head2head(self.default_competition)
 
         self.assertEqual(winner_head2head[game.loser]['wins'], 1)
         self.assertEqual(winner_head2head[game.loser]['defeats'], 0)

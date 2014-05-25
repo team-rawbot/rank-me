@@ -1,28 +1,59 @@
 {% extends "base.html" %}
 
+{% load i18n %}
+
 {% block content %}
 
     <div class="row">
         <div class="span6">
             <div class="team">
-                <h1>{{ team }} ({{ team.score|floatformat }})</h1>
+                <h1>{{ team }} ({{ score.score|floatformat }})</h1>
+
+                <h2>{% trans "Games per week" %}</h2>
+                <table id="games-per-week" border="1">
+                    <thead>
+                        <tr>
+                            <td>{% trans "Week" %}</td>
+                            <td>{% trans "Nb game played by {{ team }}" %}</td>
+                            <td>{% trans "Total game" %}</td>
+                            <td>{% trans "All team avg" %}</td>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for week, stats in stats_per_week %}
+                            <tr>
+                                <td>{{ week }}</td>
+                                <td>{{ stats.team_count }}</td>
+                                <td>{{ stats.total_count }}</td>
+                                <td>{{ stats.avg_game_per_team }}</td></tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+
+                <h2>{% trans "Statistics" %}</h2>
                     <ul class="team-statistics">
-                        <li><strong>W</strong>: {{ team.wins }}</li>
-                        <li><strong>L</strong>: {{ team.defeats }}</li>
-                        <li><strong>σ</strong>: {{ team.stdev|floatformat:"5" }}</li>
+                        <li><strong>W</strong>: {{ wins }}</li>
+                        <li><strong>L</strong>: {{ defeats }}</li>
+                        <li><strong>σ</strong>: {{ score.stdev|floatformat:"5" }}</li>
                         <li><strong>L10</strong>: {{ last_results.wins }} - {{ last_results.defeats }}</li>
-                        <li><strong>Longest Winning Streak</strong>: {{ longest_streak }}</li>
+                        <li><strong>{% trans "Longest Winning Streak" %}</strong>: {{ longest_streak }}</li>
                     </ul>
-                <h2>Last 10 games</h2>
+                <h2>{% trans "Last 10 games" %}</h2>
                 <ul class="team-last-games">
                     {% regroup last_results.games by date|date:"d F Y" as last_games %}
                     {% for game_dates in last_games %}
                         <li class = "date">{{ game_dates.grouper }}<ul>
                             {% for game in game_dates.list %}
                                 {% if game.winner == team %}
-                                    <li class="game game-win">Win against <span class="loser">{{ game.loser }}</span></li>
+                                    <li class="game game-win">
+                                        {% url 'team_general_detail' team_id=game.loser.id as loser_url %}
+                                        {% blocktrans with loser=game.loser %}Win against <span class="loser"><a href="{{ loser_url }}">{{ loser }}</a></span>{% endblocktrans %}
+                                    </li>
                                 {% else %}
-                                    <li class="game game-defeat">Defeat against <span class="winner">{{ game.winner }}</span></li>
+                                    <li class="game game-defeat">
+                                        {% url 'team_general_detail' team_id=game.winner.id as winner_url %}
+                                        {% blocktrans with winner=game.winner %}Defeat against <span class="winner"><a href="{{ winner_url }}">{{ winner }}</a></span>{% endblocktrans %}
+                                    </li>
                                 {% endif %}
                             {% endfor %}
                         </ul></li>
@@ -32,31 +63,25 @@
         </div>
 
         <div class="span6">
-            <h2>Head-to-Head</h2>
-            <ul class="head2head">
-            {% for opponent, results in head2head.iteritems %}
-                <li class="team">
-                    <a href="{% url 'team_detail' opponent.id %}"><strong>{{ opponent }}</strong></a>: 
-                    {{ results.wins }} - {{ results.defeats }}
-                    <ul class="head2head-games hidden">
-                        {% for game in results.games %}
-                            {% ifchanged game.date|date:"d F Y" %}
-                                {% if forloop.first != True %}</ul>{% endif %}<li class = "date">{{ game.date|date:"d F Y" }}<ul>
-                            {% endifchanged %}
-                            {% if game.winner == team %}
-                                <li class="game game-win">Win</li>
-                            {% else %}
-                                <li class="game game-defeat">Defeat</span></li>
-                            {% endif %}
-                        {% endfor %}
-                        </ul>
-                    </ul>
-                </li>
-            {% endfor %}
-            </ul>
+            <h2>{% trans "Head-to-Head" %}</h2>
+            <table id="head-2-head-results" border="1">
+                <thead>
+                    <tr>
+                        <td>{% trans "Opponents" %}</td>
+                        <td>{% trans "Wins" %}</td>
+                        <td>{% trans "Defeats" %}</td>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for opponent, results in head2head.iteritems %}
+                        <tr>
+                            <td><a href="{% url 'team_detail' team_id=opponent.id competition_slug=competition.slug %}">{{ opponent }}</a>:
+                            <td>{{ results.wins }}</td>
+                            <td>{{ results.defeats }}</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
         </div>
-
-
     </div>
-
 {% endblock %}

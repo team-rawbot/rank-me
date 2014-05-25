@@ -29,7 +29,7 @@ BASE_PATH = get_project_root_path()
 # timezone as the operating system.
 # If running in a Windows environment this must be set to the same as your
 # system time zone.
-TIME_ZONE = None
+TIME_ZONE = 'Europe/Zurich'
 
 # Language code for this installation. All choices can be found here:
 # http://www.i18nguy.com/unicode/language-identifiers.html
@@ -86,9 +86,10 @@ SECRET_KEY = get_env_variable('SECRET_KEY', '')
 
 # List of callables that know how to import templates from various sources.
 TEMPLATE_LOADERS = (
-    'django.template.loaders.filesystem.Loader',
-    'django.template.loaders.app_directories.Loader',
-#     'django.template.loaders.eggs.Loader',
+    ('django.template.loaders.cached.Loader', (
+        'django.template.loaders.filesystem.Loader',
+        'django.template.loaders.app_directories.Loader',
+    )),
 )
 
 MIDDLEWARE_CLASSES = (
@@ -191,11 +192,11 @@ SOCIAL_AUTH_PIPELINE = (
 )
 LOGIN_URL = '/login/twitter/'
 
-AUTH_USER_MODEL = 'user.User'
-
 GAME_INITIAL_MU = 25
 GAME_INITIAL_SIGMA = 8.333
 
 SLACK_CHANNEL = '#rankme'
 SLACK_API_TOKEN = get_env_variable('SLACK_API_TOKEN', '')
 SLACK_DEBUG = False
+
+AUTH_PROFILE_MODULE = 'user.UserProfile'
