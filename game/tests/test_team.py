@@ -204,6 +204,12 @@ class TestTeamGetOrCreate(TestCase):
         # head2head
         self.assertNotIn(rolf.teams.first(), winner_head2head)
 
+
+class TestTeamSignals(TestCase):
+    @classmethod
+    def setUp(self):
+        self.default_competition = Competition.objects.get_default_competition()
+
     def test_team_ranking_changed_signal(self):
         team_ranking_changed_receiver = receiver(
             team_ranking_changed
