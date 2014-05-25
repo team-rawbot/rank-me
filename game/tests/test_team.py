@@ -235,12 +235,16 @@ class TestTeamSignals(RankMeTestCase):
         self.assertEqual(
             args_list, [
                 mock.call(team=rolf_team, old_ranking=None, sender=game1,
-                          new_ranking=1, signal=mock.ANY),
+                          new_ranking=1, signal=mock.ANY,
+                          competition=self.default_competition),
                 mock.call(team=christoph_team, old_ranking=None, sender=game1,
-                          new_ranking=2, signal=mock.ANY),
+                          new_ranking=2, signal=mock.ANY,
+                          competition=self.default_competition),
                 mock.call(team=christoph_team, old_ranking=2, sender=game2,
-                          new_ranking=1, signal=mock.ANY),
+                          new_ranking=1, signal=mock.ANY,
+                          competition=self.default_competition),
                 mock.call(team=rolf_team, old_ranking=1, sender=game2,
-                          new_ranking=2, signal=mock.ANY),
+                          new_ranking=2, signal=mock.ANY,
+                          competition=self.default_competition),
             ]
         )
