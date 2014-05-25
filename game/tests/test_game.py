@@ -1,7 +1,12 @@
+from django.dispatch import receiver
 from django.test import TestCase
+from django.utils import timezone
+
+import mock
 
 from .factories import UserFactory
 from ..models import Competition, Game
+from ..signals import game_played
 
 
 class TestGameAnnouncement(TestCase):
@@ -26,3 +31,21 @@ class TestGameAnnouncement(TestCase):
         game2 = Game.objects.announce(self.users[1], self.users[0],
                                       self.default_competition)
         self.assertGreater(game2.date, game1.date)
+
+    def test_game_announcement_signal(self):
+        game_played_receiver = receiver(game_played)(mock.Mock())
+
+        game = Game.objects.announce(self.users[0], self.users[1],
+                                     self.default_competition)
+        game_played_receiver.assert_called_once_with(
+            sender=game, signal=mock.ANY
+        )
+
+        # Check that the 'game played' signal is fired only when the game
+        # object is created, not modified
+        game_played_receiver = receiver(game_played)(mock.Mock())
+
+        game.date = timezone.now()
+        game.save()
+
+        self.assertEqual(game_played_receiver.call_count, 0)

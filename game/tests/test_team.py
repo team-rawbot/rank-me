@@ -1,7 +1,11 @@
+from django.dispatch import receiver
 from django.test import TestCase
+
+import mock
 
 from .factories import UserFactory
 from ..models import Competition, Game, Team
+from ..signals import team_ranking_changed
 
 
 class TestTeamGetOrCreate(TestCase):
@@ -199,3 +203,35 @@ class TestTeamGetOrCreate(TestCase):
         # Since Laurent never played against rolf, it shouldn't be in the
         # head2head
         self.assertNotIn(rolf.teams.first(), winner_head2head)
+
+    def test_team_ranking_changed_signal(self):
+        team_ranking_changed_receiver = receiver(
+            team_ranking_changed
+        )(mock.Mock())
+
+        christoph, laurent, rolf = (UserFactory() for i in range(3))
+
+        game1 = Game.objects.announce(rolf, christoph,
+                                      self.default_competition)
+        game2 = Game.objects.announce(christoph, rolf,
+                                      self.default_competition)
+        Game.objects.announce(christoph, rolf, self.default_competition)
+
+        self.assertEqual(team_ranking_changed_receiver.call_count, 4)
+        args_list = team_ranking_changed_receiver.call_args_list
+
+        rolf_team = rolf.teams.get()
+        christoph_team = christoph.teams.get()
+
+        self.assertEqual(
+            args_list, [
+                mock.call(team=rolf_team, old_ranking=None, sender=game1,
+                          new_ranking=1, signal=mock.ANY),
+                mock.call(team=christoph_team, old_ranking=None, sender=game1,
+                          new_ranking=2, signal=mock.ANY),
+                mock.call(team=christoph_team, old_ranking=2, sender=game2,
+                          new_ranking=1, signal=mock.ANY),
+                mock.call(team=rolf_team, old_ranking=1, sender=game2,
+                          new_ranking=2, signal=mock.ANY),
+            ]
+        )
