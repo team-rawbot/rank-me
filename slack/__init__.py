@@ -29,5 +29,8 @@ def post_message(message):
     if is_debug_enabled():
         logger.info(message)
     else:
-        _slacker.chat.post_message(settings.SLACK_CHANNEL, message,
-                                   link_names=True)
+        try:
+            _slacker.chat.post_message(settings.SLACK_CHANNEL, message,
+                                       link_names=True)
+        except Exception:
+            logger.exception("Unable to send slack message")
