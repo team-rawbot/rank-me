@@ -252,12 +252,13 @@ class Game(models.Model):
             self.loser
         )
 
-    def update_score(self):
+    def update_score(self, notify=True):
         winner = self.winner
         loser = self.loser
 
         for competition in self.competitions.all():
-            old_rankings = Score.objects.get_ranking_by_team(competition)
+            if notify:
+                old_rankings = Score.objects.get_ranking_by_team(competition)
 
             winner_score = winner.get_or_create_score(competition)
             loser_score = loser.get_or_create_score(competition)
@@ -289,19 +290,20 @@ class Game(models.Model):
                 competition=competition
             )
 
-            new_rankings = Score.objects.get_ranking_by_team(competition)
+            if notify:
+                new_rankings = Score.objects.get_ranking_by_team(competition)
 
-            for team in [winner, loser]:
-                if (team not in old_rankings or
-                        old_rankings[team] != new_rankings[team]):
-                    team_ranking_changed.send(
-                        sender=self,
-                        team=team,
-                        old_ranking=(old_rankings[team]
-                                     if team in old_rankings else None),
-                        new_ranking=new_rankings[team],
-                        competition=competition
-                    )
+                for team in [winner, loser]:
+                    if (team not in old_rankings or
+                            old_rankings[team] != new_rankings[team]):
+                        team_ranking_changed.send(
+                            sender=self,
+                            team=team,
+                            old_ranking=(old_rankings[team]
+                                         if team in old_rankings else None),
+                            new_ranking=new_rankings[team],
+                            competition=competition
+                        )
 
     def get_opponent(self, team):
         """

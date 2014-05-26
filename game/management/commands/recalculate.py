@@ -29,7 +29,7 @@ class Command(BaseCommand):
         scores.update(score=score, stdev=stdev)
 
         for game in games:
-            game.update_score()
+            game.update_score(notify=False)
 
         self.stdout.write(
             "Recalculated the standings for {nb_games} games with an initial"
