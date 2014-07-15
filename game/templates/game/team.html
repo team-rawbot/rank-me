@@ -6,7 +6,12 @@
 
     <div class="team">
         <header class="page-header">
-            <h1>{{ team }} <small>{{ score.score|floatformat }}</small></h1>
+            <h1>
+                {% for player in team.users.all %}
+                    {% include 'game/_player_avatar.html' with user=player %}
+                {% endfor %}
+                {{ team }} <small>{{ score.score|floatformat }}</small>
+            </h1>
         </header>
 
         <div class="panel panel-default">
@@ -70,7 +75,7 @@
                         <h3 class="panel-title">{% trans "Head-to-Head" %}</h3>
                     </div>
                     <div class="panel-body">
-                        <table id="head-2-head-results" border="1">
+                        <table id="head-2-head-results">
                             <thead>
                                 <tr>
                                     <td>{% trans "Opponents" %}</td>
