@@ -127,6 +127,7 @@ INSTALLED_APPS = (
     'django.contrib.admin',
     'django.contrib.admindocs',
     'social.apps.django_app.default',
+    'bootstrapform'
 )
 
 # A sample logging configuration. The only tangible logging

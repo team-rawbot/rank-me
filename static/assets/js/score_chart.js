@@ -27,6 +27,9 @@ var ScoreChart = (function ($) {
         positionSeries = _.sortBy(positionSeries, 'name');
 
         $target.highcharts({
+            chart: {
+                backgroundColor: 'transparent'
+            },
             title: {
                 text: 'Last ' + nbGames + ' games',
                 x: -20 //center

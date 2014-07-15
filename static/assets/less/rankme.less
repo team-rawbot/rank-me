@@ -1,11 +1,54 @@
-/**
- * Style my app!
- */
-
-div.app {
-    margin-top: 60px;
+body {
+  padding: 60px 40px;
 }
 
-.hidden {
-	display: none;
+.wrapper {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+}
+  .wrapper--small {
+    max-width: 400px;
+  }
+
+.user-avatar {
+  width: 32px;
+}
+
+.table > tbody > tr > td {
+  vertical-align: middle;
+}
+
+.rank-num {
+  text-align: right;
+
+  tr:first-child & {
+    font-size: 24px;
+    font-weight: bold;
+  }
+  tr:nth-child(2) & {
+    font-size: 20px;
+    font-weight: bold;
+  }
+  tr:nth-child(3) & {
+    font-size: 16px;
+    font-weight: bold;
+  }
+}
+
+.game-win {
+  color: @brand-success;
+
+  a {
+    color: inherit;
+    text-decoration: underline;
+  }
+}
+.game-defeat {
+  color: @brand-danger;
+
+  a {
+    color: inherit;
+    text-decoration: underline;
+  }
 }

@@ -1,57 +1,68 @@
 {% load i18n static game_extras %}
 <!DOCTYPE html>
 <html>
-    <head>
-        <title>Rank-me</title>
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <link href="{% static "main.css" %}" rel="stylesheet" media="screen">
-    </head>
-    <body class="{% block body_class %}{% endblock %}">
-        <div class="navbar navbar-fixed-top">
-            <div class="navbar-inner">
-                <div class="container">
-                    <a class="brand" href="/">Rank-me</a>
-                    <ul class="nav pull-right">
-                        <li class="dropdown">
-                            <a class="dropdown-toggle" data-toggle="dropdown" href="#">
-                                {% trans "Competitions" %}
-                                <b class="caret"></b>
-                            </a>
-                            <ul class="dropdown-menu" role="menu">
-                                {% competitions_list %}
-                                <li class="divider"></li>
-                                <li><a href="{% url "competition_add" %}">{% trans "Create new..." %}</a></li>
-                            </ul>
-                        </li>
-                        {% if user and user.is_authenticated %}
-                          <li class="dropdown">
-                              <a class="dropdown-toggle" data-toggle="dropdown" href="#">
-                                  <span id="nav-user-name">{{ user.username }}</span>
-                                  {% include 'game/_player_avatar.html' with user=user %}
-                                  <b class="caret"></b>
-                              </a>
-                              <ul class="dropdown-menu" role="menu">
-                                  <li><a href="{% url 'auth_logout' %}">{% trans "Log out" %}</a></li>
-                              </ul>
-                          </li>
-                        {% endif %}
-                    </ul>
-                </div>
+<head>
+    <title>Rank-me</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="{% static "main.css" %}" rel="stylesheet" media="screen">
+    <link href="http://fonts.googleapis.com/css?family=Source+Sans+Pro:400,600" rel="stylesheet" type="text/css">
+</head>
+<body class="{% block body_class %}{% endblock %}">
+    <nav class="navbar navbar-default navbar-fixed-top">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#main-navbar">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="/">Rank-me</a>
+            </div>
+
+            <div class="collapse navbar-collapse" id="main-navbar">
+                <ul class="nav navbar-nav navbar-right">
+                    <li class="dropdown">
+                        <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                            {% trans "Competitions" %}
+                            <b class="caret"></b>
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-right" role="menu">
+                            {% competitions_list %}
+                            <li class="divider"></li>
+                            <li><a href="{% url "competition_add" %}">{% trans "Create new..." %}</a></li>
+                        </ul>
+                    </li>
+                    {% if user and user.is_authenticated %}
+                    <li class="dropdown">
+                        <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                            <span id="nav-user-name">{{ user.username }}</span>
+                            <!-- {% include 'game/_player_avatar.html' with user=user %} -->
+                            <b class="caret"></b>
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-right" role="menu">
+                            <li><a href="{% url 'auth_logout' %}">{% trans "Log out" %}</a></li>
+                        </ul>
+                    </li>
+                    {% endif %}
+                </ul>
             </div>
         </div>
+    </nav>
 
-        <div class="app container">
-            {% block content %}{% endblock %}
-        </div>
+    <div class="app container-fluid">
+        {% block content %}{% endblock %}
+    </div>
 
-        <script src="{% static "vendors/jquery.min.js" %}"></script>
-        <script src="{% static "vendors/bootstrap-dropdown.js" %}"></script>
-        <script src="{% static "vendors/underscore-min.js" %}"></script>
-        <script src="{% static "vendors/highcharts.js" %}"></script>
-        <script src="{% static "vendors/exporting.js" %}"></script>
-        <script src="{% static "assets/js/add_result.js" %}"></script>
-        <script src="{% static "assets/js/team_charts.js" %}"></script>
+    <script src="{% static "vendors/jquery.min.js" %}"></script>
+    <script src="{% static "vendors/bootstrap/js/collapse.js" %}"></script>
+    <script src="{% static "vendors/bootstrap/js/dropdown.js" %}"></script>
+    <script src="{% static "vendors/underscore-min.js" %}"></script>
+    <script src="{% static "vendors/highcharts.js" %}"></script>
+    <script src="{% static "vendors/exporting.js" %}"></script>
+    <script src="{% static "assets/js/add_result.js" %}"></script>
+    <script src="{% static "assets/js/team_charts.js" %}"></script>
 
-        {% block extra_footer_js %}{% endblock %}
-    </body>
+    {% block extra_footer_js %}{% endblock %}
+</body>
 </html>

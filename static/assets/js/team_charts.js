@@ -18,7 +18,8 @@ $(function() {
     // Init highcharts JS
     $('#head-to-head-charts').highcharts({
         chart: {
-            type: 'bar'
+            type: 'bar',
+            backgroundColor: 'transparent'
         },
         title: {
             text:''

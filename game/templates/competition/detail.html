@@ -5,52 +5,73 @@
 {% block body_class %}home{% endblock %}
 
 {% block content %}
-    <h1>{{ competition }}</h1>
-
-    <a href="{% url 'game_add' competition_slug=competition.slug %}" id="add-result-button" class="btn btn-success">{% trans "Add a result" %}</a>
-
+    <div class="page-header">
+      <a href="{% url 'game_add' competition_slug=competition.slug %}" id="add-result-button" class="btn btn-primary pull-right">{% trans "Add a result" %}</a>
+      <h1>{{ competition }}</h1>
+    </div>
 
     <div class="row">
-        <div class="span3">
+        <div class="col-md-3">
             <div class="scores">
-                <h2>{% trans "Scores" %}</h2>
-                {% if score_board %}
-                    <ol class="score-board">
-                        {% for score in score_board %}
-                            <li class="score-item">
-                                <a href="{% url 'team_detail' team_id=score.team_id competition_slug=competition.slug  %}">
-                                    {% for player in score.team.users.all %}
-                                        {% include 'game/_player_avatar.html' with user=player %}
-                                    {% endfor %}
-                                    <strong>{{ score.team }}</strong> ({{ score.score|floatformat }})</a>
-                            </li>
-                        {% endfor %}
-                    </ol>
-                {% else %}
-                    <p>{% trans "No scores registered yet." %}</p>
-                {% endif %}
+                <div class="score-board panel panel-default">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">{% trans "Scores" %}</h3>
+                    </div>
+
+                    {% if score_board %}
+                        <table class="table">
+                            {% for score in score_board %}
+                                <tr class="score-item">
+                                    <td class="rank-num">{{ forloop.counter }}</td>
+                                    <td>
+                                        <a href="{% url 'team_detail' team_id=score.team_id competition_slug=competition.slug  %}">
+                                            {% for player in score.team.users.all %}
+                                                {% include 'game/_player_avatar.html' with user=player %}
+                                            {% endfor %}
+                                            {{ score.team }}
+                                        </a>
+                                    </td>
+                                    <td>{{ score.score|floatformat }}</td>
+                                </tr>
+                            {% endfor %}
+                        </table>
+                    {% else %}
+                        <div class="panel-body">
+                            {% trans "No scores registered yet." %}
+                        </div>
+                    {% endif %}
+                </div>
             </div>
         </div>
 
-        <div id="score-chart-container" class="span9 hidden-phone"
-            data-scores="{{ score_chart_data }}"></div>
-    </div>
-    <div class="row">
-        <div class="span12">
-          <div class="latest-results">
-              {% if latest_results %}
-                  <h2>{% trans "Last 20 games" %}</h2>
-                  <ul class="games">
-                      {% for game in latest_results %}
-                          <li class="game-item">
-                              {% include 'game/_score_detail.html' %}
-                          </li>
-                      {% endfor %}
-                  </ul>
-              {% else %}
-                  <p>{% trans "No result yet." %}</p>
-              {% endif %}
-          </div>
+        <div class="col-md-9">
+            <div id="score-chart-container" class="well hidden-phone" data-scores="{{ score_chart_data }}"></div>
+
+            <div class="latest-results panel panel-default">
+                <div class="panel-heading">
+                    <h3 class="panel-title">{% trans "Last 20 games" %}</h3>
+                </div>
+                {% if latest_results %}
+                    <table class="games table">
+                        <thead>
+                            <th>Winner</th>
+                            <th>Loser</th>
+                            <th>Date</th>
+                        </thead>
+                        <tbody>
+                            {% for game in latest_results %}
+                                <tr class="game-item">
+                                    {% include 'game/_score_detail.html' %}
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                {% else %}
+                    <div class="panel-body">
+                        {% trans "No result yet." %}
+                    </div>
+                {% endif %}
+            </div>
         </div>
     </div>
 {% endblock %}
