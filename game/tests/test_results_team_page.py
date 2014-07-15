@@ -66,15 +66,17 @@ class TestResultsTeamPage(RankMeTestCase):
             'competition_slug': self.default_competition.slug
         }))
 
-        self.assertContains(response, '<ul class="team-statistics"')
+        self.assertContains(response, '<table class="team-statistics')
         self.assertContains(response, '<table id="head-2-head-results"')
-        self.assertContains(response, '<li><strong>Longest Winning Streak</strong>: 2</li>')
+        self.assertContains(response, '<th>Longest Winning Streak</th>')
+        self.assertEqual(response.context['longest_streak'], 2)
 
         response = self.client.get(reverse('team_detail', kwargs={
             'team_id': christoph_team_id,
             'competition_slug': self.default_competition.slug
         }))
 
-        self.assertContains(response, '<ul class="team-statistics"')
+        self.assertContains(response, '<table class="team-statistics')
         self.assertContains(response, '<table id="head-2-head-results"')
-        self.assertContains(response, '<li><strong>Longest Winning Streak</strong>: 1</li>')
+        self.assertContains(response, '<th>Longest Winning Streak</th>')
+        self.assertEqual(response.context['longest_streak'], 1)

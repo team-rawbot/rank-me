@@ -32,8 +32,7 @@ class TestResultsPage(RankMeTestCase):
 
         self.assertContains(response, '<div class="scores"')
         self.assertContains(response, 'No scores registered yet')
-        self.assertNotContains(response, '<ul class="score-board"')
-        self.assertContains(response, '<div class="latest-results"')
+        self.assertContains(response, '<div class="latest-results')
         self.assertContains(response, 'No result yet')
 
     """
@@ -69,8 +68,8 @@ class TestResultsPage(RankMeTestCase):
 
         self.assertContains(response, '<div class="scores"')
         self.assertNotContains(response, 'No scores registered yet')
-        self.assertContains(response, '<ol class="score-board"')
-        self.assertContains(response, '<li class="score-item"', 2)
-        self.assertContains(response, '<div class="latest-results"')
-        self.assertContains(response, '<ul class="games')
-        self.assertContains(response, '<li class="game-item', 1)
+        self.assertContains(response, '<div class="score-board')
+        self.assertContains(response, '<tr class="score-item"', 2)
+        self.assertContains(response, '<div class="latest-results')
+        self.assertContains(response, '<table class="games')
+        self.assertContains(response, '<tr class="game-item', 1)
