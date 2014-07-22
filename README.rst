@@ -13,8 +13,8 @@ Start by installing the requirements and set up your database::
 
 Create the database::
 
-    ./manage.py syncdb --all
-    ./manage.py migrate --fake
+    ./manage.py syncdb
+    ./manage.py migrate
 
 Then run the development server::
 
