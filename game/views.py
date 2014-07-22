@@ -6,14 +6,13 @@ from .forms import GameForm, CompetitionForm
 from .models import Competition, Game, HistoricalScore, Score, Team
 
 
-@login_required
 def index(request):
     if request.user.is_authenticated():
         return redirect(reverse('competition_detail', kwargs={
             'competition_slug': 'default-competition'
         }))
     else:
-        return render('user/login.html')
+        return render(request, 'user/login.html')
 
 
 @login_required
