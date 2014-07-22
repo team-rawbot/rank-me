@@ -36,13 +36,13 @@ $(function() {
             },
         },
         series: [{
-            name: 'Win',
+            name: 'Wins',
             data: data.wins,
-            color: 'green'
+            color: '#89c571'
         }, {
-            name: 'Defeat',
+            name: 'Losses',
             data: data.defeats,
-            color: 'red'
+            color: '#d76b7a'
         }]
     });
 
@@ -89,6 +89,7 @@ $(function() {
             {
                 name: 'Player games',
                 data: data.games,
+                color: '#659dca',
                 pointPadding: 0,
                 groupPadding: 0
             },
@@ -96,7 +97,7 @@ $(function() {
                 name: 'Office avg',
                 type: 'spline',
                 data: data.avg,
-                color: 'red',
+                color: '#d76b7a',
                 width: 1
             }
         ],
