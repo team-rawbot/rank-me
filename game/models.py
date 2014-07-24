@@ -446,6 +446,11 @@ class Score(models.Model):
             ('competition', 'team'),
         )
 
+    def __unicode__(self):
+        return '[%s] %s: mu = %s, s = %s' % (self.competition.name,
+                                             self.team.get_name(), self.score,
+                                             self.stdev)
+
 
 class HistoricalScore(models.Model):
     game = models.ForeignKey(Game, related_name='historical_scores')
