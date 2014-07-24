@@ -5,6 +5,9 @@ DEBUG = bool(get_env_variable('DEBUG', True))
 TEMPLATE_DEBUG = DEBUG
 SECRET_KEY = 'notsosecret'
 
+SOCIAL_AUTH_TWITTER_KEY = 'notsotwitter'
+SOCIAL_AUTH_TWITTER_SECRET = 'notsotwitter'
+
 INSTALLED_APPS += (
     'debug_toolbar',
     'django_extensions',
