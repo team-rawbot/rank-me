@@ -95,7 +95,7 @@ def game_add(request, competition_slug):
     competition = get_object_or_404(Competition, slug=competition_slug)
 
     if request.method == 'POST':
-        form = GameForm(request.POST)
+        form = GameForm(request.POST, competition=competition)
 
         if form.is_valid():
             Game.objects.announce(
@@ -108,7 +108,7 @@ def game_add(request, competition_slug):
                 'competition_slug': competition.slug
             }))
     else:
-        form = GameForm()
+        form = GameForm(competition=competition)
 
     return render(request, 'game/add.html', {
         'form': form,

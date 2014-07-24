@@ -14,6 +14,15 @@ class GameForm(forms.Form):
         queryset=get_user_model().objects.all().order_by('username')
     )
 
+    def __init__(self, *args, **kwargs):
+        competition = kwargs.pop('competition', None)
+
+        super(GameForm, self).__init__(*args, **kwargs)
+
+        if competition is not None:
+            self.fields['winner'].queryset = competition.competitors.all().order_by('username')
+            self.fields['loser'].queryset = competition.competitors.all().order_by('username')
+
     def clean(self):
         cleaned_data = super(GameForm, self).clean()
         winner = cleaned_data.get('winner', None)

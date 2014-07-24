@@ -1,9 +1,17 @@
 from django.contrib import admin
-from game.models import Competition, Game, Score, Team
+from game.models import Competition, Competitor, Game, Score, Team
+
+
+class CompetitorInline(admin.TabularInline):
+    model = Competitor
 
 
 class CompetitionAdmin(admin.ModelAdmin):
     fields = ['name', 'description', 'start_date', 'end_date', 'slug']
+
+    inlines = [
+        CompetitorInline
+    ]
 
 
 class ScoreAdmin(admin.ModelAdmin):

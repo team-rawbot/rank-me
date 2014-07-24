@@ -471,6 +471,21 @@ class CompetitionManager(models.Manager):
         return self.get_queryset().get(pk=1)
 
 
+class Competitor(models.Model):
+    ROLE_USER = 0
+    ROLE_MANAGER = 1
+    ROLE_ADMIN = 2
+    ROLES = (
+        (ROLE_USER, 'User'),
+        (ROLE_MANAGER, 'Manager'),
+        (ROLE_ADMIN, 'Admin')
+    )
+
+    user = models.ForeignKey(settings.AUTH_USER_MODEL)
+    competition = models.ForeignKey('Competition')
+    role = models.PositiveSmallIntegerField(choices=ROLES)
+
+
 class Competition(models.Model):
     name = models.CharField(max_length=255)
     description = models.TextField(blank=True)
@@ -479,6 +494,8 @@ class Competition(models.Model):
     teams = models.ManyToManyField(Team, through=Score)
     games = models.ManyToManyField(Game, related_name='competitions')
     slug = models.SlugField()
+    competitors = models.ManyToManyField(settings.AUTH_USER_MODEL,
+                                         through=Competitor)
 
     objects = CompetitionManager()
 
