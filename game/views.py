@@ -1,9 +1,11 @@
 from django.contrib.auth.decorators import login_required
 from django.core.urlresolvers import reverse
+from django.forms.models import inlineformset_factory
+from django.http import HttpResponseForbidden
 from django.shortcuts import get_object_or_404, render, redirect
 
 from .forms import GameForm, CompetitionForm
-from .models import Competition, Game, HistoricalScore, Score, Team
+from .models import Competition, Competitor, Game, HistoricalScore, Score, Team
 
 
 def index(request):
@@ -88,6 +90,35 @@ def competition_detail(request, competition_slug):
     }
 
     return render(request, 'competition/detail.html', context)
+
+
+def competition_edit(request, competition_slug):
+    competition = get_object_or_404(Competition, slug=competition_slug)
+
+    if not competition.can_edit(request.user):
+        return HttpResponseForbidden()
+
+    CompetitorFormset = inlineformset_factory(Competition, Competitor)
+
+    if request.method == 'POST':
+        form = CompetitionForm(request.POST, instance=competition)
+        formset = CompetitorFormset(request.POST, instance=competition)
+
+        if form.is_valid() and formset.is_valid():
+            competition = form.save()
+            formset.save()
+
+            return redirect('competition_detail',
+                            competition_slug=competition.slug)
+    else:
+        form = CompetitionForm(instance=competition)
+        formset = CompetitorFormset(instance=competition)
+
+    return render(request, 'competition/edit.html', {
+        'competition': competition,
+        'form': form,
+        'formset': formset
+    })
 
 
 @login_required

@@ -10,6 +10,7 @@
             <span class="glyphicon glyphicon-plus icon-spaced-right"></span>
             {% trans "Add a result" %}
         </a>
+        <a href="{% url 'competition_edit' competition_slug=competition.slug %}" id="edit-competition-button" class="btn btn-primary pull-right">{% trans "Edit competition" %}</a>
         <h1>{{ competition }}</h1>
     </div>
 

@@ -5,6 +5,7 @@ from collections import defaultdict, OrderedDict
 from itertools import groupby
 
 from django.conf import settings
+from django.contrib.auth import get_user_model
 from django.core.exceptions import ValidationError
 from django.db import models
 from django.db.models import Q
@@ -483,7 +484,7 @@ class Competitor(models.Model):
 
     user = models.ForeignKey(settings.AUTH_USER_MODEL)
     competition = models.ForeignKey('Competition')
-    role = models.PositiveSmallIntegerField(choices=ROLES)
+    role = models.PositiveSmallIntegerField(choices=ROLES, default=ROLE_USER)
 
 
 class Competition(models.Model):
@@ -507,3 +508,12 @@ class Competition(models.Model):
             self.slug = slugify(self.name)
 
         super(Competition, self).save(*args, **kwargs)
+
+    def can_edit(self, user):
+        try:
+            self.competitors.get(competitor__user=user,
+                                 competitor__role=Competitor.ROLE_ADMIN)
+        except get_user_model().DoesNotExist:
+            return False
+
+        return True
