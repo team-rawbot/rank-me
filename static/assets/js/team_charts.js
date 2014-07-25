@@ -40,7 +40,7 @@ $(function() {
             data: data.wins,
             color: '#89c571'
         }, {
-            name: 'Losses',
+            name: 'Defeats',
             data: data.defeats,
             color: '#d76b7a'
         }]
