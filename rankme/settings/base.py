@@ -130,6 +130,7 @@ INSTALLED_APPS = (
     'social.apps.django_app.default',
     'bootstrapform',
     'rest_framework',
+    'rest_framework.authtoken',
 )
 
 # A sample logging configuration. The only tangible logging
@@ -206,6 +207,10 @@ AUTH_PROFILE_MODULE = 'user.UserProfile'
 
 REST_FRAMEWORK = {
     'DEFAULT_MODEL_SERIALIZER_CLASS': 'rest_framework.serializers.HyperlinkedModelSerializer',
-    'DEFAULT_PERMISSION_CLASSES': ['rest_framework.permissions.DjangoModelPermissionsOrAnonReadOnly'],
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework.authentication.SessionAuthentication',
+        'rest_framework.authentication.TokenAuthentication',
+    ),
+    'DEFAULT_PERMISSION_CLASSES': ['rest_framework.permissions.IsAuthenticated'],
     'PAGINATE_BY': 10
 }
