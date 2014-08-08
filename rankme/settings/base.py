@@ -124,10 +124,12 @@ INSTALLED_APPS = (
     'game',
     'user',
     'slack',
+    'api',
     'django.contrib.admin',
     'django.contrib.admindocs',
     'social.apps.django_app.default',
-    'bootstrapform'
+    'bootstrapform',
+    'rest_framework',
 )
 
 # A sample logging configuration. The only tangible logging
@@ -201,3 +203,9 @@ SLACK_API_TOKEN = get_env_variable('SLACK_API_TOKEN', '')
 SLACK_DEBUG = False
 
 AUTH_PROFILE_MODULE = 'user.UserProfile'
+
+REST_FRAMEWORK = {
+    'DEFAULT_MODEL_SERIALIZER_CLASS': 'rest_framework.serializers.HyperlinkedModelSerializer',
+    'DEFAULT_PERMISSION_CLASSES': ['rest_framework.permissions.DjangoModelPermissionsOrAnonReadOnly'],
+    'PAGINATE_BY': 10
+}

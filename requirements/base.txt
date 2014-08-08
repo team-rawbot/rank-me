@@ -13,3 +13,4 @@ six==1.6.1
 South==0.8.4
 trueskill==0.4.1
 git+git://github.com/os/slacker.git
+djangorestframework==2.3.14
