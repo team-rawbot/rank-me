@@ -34,6 +34,10 @@ to register a Twitter app to get an API key and secret, you can just create a
 user with ``./manage.py createsuperuser``, go to ``/admin`` and log in. Once you're
 authenticated, you'll be able to go through the whole application.
 
+API documentation
+=================
+
+Go to http://127.0.0.1:8000/api
 
 Assets management
 =================
