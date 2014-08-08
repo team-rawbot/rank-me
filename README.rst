@@ -23,7 +23,7 @@ Then run the development server::
 
 To run the tests::
 
-    ./manage.py test game
+    ./manage.py test
 
 Twitter authentication
 ======================
