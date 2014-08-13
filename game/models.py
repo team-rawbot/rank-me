@@ -404,20 +404,33 @@ class HistoricalScoreManager(models.Manager):
         :param game:Game
         :return:float skill
         """
-        historical_score_id = game.historical_scores.filter(
+        return self.get_last_for_team(team, game, competition).score
+
+    def get_last_for_team(self, team, game, competition):
+        """
+        Return the latest historical score before game for a team in the competition
+
+        :param team:Team
+        :param game:Game
+        :param competition:Competition
+        :return:HistoricalScore
+        """
+        last_score = HistoricalScore.objects.filter(
+            game_id__lt=game.id,
+            team=team,
             competition=competition
-        ).order_by('id').first().id
-        last_score = (self.get_queryset()
-                      .filter(team=team, id__lte=historical_score_id,
-                              competition=competition)
-                      .select_related('game__winner', 'game__loser', 'game')
-                      .order_by('-id')
-                      .first())
+        ).order_by('-id').first()
 
         if last_score is None:
-            return settings.GAME_INITIAL_MU
+            last_score = HistoricalScore(
+                game=game,
+                score=settings.GAME_INITIAL_MU,
+                stdev=settings.GAME_INITIAL_SIGMA,
+                team=team,
+                competition=competition
+            )
 
-        return last_score.score
+        return last_score
 
 
 class ScoreManager(models.Manager):
