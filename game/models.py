@@ -279,6 +279,7 @@ class Game(models.Model):
             HistoricalScore.objects.create(
                 game=self,
                 score=winner_score.score,
+                stdev=winner_score.stdev,
                 team=winner,
                 competition=competition
             )
@@ -286,6 +287,7 @@ class Game(models.Model):
             HistoricalScore.objects.create(
                 game=self,
                 score=loser_score.score,
+                stdev=loser_score.stdev,
                 team=loser,
                 competition=competition
             )
@@ -457,6 +459,8 @@ class HistoricalScore(models.Model):
     competition = models.ForeignKey('Competition')
     team = models.ForeignKey(Team, related_name='historical_scores')
     score = models.FloatField('Current team score')
+    stdev = models.FloatField('Current team standard deviation',
+                              default=settings.GAME_INITIAL_SIGMA)
 
     objects = HistoricalScoreManager()
 
