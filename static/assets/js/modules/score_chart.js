@@ -3,13 +3,12 @@ define(["jquery", "underscore", "highcharts"], function($, _, HighCharts) {
         var drawChart,
             mapToPosition,
             positionSeries,
-            getMinGameId,
-            getMaxGameId,
+            getNbGames,
             getSeries;
 
-        mapToPosition = function(element) {
+        mapToPosition = function(element, index) {
             return {
-                'x': element['game'],
+                'x': index,
                 'y': element['position'],
                 'marker': {
                     'radius': element['played']? 5:0,
@@ -19,27 +18,27 @@ define(["jquery", "underscore", "highcharts"], function($, _, HighCharts) {
         };
 
         drawChart = function($target) {
-            if ($target.length === 0) return;
-          
             var scoresByTeam = $target.data('scores');
 
             var positionSeries = getSeries(scoresByTeam);
-            var minGameId = getMinGameId(scoresByTeam);
-            var maxGameId = getMaxGameId(scoresByTeam);
+            var nbGames = getNbGames(scoresByTeam);
 
             // sort series by team name
             positionSeries = _.sortBy(positionSeries, 'name');
 
             $target.highcharts({
+                chart: {
+                    backgroundColor: 'transparent'
+                },
                 title: {
-                    text: 'Last ' + (maxGameId - minGameId + 1) + ' games',
+                    text: 'Last ' + nbGames + ' games',
                     x: -20 //center
                 },
                 xAxis: {
                     text: 'Game id',
                     type: 'linear',
-                    min: minGameId,
-                    max: maxGameId,
+                    min: 0,
+                    max: nbGames,
                     gridLineColor: '#fff',
                     offset: 30
                 },
@@ -108,15 +107,9 @@ define(["jquery", "underscore", "highcharts"], function($, _, HighCharts) {
             return positionSeries;
         };
 
-        getMinGameId = function(scores_by_team) {
-            for (team in scores_by_team) {
-                return scores_by_team[team][0]['game'];
-            }
-        };
-
-        getMaxGameId = function(scores_by_team) {
-            for (team in scores_by_team) {
-                return scores_by_team[team][scores_by_team[team].length - 1]['game'];
+        getNbGames = function(scoresByTeam) {
+            for (var team in scoresByTeam) {
+                return scoresByTeam[team].length;
             }
         };
 
