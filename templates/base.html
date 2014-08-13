@@ -54,6 +54,12 @@
         </div>
     </nav>
 
+    <div class="messages">
+        {% for message in messages %}
+            <div class="alert alert-{{ message.tags }}">{{ message }}</div>
+        {% endfor %}
+    </div>
+
     <div class="app container-fluid">
         {% block content %}{% endblock %}
     </div>
