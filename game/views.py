@@ -1,6 +1,8 @@
 from django.contrib.auth.decorators import login_required
+from django.contrib import messages
 from django.core.urlresolvers import reverse
 from django.shortcuts import get_object_or_404, render, redirect
+
 
 from .forms import GameForm, CompetitionForm
 from .models import Competition, Game, HistoricalScore, Score, Team
@@ -114,3 +116,18 @@ def game_add(request, competition_slug):
         'form': form,
         'competition': competition,
     })
+
+
+@login_required
+def game_remove(request, game_id, competition_slug):
+    game = get_object_or_404(Game, pk=game_id)
+    competition = get_object_or_404(Competition, slug=competition_slug)
+
+    last_game = Game.objects.get_latest(competition)[0]
+
+    if last_game.id == game.id:
+        messages.add_message(request, messages.WARNING, 'Not implemented yet.')
+    else:
+        messages.add_message(request, messages.ERROR, 'Trying to delete a game that is not the last.')
+
+    return redirect('game.views.competition_detail', competition_slug=competition_slug)

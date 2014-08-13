@@ -60,11 +60,20 @@
                             <th>{% trans "Winner" %}</th>
                             <th>{% trans "Loser" %}</th>
                             <th>{% trans "Date" %}</th>
+                            <th>{% trans "Action" %}</th>
                         </thead>
                         <tbody>
                             {% for game in latest_results %}
                                 <tr class="game-item">
                                     {% include 'game/_score_detail.html' %}
+                                    <td>
+                                        {%if forloop.first %}
+                                        <a href="{% url 'game_remove' competition_slug=competition.slug game_id=game.id %}" class="btn btn-primary pull-right">
+                                            <span class="glyphicon glyphicon-trash icon-spaced-right"></span>
+                                            {% trans "Remove" %}
+                                        </a>
+                                        {% endif %}
+                                    </td>
                                 </tr>
                             {% endfor %}
                         </tbody>
