@@ -55,6 +55,10 @@ define(['jquery'], function($) {
             else if (event.keyCode == 76) {
                 selectAs('loser');
             }
+            // press Ctrl + enter to submit the form
+            else if (event.keyCode == 13 && event.ctrlKey) {
+                $('#add-result').submit();
+            }
         });
     };
 
