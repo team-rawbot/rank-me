@@ -22,6 +22,7 @@ module.exports = function(grunt) {
                 tasks: ["less"],
                 options: {
                     debounceDelay: 250,
+                    livereload: true
                 }
             }
         },

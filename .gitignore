@@ -1,6 +1,6 @@
 *.pyc
-static/vendors/*
 node_modules/*
 envdir/*
 !envdir/.gitkeep
 static/main.css
+rankme.db

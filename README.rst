@@ -13,8 +13,8 @@ Start by installing the requirements and set up your database::
 
 Create the database::
 
-    ./manage.py syncdb --all
-    ./manage.py migrate --fake
+    ./manage.py syncdb
+    ./manage.py migrate
 
 Then run the development server::
 
@@ -24,6 +24,15 @@ Then run the development server::
 To run the tests::
 
     ./manage.py test game
+
+Twitter authentication
+======================
+
+Most of the application requires to be authenticated. This means you'll get
+redirected to Twitter if you try to access a protected page. If you don't want
+to register a Twitter app to get an API key and secret, you can just create a
+user with ``./manage.py createsuperuser``, go to ``/admin`` and log in. Once you're
+authenticated, you'll be able to go through the whole application.
 
 
 Assets management
@@ -45,7 +54,7 @@ Compute LESS with grunt::
 
     # keep looking at changes and recompile when needed
     grunt
-    
+
 Deployment
 ==========
 
@@ -69,6 +78,7 @@ setting in the file).
 * STATIC_URL
 * SOCIAL_AUTH_TWITTER_KEY
 * SOCIAL_AUTH_TWITTER_SECRET
+* SLACK_API_TOKEN
 
 Contribute
 ==========

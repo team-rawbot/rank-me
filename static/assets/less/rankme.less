@@ -1,6 +1,77 @@
-/**
- * Style my app!
- */
-.hidden {
-	display: none;
+body {
+  padding: 60px 40px;
+}
+
+.wrapper {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+}
+  .wrapper--small {
+    max-width: 400px;
+  }
+
+.user-avatar {
+  width: 32px;
+  margin-right: 0.5em;
+
+  .page-header & {
+    width: 48px;
+  }
+}
+
+.table > tbody > tr > td {
+  vertical-align: middle;
+}
+
+.rank-num {
+  text-align: right;
+
+  tr:first-child & {
+    font-size: 24px;
+    font-weight: bold;
+  }
+  tr:nth-child(2) & {
+    font-size: 20px;
+    font-weight: bold;
+  }
+  tr:nth-child(3) & {
+    font-size: 16px;
+    font-weight: bold;
+  }
+}
+
+.game-win {
+  color: @brand-success;
+
+  a {
+    color: inherit;
+    text-decoration: underline;
+  }
+}
+.game-defeat {
+  color: @brand-danger;
+
+  a {
+    color: inherit;
+    text-decoration: underline;
+  }
+}
+
+.icon-spaced-right {
+  margin-right: 0.5em;
+}
+
+@media (max-width: @screen-sm-max) {
+  body {
+    padding-left: 20px;
+    padding-right: 20px;
+  }
+}
+
+@media (max-width: @screen-xs-max) {
+  body {
+    padding-left: 10px;
+    padding-right: 10px;
+  }
 }

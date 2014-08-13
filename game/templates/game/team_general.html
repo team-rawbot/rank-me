@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+
+{% load i18n %}
+
+{% block content %}
+<div class="wrapper--small wrapper">
+    <div class="page-header">
+        <h1>{{ team }}</h1>
+    </div>
+
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h3 class="panel-title">{% trans "Competitions in which this team participates" %}</h3>
+        </div>
+
+        <table class="table">
+            {% for score in team.scores.all %}
+                <tr>
+                    <td><a href="{% url 'team_detail' competition_slug=score.competition.slug team_id=team.id %}">{{ score.competition }}</a></td>
+                    <td class="text-right text-muted">{{ score.score }}</td>
+                </tr>
+            {% endfor %}
+        </table>
+    </div>
+</div>
+{% endblock %}

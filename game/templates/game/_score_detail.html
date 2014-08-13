@@ -1,0 +1,15 @@
+{% load i18n static %}
+
+<td>
+  {% for player in game.winner.users.all %}
+      {% include 'game/_player_avatar.html' with user=player %}
+  {% endfor %}
+  {{ game.winner }}
+</td>
+<td>
+  {% for player in game.loser.users.all %}
+      {% include 'game/_player_avatar.html' with user=player %}
+  {% endfor %}
+  {{ game.loser }}
+</td>
+<td>{{ game.date }}</td>

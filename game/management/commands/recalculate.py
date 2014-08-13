@@ -1,7 +1,7 @@
 from django.conf import settings
 from django.core.management.base import BaseCommand
 
-from game.models import Game, Team, HistoricalScore
+from game.models import Game, HistoricalScore, Score
 
 
 class Command(BaseCommand):
@@ -20,16 +20,16 @@ class Command(BaseCommand):
         except IndexError:
             stdev = settings.GAME_INITIAL_SIGMA
 
-        teams = Team.objects.all()
-        games = Game.objects.order_by('id')
+        scores = Score.objects.all()
+        games = Game.objects.prefetch_related('competitions').order_by('id')
 
-        # remove all HistoricalScores (will be auto-populated on game.save()
+        # remove all HistoricalScores
         HistoricalScore.objects.all().delete()
 
-        teams.update(score=score, stdev=stdev, wins=0, defeats=0)
+        scores.update(score=score, stdev=stdev)
 
         for game in games:
-            game.update_score()
+            game.update_score(notify=False)
 
         self.stdout.write(
             "Recalculated the standings for {nb_games} games with an initial"
