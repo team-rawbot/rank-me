@@ -1,7 +1,5 @@
 define(['jquery'], function ($) {
     function init() {
-        console.log('plop');
-
         // HEAD TO HEAD GRAPH
         // ------------------
 
