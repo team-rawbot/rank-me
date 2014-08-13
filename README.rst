@@ -89,5 +89,4 @@ Contribute
 
 Any contribution welcome! Ideally use pull requests and make sure that the tests still pass (see above).
 
-Backlog available on `Trello
-<https://trello.com/b/lcJzUtQS/rankme>`_.
+We use the Github issues as a Backlog.
