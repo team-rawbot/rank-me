@@ -1,5 +1,6 @@
 define(['jquery'], function($) {
     var alreadySelected = false;
+    var selects = '#add-result select';
 
     /**
      * return the opposite of field (winner if loser and vice versa)
@@ -23,15 +24,25 @@ define(['jquery'], function($) {
 
         if(option && !alreadySelected) {
             option.attr('selected', 'selected');
+            option.trigger('change');
 
             opposite(field).focus();
             alreadySelected = true;
         }
     }
 
+    function removeUserFrom(user, field) {
+        field.find('option').show();
+        field.find('option[value=' + user + ']').hide();
+    }
+
     var init = function() {
         // focus "add result" button on load
         $('body.home #add-result-button').focus();
+
+        $(selects).on('change', function() {
+            removeUserFrom($(this).val(), opposite($(this).attr('id')));
+        });
 
         $('body.add-result').keydown(function(event) {
             var username = appDatas.username;
