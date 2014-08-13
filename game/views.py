@@ -126,7 +126,8 @@ def game_remove(request, game_id, competition_slug):
     last_game = Game.objects.get_latest(competition)[0]
 
     if last_game.id == game.id:
-        messages.add_message(request, messages.WARNING, 'Not implemented yet.')
+        Game.objects.delete(game, competition)
+        messages.add_message(request, messages.SUCCESS, 'Last game was deleted.')
     else:
         messages.add_message(request, messages.ERROR, 'Trying to delete a game that is not the last.')
 

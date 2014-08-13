@@ -231,6 +231,24 @@ class GameManager(models.Manager):
 
         return game
 
+    def delete(self, game, competition):
+        history_winner = HistoricalScore.objects.get_last_for_team(game.winner, game, competition)
+        history_loser = HistoricalScore.objects.get_last_for_team(game.loser, game, competition)
+
+        Score.objects.filter()
+        winner = game.winner.get_or_create_score(competition)
+        winner.score = history_winner.score
+        winner.stdev = history_winner.stdev
+        winner.save()
+
+        loser = game.loser.get_or_create_score(competition)
+        loser.score = history_loser.score
+        loser.stdev = history_loser.stdev
+        loser.save()
+
+        game.delete()
+        game.historical_scores.all().delete()
+
 
 class Game(models.Model):
     winner = models.ForeignKey(Team, related_name='games_won')
