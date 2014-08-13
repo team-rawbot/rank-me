@@ -19,7 +19,7 @@ define(['jquery'], function($) {
      * Select the current user in the given field
      * @param field
      */
-    function selectAs(field) {
+    function selectAs(field, event) {
         var option = $('#id_' + field + ' option:contains("' + appDatas.username + '")');
 
         if(option && !alreadySelected) {
@@ -28,6 +28,7 @@ define(['jquery'], function($) {
 
             opposite(field).focus();
             alreadySelected = true;
+            event.preventDefault();
         }
     }
 
@@ -49,11 +50,11 @@ define(['jquery'], function($) {
 
             // press 'w' to set yourself as winner
             if (event.keyCode == 87) {
-                selectAs('winner');
+                selectAs('winner', event);
             }
             // press 'l' to set yourself as loser
             else if (event.keyCode == 76) {
-                selectAs('loser');
+                selectAs('loser', event);
             }
             // press Ctrl + enter to submit the form
             else if (event.keyCode == 13 && event.ctrlKey) {
