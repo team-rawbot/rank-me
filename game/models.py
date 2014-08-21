@@ -371,7 +371,7 @@ class HistoricalScoreManager(models.Manager):
                     result['played'] = False
                     if len(team_scores) == 0:
                         result['skill'] = self.get_last_score_for_team(
-                            team, games[0], competition
+                            team, game, competition
                         )
                     else:
                         result['skill'] = team_scores[-1]['skill']
