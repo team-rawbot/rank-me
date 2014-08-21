@@ -28,15 +28,32 @@ define(['jquery'], function ($) {
             credits: {
                 enabled: false
             },
-            xAxis: [
-                {
-                    categories: data.users
-                }
-            ],
+            xAxis: {
+                categories: data.users
+            },
             yAxis: {
+                min: 0,
+                tickInterval: 25,
                 title: {
                     text: null
-                },
+                }
+            },
+            tooltip: {
+                useHTML: true,
+                headerFormat: '<b>{point.key}</b><br><br><table>' +
+                    '<tr><td><b>Total</b></td><td style="text-align: right"><b>{point.total}</b></td><td>&nbsp;</td></tr>',
+                pointFormat: '<tr>' +
+                    '<td style="padding: 2px;"><span style="color:{series.color}">{series.name}</span></td>' +
+                    '<td style="padding: 2px; text-align: right;"><b>{point.y}</b></td>' +
+                    '<td style="padding: 2px; text-align: right;">({point.percentage:.0f}%)</td>' +
+                '</tr>',
+                footerFormat: '</table>',
+                shared: true
+            },
+            plotOptions: {
+                series: {
+                    stacking: 'percent'
+                }
             },
             series: [
                 {
