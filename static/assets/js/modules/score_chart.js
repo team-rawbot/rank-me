@@ -4,13 +4,18 @@ define(["jquery", "underscore", "highcharts"], function($, _, HighCharts) {
             mapToPosition,
             positionSeries,
             getNbGames,
-            getSeries;
+            getSeries,
+            yAxis,
+            mode;
+
+        mode = 'position';
 
         mapToPosition = function(element, index) {
             return {
                 'x': index,
-                'y': element['position'],
+                'y': element[mode],
                 'skill': Math.round(element['skill'] * 100) / 100,
+                'position': element['position'],
                 'marker': {
                     'radius': element['played']? 5:0,
                     'fillColor': element['win']? null:'#fff'
@@ -26,6 +31,28 @@ define(["jquery", "underscore", "highcharts"], function($, _, HighCharts) {
 
             // sort series by team name
             positionSeries = _.sortBy(positionSeries, 'name');
+
+            yAxis = {
+                'skill': {
+                    title: {
+                        text: 'Skill'
+                    },
+                    gridLineWidth: 0,
+                    tickPixelInterval: 1,
+                    startOnTick: true,
+                    endOnTick: true
+                },
+                'position': {
+                    title: {
+                        text: 'Position'
+                    },
+                    reversed: true,
+                    gridLineWidth: 0,
+                    min: 1,
+                    max: positionSeries.length,
+                    tickInterval: 1
+                }
+            };
 
             $target.highcharts({
                 chart: {
@@ -43,23 +70,14 @@ define(["jquery", "underscore", "highcharts"], function($, _, HighCharts) {
                     gridLineColor: '#fff',
                     offset: 30
                 },
-                yAxis: {
-                    title: {
-                        text: 'Position'
-                    },
-                    reversed: true,
-                    gridLineWidth: 0,
-                    min: 1,
-                    max: positionSeries.length,
-                    tickInterval: 1
-                },
+                yAxis: yAxis[mode],
                 tooltip: {
                     valueSuffix: '',
                     crosshairs: true,
                     positioner: function() { return { x: 0, y: 0 }; },
                     useHTML: true,
                     headerFormat: '',
-                    pointFormat: '<b>{series.name}</b> : {point.y}, skill : {point.skill}',
+                    pointFormat: '<b>{series.name}</b> : {point.position}, skill : {point.skill}',
                     footerFormat: ''
                 },
                 legend: {
