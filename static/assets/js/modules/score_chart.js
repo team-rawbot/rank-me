@@ -24,6 +24,10 @@ define(["jquery", "underscore", "highcharts"], function($, _, HighCharts) {
         };
 
         drawChart = function($target) {
+            if(window.location.hash === '#skill') {
+                mode = 'skill';
+            }
+
             var scoresByTeam = $target.data('scores');
 
             var positionSeries = getSeries(scoresByTeam);
