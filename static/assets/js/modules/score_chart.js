@@ -60,7 +60,8 @@ define(["jquery", "underscore", "highcharts"], function($, _, HighCharts) {
 
             $target.highcharts({
                 chart: {
-                    backgroundColor: 'transparent'
+                    backgroundColor: 'transparent',
+                    zoomType: 'y'
                 },
                 title: {
                     text: 'Last ' + nbGames + ' games',
