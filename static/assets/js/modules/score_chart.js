@@ -10,6 +10,7 @@ define(["jquery", "underscore", "highcharts"], function($, _, HighCharts) {
             return {
                 'x': index,
                 'y': element['position'],
+                'skill': Math.round(element['skill'] * 100) / 100,
                 'marker': {
                     'radius': element['played']? 5:0,
                     'fillColor': element['win']? null:'#fff'
@@ -53,7 +54,13 @@ define(["jquery", "underscore", "highcharts"], function($, _, HighCharts) {
                     tickInterval: 1
                 },
                 tooltip: {
-                    valueSuffix: ''
+                    valueSuffix: '',
+                    crosshairs: true,
+                    positioner: function() { return { x: 0, y: 0 }; },
+                    useHTML: true,
+                    headerFormat: '',
+                    pointFormat: '<b>{series.name}</b> : {point.y}, skill : {point.skill}',
+                    footerFormat: ''
                 },
                 legend: {
                     layout: 'vertical',
