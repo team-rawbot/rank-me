@@ -28,6 +28,7 @@ def team_detail(request, competition_slug, team_id):
 
     wins = team.get_wins(competition)
     defeats = team.get_defeats(competition)
+    games = wins + defeats
     score = team.get_score(competition)
 
     context = {
@@ -35,6 +36,7 @@ def team_detail(request, competition_slug, team_id):
         'head2head': head2head,
         'last_results': last_results,
         'longest_streak': longest_streak,
+        'games': games,
         'wins': wins,
         'defeats': defeats,
         'score': score,

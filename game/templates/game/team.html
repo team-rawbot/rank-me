@@ -103,12 +103,20 @@
                 <table class="team-statistics table table-bordered">
                     <tbody>
                         <tr>
-                            <th width="40%">{% trans "Wins" %}</th>
+                            <th width="40%">{% trans "Games" %}</th>
+                            <td>{{ games }}</td>
+                        </tr>
+                        <tr>
+                            <th >{% trans "Wins" %}</th>
                             <td>{{ wins }}</td>
                         </tr>
                         <tr>
                             <th>{% trans "Defeats" %}</th>
                             <td>{{ defeats }}</td>
+                        </tr>
+                        <tr>
+                            <th>µ</th>
+                            <td>{{ score.score|floatformat:"5" }}</td>
                         </tr>
                         <tr>
                             <th>σ</th>
