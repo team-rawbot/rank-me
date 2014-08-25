@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 
-{% load i18n %}
+{% load i18n game_extras %}
 
 {% block content %}
 <div class="team">
@@ -108,11 +108,11 @@
                         </tr>
                         <tr>
                             <th >{% trans "Wins" %}</th>
-                            <td>{{ wins }}</td>
+                            <td>{{ wins }} ({{ wins|as_percentage_of:games }} of games)</td>
                         </tr>
                         <tr>
                             <th>{% trans "Defeats" %}</th>
-                            <td>{{ defeats }}</td>
+                            <td>{{ defeats }} ({{ defeats|as_percentage_of:games }} of games)</td>
                         </tr>
                         <tr>
                             <th>µ</th>
