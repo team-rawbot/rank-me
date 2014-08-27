@@ -17,7 +17,8 @@ env.project_root = '/var/www/rank-me/rankme'
 
 
 def push_tag(tag):
-    local("git push -f origin %s" % tag)
+    with settings(warn_only=True):
+        local("git push -f origin %s" % tag)
 
 
 def checkout_tag(tag):
