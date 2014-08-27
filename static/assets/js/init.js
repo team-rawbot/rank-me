@@ -7,7 +7,7 @@ require([
 ], function($, Bootstrap, AddResult, TeamChart, ScoreChart) {
     $(function() {
         AddResult.init();
-        TeamChart.init();
+        TeamChart.drawChart();
         ScoreChart.drawChart($('#score-chart-container'));
     });
 });

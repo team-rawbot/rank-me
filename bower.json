@@ -4,7 +4,7 @@
     "dependencies": {
         "bootstrap": ">=3.2",
         "requirejs": "*",
-        "highcharts": "*",
+        "d3": "*",
         "underscore": "*"
     },
     "ignore": [
