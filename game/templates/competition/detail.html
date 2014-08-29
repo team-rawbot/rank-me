@@ -48,6 +48,18 @@
         </div>
 
         <div class="col-md-9">
+            <div class="score-chart-header">
+                <div>
+                    <label for="score-chart-mode-position">Position</label>
+                    <input id="score-chart-mode-position" name="score-chart-mode" type="radio" value="position" checked="checked">
+
+                    <label for="score-chart-mode-skill">Skill</label>
+                    <input id="score-chart-mode-skill" name="score-chart-mode" type="radio" value="skill">
+                </div>
+
+                <p>You can zoom on the graph by dragging with the mouse !</p>
+            </div>
+
             <div id="score-chart-container" class="well hidden-phone" data-scores="{{ score_chart_data }}"></div>
 
             <div class="latest-results panel panel-default">

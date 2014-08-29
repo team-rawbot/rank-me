@@ -9,5 +9,10 @@ require([
         AddResult.init();
         TeamChart.init();
         ScoreChart.drawChart($('#score-chart-container'));
+
+
+        $(ScoreChart.modeSelector).on('change', function() {
+            ScoreChart.drawChart($('#score-chart-container'));
+        })
     });
 });

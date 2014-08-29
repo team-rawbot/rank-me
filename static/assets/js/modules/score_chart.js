@@ -1,5 +1,5 @@
 define(["jquery", "underscore", "highcharts"], function($, _, HighCharts) {
-    var ScoreChart = function ($) {
+    var ScoreChart = function () {
         var drawChart,
             mapToPosition,
             positionSeries,
@@ -7,6 +7,8 @@ define(["jquery", "underscore", "highcharts"], function($, _, HighCharts) {
             getSeries,
             yAxis,
             mode;
+
+        var modeSelector = 'input[name="score-chart-mode"]';
 
         mode = 'position';
 
@@ -24,9 +26,9 @@ define(["jquery", "underscore", "highcharts"], function($, _, HighCharts) {
         };
 
         drawChart = function($target) {
-            if(window.location.hash === '#skill') {
-                mode = 'skill';
-            }
+            mode = $(modeSelector + ':checked').val();
+
+            console.log(mode);
 
             var scoresByTeam = $target.data('scores');
 
@@ -144,6 +146,7 @@ define(["jquery", "underscore", "highcharts"], function($, _, HighCharts) {
         };
 
         return {
+            modeSelector: modeSelector,
             drawChart: drawChart
         };
     }();
