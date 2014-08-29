@@ -91,8 +91,83 @@ define(["jquery", "underscore", "d3"], function ($, _, d3) {
                 .call(yAxis);
         }
 
+        function officeAvg(container) {
+            if(container.length == 0) {
+                return;
+            }
+
+            var data = [];
+            container.find('tbody tr').each(function () {
+                var week = $(this).find('td:nth-child(1)').text();
+                var playedGames = parseInt($(this).find('td:nth-child(2)').text());
+                var totalGames = parseInt($(this).find('td:nth-child(3)').text());
+                var average = parseInt($(this).find('td:nth-child(4)').text());
+
+                data.push({
+                    week: week,
+                    playedGames: playedGames,
+                    totalGames: totalGames,
+                    average: average
+                });
+            });
+
+            container = container.parent();
+            container.empty();
+
+            var margin = {top: 10, right: 15, bottom: 10, left: 15},
+                width = container.width() - margin.left - margin.right,
+                height = 200;
+
+            var x = d3.scale.ordinal()
+                .rangeRoundBands([0, width], 0.1)
+                .domain(data.map(function(d) { return d.week; }));
+
+            var y = d3.scale.linear()
+                .domain([0, d3.max(data, function(d) { return d.totalGames; })])
+                .range([height, 0]);
+
+            var line = d3.svg.line()
+                .interpolate('monotone')
+                .x(function(d) { return x(d.week); })
+                .y(function(d) { return y(d.totalGames); });
+
+            var lineAvg = d3.svg.line()
+                .interpolate('monotone')
+                .x(function(d) { return x(d.week); })
+                .y(function(d) { return y(d.average); });
+
+            var svg = d3.select(container[0]).append("svg")
+                .attr("width", width + margin.left + margin.right)
+                .attr("height", height + margin.top + margin.bottom)
+                .append("g")
+                .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+            var played = svg.selectAll(".played")
+                .data(data)
+              .enter()
+                .append("g")
+                .attr("class", "played")
+                .attr("transform", function (d) { return "translate(" + x(d.week) + ", 0)"; });
+
+            played.append("rect")
+                .attr("width", x.rangeBand())
+                .attr('height', function(d) { return height - y(d.playedGames); })
+                .attr('y', function(d) { return y(d.playedGames); });
+
+            svg.append('path')
+                .datum(data)
+                .attr('class', 'line')
+                .attr('d', line);
+
+            svg.append('path')
+                .datum(data)
+                .attr('class', 'line')
+                .attr('d', lineAvg);
+        }
+
         function drawChart() {
             head2head($('#head-2-head-results'));
+            officeAvg($('#games-per-week'));
         }
 
         return {
