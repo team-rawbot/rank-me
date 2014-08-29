@@ -85,7 +85,7 @@
                         <tbody>
                             {% for opponent, results in head2head.iteritems %}
                                 <tr>
-                                    <td><a href="{% url 'team_detail' team_id=opponent.id competition_slug=competition.slug %}">{{ opponent }}</a>:
+                                    <td><a href="{% url 'team_detail' team_id=opponent.id competition_slug=competition.slug %}">{{ opponent }}</a></td>
                                     <td>{{ results.wins }}</td>
                                     <td>{{ results.defeats }}</td>
                                 </tr>
