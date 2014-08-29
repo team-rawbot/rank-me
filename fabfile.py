@@ -69,9 +69,9 @@ def deploy(tag):
 
     execute(update_remote_git, tag=tag)
     execute(install_requirements)
+    execute(compile_less)
     execute(install_static)
     execute(migrate_database)
-    execute(compile_less)
 
     execute(restart_process)
 

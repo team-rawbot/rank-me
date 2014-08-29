@@ -1,5 +1,7 @@
 define(["jquery", "underscore", "d3"], function($, _, d3) {
-    var ScoreChart = function ($) {
+    var ScoreChart = function () {
+        var modeSelector = 'input[name="score-chart-mode"]';
+
         function drawChart(container) {
             if(container.length == 0) {
                 return;
@@ -15,8 +17,8 @@ define(["jquery", "underscore", "d3"], function($, _, d3) {
                 var width = container.width() - margin.left - margin.right;
                 var height = 400;
 
-                var attribute = 'position';
-                // attribute = 'skill';
+                var attribute = $(modeSelector + ':checked').val();
+                container.empty();
 
                 var color = d3.scale.category20();
 
@@ -114,6 +116,7 @@ define(["jquery", "underscore", "d3"], function($, _, d3) {
         }
 
         return {
+            modeSelector: modeSelector,
             drawChart: drawChart
         };
     }();
