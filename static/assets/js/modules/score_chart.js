@@ -2,6 +2,23 @@ define(["jquery", "underscore", "d3"], function($, _, d3) {
     var ScoreChart = function () {
         var modeSelector = 'input[name="score-chart-mode"]';
 
+        var attribute;
+        var positions;
+        var x, y;
+
+        function setDomain() {
+            x.domain([1, positions[0].values.length]);
+
+            var bigger = d3.max(positions, function(p) { return d3.max(p.values, function(v) { return v[attribute]; })});
+            var smaller = d3.min(positions, function(p) { return d3.min(p.values, function(v) { return v[attribute]; })});
+
+            if(attribute === 'position') {
+                y.domain([smaller, bigger]);
+            } else {
+                y.domain([bigger, smaller]);
+            }
+        }
+
         function drawChart(container) {
             if(container.length == 0) {
                 return;
@@ -17,14 +34,29 @@ define(["jquery", "underscore", "d3"], function($, _, d3) {
                 var width = container.width() - margin.left - margin.right;
                 var height = 400;
 
-                var attribute = $(modeSelector + ':checked').val();
-                container.empty();
+                attribute = $(modeSelector + ':checked').val();
+                $(modeSelector).on('change', function() {
+                    var t = svg.selectAll(".position").transition().duration(1250);
+
+                    attribute = $(this).val();
+                    setDomain();
+
+                    // redraw relevent part of each item
+                    t.select('path')
+                        .attr('d', function(d) { return line(d.values); });
+
+                    t.selectAll('circle')
+                        .attr("transform", function(d, idx) { return "translate(" + x(idx + 1) + "," + y(d[attribute]) + ")"; });
+
+                    t.selectAll("text")
+                        .attr("transform", function(d) { return "translate(" + x(50) + "," + y(d.value[attribute]) + ")"; })
+                });
 
                 var color = d3.scale.category20();
 
-                var x = d3.scale.linear()
+                x = d3.scale.linear()
                     .range([0, width]);
-                var y = d3.scale.linear()
+                y = d3.scale.linear()
                     .range([0, height]);
 
                 var line = d3.svg.line()
@@ -50,23 +82,14 @@ define(["jquery", "underscore", "d3"], function($, _, d3) {
                     }
                 }
 
-                var positions = color.domain().map(function(name) {
+                positions = color.domain().map(function(name) {
                     return {
                         name: name,
                         values: data[name]
                     };
                 });
 
-                x.domain([1, positions[0].values.length]);
-
-                var bigger = d3.max(positions, function(p) { return d3.max(p.values, function(v) { return v[attribute]; })});
-                var smaller = d3.min(positions, function(p) { return d3.min(p.values, function(v) { return v[attribute]; })});
-
-                if(attribute === 'position') {
-                    y.domain([smaller, bigger]);
-                } else {
-                    y.domain([bigger, smaller]);
-                }
+                setDomain();
 
                 var position = svg.selectAll('.position')
                     .data(positions)
