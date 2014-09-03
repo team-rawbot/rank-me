@@ -2,6 +2,7 @@ import json
 from django.contrib.auth import login, get_user_model
 from django.http import HttpResponse
 from django.shortcuts import get_object_or_404
+from django.utils.datastructures import MultiValueDictKeyError
 from rest_framework.response import Response
 from social.apps.django_app.utils import strategy
 from rest_framework.authtoken.models import Token
@@ -54,18 +55,24 @@ def add_result(request):
     errors = []
     try:
         competition = Competition.objects.get(slug=request.DATA['competition'])
+    except MultiValueDictKeyError:
+        errors.append('No competition given')
     except Competition.DoesNotExist as e:
         competition = None
         errors.append('Competition not found')
 
     try:
         winner = get_user_model().objects.get(username=request.DATA['winner'])
+    except MultiValueDictKeyError:
+        errors.append('No winner given')
     except get_user_model().DoesNotExist as e:
         winner = None
         errors.append('Winner not found')
 
     try:
         looser = get_user_model().objects.get(username=request.DATA['looser'])
+    except MultiValueDictKeyError:
+        errors.append('No looser given')
     except get_user_model().DoesNotExist as e:
         looser = None
         errors.append('Looser not found')
