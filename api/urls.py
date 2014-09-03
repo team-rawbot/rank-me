@@ -1,11 +1,11 @@
 from django.conf.urls import patterns, url, include
 from rest_framework import routers
 
-from .views import CompetitionViewSet, PlayerViewSet
+from .views import CompetitionViewSet, TeamViewSet
 
 router = routers.DefaultRouter()
 router.register(r'competitions', CompetitionViewSet)
-router.register(r'players', PlayerViewSet)
+router.register(r'teams', TeamViewSet)
 
 urlpatterns = patterns(
     'api.views',

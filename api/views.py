@@ -38,7 +38,7 @@ class CompetitionViewSet(viewsets.ReadOnlyModelViewSet):
     serializer_class = CompetitionSerializer
 
 
-class PlayerViewSet(viewsets.ReadOnlyModelViewSet):
+class TeamViewSet(viewsets.ReadOnlyModelViewSet):
     """
     API endpoint that allows competitions to be viewed or edited.
     """
