@@ -16,6 +16,7 @@ urlpatterns = patterns(
             name='register_by_access_token',
         ),
         url(r'^', include(router.urls)),
+        url(r'^results/add/$', 'api.views.add_result', name='api_add_result'),
         url(r'^auth/', include('rest_framework.urls', namespace='rest_framework')),
         ])),
 )
