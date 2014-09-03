@@ -6,4 +6,4 @@ from game.models import Competition
 class CompetitionSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Competition
-        fields = ('name', 'description')
+        fields = ('name', 'description', 'slug')

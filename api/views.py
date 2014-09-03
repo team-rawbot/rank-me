@@ -29,7 +29,7 @@ def register_by_access_token(request, backend):
     return HttpResponse(data_json, mimetype='application/json')
 
 
-class competition_view_set(viewsets.ModelViewSet):
+class CompetitionViewSet(viewsets.ReadOnlyModelViewSet):
     """
     API endpoint that allows competitions to be viewed or edited.
     """
