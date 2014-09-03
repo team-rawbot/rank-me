@@ -4,8 +4,9 @@ from django.http import HttpResponse
 from social.apps.django_app.utils import strategy
 from rest_framework.authtoken.models import Token
 from rest_framework import viewsets
+from api.serializers import TeamSerializer
 
-from game.models import Competition
+from game.models import Competition, Team
 
 from .serializers import CompetitionSerializer
 
@@ -35,4 +36,12 @@ class CompetitionViewSet(viewsets.ReadOnlyModelViewSet):
     """
     queryset = Competition.objects.all()
     serializer_class = CompetitionSerializer
+
+
+class PlayerViewSet(viewsets.ReadOnlyModelViewSet):
+    """
+    API endpoint that allows competitions to be viewed or edited.
+    """
+    queryset = Team.objects.all()
+    serializer_class = TeamSerializer
 

@@ -61,6 +61,9 @@ class Team(models.Model):
     def get_name(self):
         return u" / ".join([user.username for user in self.users.all()])
 
+    def get_competitions(self):
+        return Competition.objects.filter(score__team=self)
+
     def get_games(self, competition):
         """
         Fetch the list of games played by the team, filtered by competition.
