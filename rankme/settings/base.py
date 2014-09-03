@@ -212,7 +212,8 @@ REST_FRAMEWORK = {
         'rest_framework.authentication.TokenAuthentication',
     ),
     'DEFAULT_PERMISSION_CLASSES': ['rest_framework.permissions.IsAuthenticated'],
-    'PAGINATE_BY': 10
+    'PAGINATE_BY': 10,
+    'PAGINATE_BY_PARAM': 'page_size'
 }
 
 from django.contrib.messages import constants as messages
