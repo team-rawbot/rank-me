@@ -125,6 +125,62 @@ define(['jquery'], function ($) {
                 }
             ]
         });
+
+        // FAIRNESS GRAPH
+        // ------------------
+
+        // Collect data from the HTML table
+        var data = {users: [], fairness: []};
+        $('#fairness-results tbody tr').each(function () {
+            data.users.push($(this).find('td:nth-child(1)').text());
+            data.fairness.push(parseFloat($(this).find('td:nth-child(2)').text()));
+        });
+
+        // Replace the table by the graph div
+        $('#fairness-results')
+            .after('<div id="fairness-charts" />')
+            .remove();
+
+        // Init highcharts JS
+        $('#fairness-charts').highcharts({
+            chart: {
+                type: 'bar',
+                backgroundColor: 'transparent'
+            },
+            title: {
+                text: ''
+            },
+            credits: {
+                enabled: false
+            },
+            xAxis: {
+                categories: data.users
+            },
+            yAxis: {
+                min: 0,
+                tickInterval: 25,
+                title: {
+                    text: null
+                }
+            },
+            tooltip: {
+                useHTML: true,
+                headerFormat: '<b>{point.key}</b><br><br><table>',
+                pointFormat: '<tr>' +
+                    '<td style="padding: 2px;"><span style="color:{series.color}">{series.name}</span></td>' +
+                    '<td style="padding: 2px; text-align: right;"><b>{point.y}</b></td>' +
+                    '</tr>',
+                footerFormat: '</table>',
+                shared: true
+            },
+            series: [
+                {
+                    name: 'Fairness',
+                    data: data.fairness,
+                    color: '#89c571'
+                }
+            ]
+        });
     }
 
     return {
