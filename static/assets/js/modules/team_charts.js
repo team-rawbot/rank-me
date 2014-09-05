@@ -143,6 +143,8 @@ define(["jquery", "underscore", "d3"], function ($, _, d3) {
                 });
             });
 
+            console.log(data);
+
             container = container.parent();
             container.empty();
 
@@ -160,12 +162,12 @@ define(["jquery", "underscore", "d3"], function ($, _, d3) {
 
             var line = d3.svg.line()
                 .interpolate('monotone')
-                .x(function(d) { return x(d.week); })
+                .x(function(d) { return x(d.week) + x.rangeBand() / 2; })
                 .y(function(d) { return y(d.totalGames); });
 
             var lineAvg = d3.svg.line()
                 .interpolate('monotone')
-                .x(function(d) { return x(d.week); })
+                .x(function(d) { return x(d.week) + x.rangeBand() / 2; })
                 .y(function(d) { return y(d.average); });
 
             var svg = d3.select(container[0]).append("svg")
