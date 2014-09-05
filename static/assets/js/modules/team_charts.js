@@ -16,10 +16,10 @@ define(["jquery", "underscore", "d3"], function ($, _, d3) {
                 data.push({
                     name: user,
                     values: [
-                        { name: 'wins', value: wins / total, previous: 0 },
-                        { name: 'defeats', value: defeats / total, previous: wins/total },
-                        { name: 'fairness', value: fairness },
-                        { name: 'total', value: total, previous: 0 }
+                        { name: 'wins', width: 2,     value: wins / total, previous: 0 },
+                        { name: 'defeats', width: 2,  value: defeats / total, previous: wins/total },
+                        { name: 'total', width: 4,    value: total, previous: 0 },
+                        { name: 'fairness', width: 4, value: fairness / 100 }
                     ]
                 });
             });
@@ -41,8 +41,8 @@ define(["jquery", "underscore", "d3"], function ($, _, d3) {
                 .rangeRoundBands([0, height], .1);
 
             var color = d3.scale.ordinal()
-                .range(["#00ff00", "#ff0000", "#000000"])
-                .domain(['wins', 'defeats', 'total']);
+                .range(["#00ff00", "#ff0000", "#000000", "#0000ff"])
+                .domain(['wins', 'defeats', 'total', 'fairness']);
 
             var svg = d3.select(container[0]).append("svg")
                 .attr("width", width + margin.left + margin.right)
@@ -68,8 +68,13 @@ define(["jquery", "underscore", "d3"], function ($, _, d3) {
                 })
               .enter()
                 .append("rect")
-                .attr("height", y.rangeBand() / 2)
-                .attr('y', function(d) { return d.name == 'total' ? y.rangeBand() / 2 : 0; })
+                .attr("height", function(d) { return y.rangeBand() / d.width; })
+                .attr('y', function(d) { switch(d.name) {
+                        case 'total': return y.rangeBand() / 2;
+                        case 'fairness': return y.rangeBand() * (3/4);
+                        default: return 0;
+                    }
+                })
                 .attr('x', function(d) { return x(d.previous); })
                 .attr("width", function (d) { return x(d.value); })
                 .style("fill", function (d) { return color(d.name); });

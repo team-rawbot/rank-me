@@ -9,7 +9,7 @@ SOCIAL_AUTH_TWITTER_KEY = get_env_variable('SOCIAL_AUTH_TWITTER_KEY', 'notsotwit
 SOCIAL_AUTH_TWITTER_SECRET = get_env_variable('SOCIAL_AUTH_TWITTER_SECRET', 'notsotwitter')
 
 INSTALLED_APPS += (
-    'debug_toolbar',
+#    'debug_toolbar',
     'django_extensions',
 )
 
@@ -20,7 +20,7 @@ TEMPLATE_LOADERS = (
 
 INTERNAL_IPS = ('127.0.0.1',)
 MIDDLEWARE_CLASSES += (
-    'debug_toolbar.middleware.DebugToolbarMiddleware',
+#    'debug_toolbar.middleware.DebugToolbarMiddleware',
 )
 
 LOGGING = {

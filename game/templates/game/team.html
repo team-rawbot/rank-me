@@ -68,7 +68,7 @@
                 </ul>
             </div>
         </div>
-        <div class="col-md-3">
+        <div class="col-md-6">
             <div class="panel panel-default">
                 <div class="panel-heading">
                     <h3 class="panel-title">{% trans "Head-to-Head" %}</h3>
@@ -80,6 +80,7 @@
                                 <td>{% trans "Opponents" %}</td>
                                 <td>{% trans "Wins" %}</td>
                                 <td>{% trans "Defeats" %}</td>
+                                <td>{% trans "Fairness" %}</td>
                             </tr>
                         </thead>
                         <tbody>
@@ -88,33 +89,9 @@
                                     <td><a href="{% url 'team_detail' team_id=opponent.id competition_slug=competition.slug %}">{{ opponent }}</a></td>
                                     <td>{{ results.wins }}</td>
                                     <td>{{ results.defeats }}</td>
+                                    <td>{{ results.fairness }}</td>
                                 </tr>
                             {% endfor %}
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-3">
-            <div class="panel panel-default">
-                <div class="panel-heading">
-                    <h3 class="panel-title">{% trans "Game Fairness" %}</h3>
-                </div>
-                <div class="panel-body">
-                    <table id="fairness-results">
-                        <thead>
-                        <tr>
-                            <td>{% trans "Opponents" %}</td>
-                            <td>{% trans "Fairness" %}</td>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        {% for opponent, fairness_item in fairness.iteritems %}
-                            <tr>
-                                <td><a href="{% url 'team_detail' team_id=opponent.id competition_slug=competition.slug %}">{{ opponent }}</a>:
-                                <td>{{ fairness_item.quality|floatformat:3 }}</td>
-                            </tr>
-                        {% endfor %}
                         </tbody>
                     </table>
                 </div>

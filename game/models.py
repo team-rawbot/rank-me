@@ -83,6 +83,9 @@ class Team(models.Model):
         are ordered by their score.
         """
         head2head = {}
+        fairnesses = self.get_fairness(competition)
+
+        print fairnesses
 
         games = self.get_games(competition)
 
@@ -93,7 +96,8 @@ class Team(models.Model):
                 head2head[opponent] = {
                     'wins': 0,
                     'defeats': 0,
-                    'games': []
+                    'games': [],
+                    'fairness': fairnesses[opponent]['quality']
                 }
 
             stat_to_increase = (
