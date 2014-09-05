@@ -30,7 +30,7 @@ define(["jquery", "underscore", "d3"], function($, _, d3) {
                     return;
                 }
 
-                var margin = { top: 20, right: 150, bottom: 40, left: 30 };
+                var margin = { top: 20, right: 150, bottom: 10, left: 40 };
                 var width = container.width() - margin.left - margin.right;
                 var height = 400;
 
@@ -48,8 +48,7 @@ define(["jquery", "underscore", "d3"], function($, _, d3) {
                     t.selectAll('circle')
                         .attr("transform", function(d, idx) { return "translate(" + x(idx + 1) + "," + y(d[attribute]) + ")"; });
 
-                    t.selectAll("text")
-                        .attr("transform", function(d) { return "translate(" + x(50) + "," + y(d.value[attribute]) + ")"; })
+                     svg.select('.y.axis').call(yAxis);
                 });
 
                 var color = d3.scale.category20();
@@ -106,7 +105,7 @@ define(["jquery", "underscore", "d3"], function($, _, d3) {
                     .data(function(d) { return d.values; })
                   .enter()
                     .append('circle')
-                    .attr('r', function(d) { return d.played ? 4 : 0; })
+                    .attr('r', function(d) { return d.played ? 5 : 0; })
                     .style('fill', function(d) { return d.win ? color(d.name) : 'white'; })
                     .style('stroke', function(d) { return color(d.name); })
                     .attr("transform", function(d, idx) { return "translate(" + x(idx + 1) + "," + y(d[attribute]) + ")"; });
@@ -114,25 +113,20 @@ define(["jquery", "underscore", "d3"], function($, _, d3) {
                 position.append("text")
                     .datum(function(d) { return {name: d.name, value: d.values[d.values.length - 1]}; })
                     .attr("transform", function(d) { return "translate(" + x(50) + "," + y(d.value[attribute]) + ")"; })
-                    .attr("x", 5)
+                    .attr("x", 10)
                     .attr("dy", ".35em")
                     .style('stroke', function(d) { return color(d.name); })
                     .text(function(d) { return d.name; });
 
-                var xAxis = d3.svg.axis()
-                    .scale(x)
-                    .orient('bottom');
                 var yAxis = d3.svg.axis()
                     .scale(y)
+                    .ticks(20)
+                    .tickSize(0)
                     .orient('left');
 
                 svg.append("g")
-                    .attr("class", "x axis")
-                    .attr("transform", "translate(0," + (height + 10) + ")")
-                    .call(xAxis);
-
-                svg.append("g")
                     .attr("class", "y axis")
+                    .attr("transform", function(d, idx) { return "translate(-5, 0)"; })
                     .call(yAxis);
 
             });
