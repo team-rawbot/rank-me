@@ -10,7 +10,7 @@ from django.db import models
 from django.db.models import Q
 from django.template.defaultfilters import slugify
 from django.utils import timezone
-from trueskill import Rating, rate_1vs1
+from trueskill import Rating, rate_1vs1, quality_1vs1
 
 from .signals import game_played, team_ranking_changed
 
@@ -61,6 +61,9 @@ class Team(models.Model):
     def get_name(self):
         return u" / ".join([user.username for user in self.users.all()])
 
+    def get_competitions(self):
+        return Competition.objects.filter(score__team=self)
+
     def get_games(self, competition):
         """
         Fetch the list of games played by the team, filtered by competition.
@@ -106,6 +109,35 @@ class Team(models.Model):
                 reverse=True
             )
         )
+
+    def get_fairness(self, competition):
+        """
+        Compute the probability of draw against all opponents (ie. how fair is the game).
+        Returns an OrderedDict of teams by score
+        """
+        qualities = {}
+
+        own_score = self.get_score(competition)
+        teams = competition.teams.all()
+
+        for team in teams:
+            if team == self:
+                continue
+            score = team.get_score(competition)
+            quality = quality_1vs1(
+                Rating(own_score.score, own_score.stdev),
+                Rating(score.score, score.stdev)
+            )
+            qualities[team] = {'score': score, 'quality': quality * 100}
+
+        return OrderedDict(
+            sorted(
+                qualities.items(),
+                key=lambda t: t[1]['score'].score,
+                reverse=True
+            )
+        )
+
 
     def get_recent_stats(self, competition, count=10):
         """

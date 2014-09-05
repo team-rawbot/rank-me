@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 define(["jquery", "underscore", "d3"], function ($, _, d3) {
     var TeamChart = function() {
         function head2head(container) {
@@ -10,6 +11,7 @@ define(["jquery", "underscore", "d3"], function ($, _, d3) {
                 var user = $(this).find('td:nth-child(1)').text();
                 var wins = parseInt($(this).find('td:nth-child(2)').text());
                 var defeats = parseInt($(this).find('td:nth-child(3)').text());
+                var fairness = parseFloat($(this).find('td:nth-child(4)').text()));
                 var total = wins + defeats;
 
                 data.push({
@@ -17,6 +19,7 @@ define(["jquery", "underscore", "d3"], function ($, _, d3) {
                     values: [
                         { name: 'wins', value: wins / total, previous: 0 },
                         { name: 'defeats', value: defeats / total, previous: wins/total },
+                        { name: 'fairness', value: fairness },
                         { name: 'total', value: total, previous: 0 }
                     ]
                 });

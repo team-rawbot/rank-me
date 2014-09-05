@@ -1,10 +1,11 @@
 from django.conf.urls import patterns, url, include
 from rest_framework import routers
 
-from .views import competition_view_set
+from .views import CompetitionViewSet, TeamViewSet
 
 router = routers.DefaultRouter()
-router.register(r'competitions', competition_view_set)
+router.register(r'competitions', CompetitionViewSet)
+router.register(r'teams', TeamViewSet)
 
 urlpatterns = patterns(
     'api.views',
@@ -15,6 +16,7 @@ urlpatterns = patterns(
             name='register_by_access_token',
         ),
         url(r'^', include(router.urls)),
+        url(r'^results/add/$', 'api.views.add_result', name='api_add_result'),
         url(r'^auth/', include('rest_framework.urls', namespace='rest_framework')),
         ])),
 )

@@ -42,7 +42,7 @@
     </div>
 
     <div class="row">
-        <div class="col-md-4">
+        <div class="col-md-3">
             <div class="panel panel-default">
                 <div class="panel-heading">
                     <h3 class="panel-title">{% trans "Last 10 games" %}</h3>
@@ -68,7 +68,7 @@
                 </ul>
             </div>
         </div>
-        <div class="col-md-4">
+        <div class="col-md-3">
             <div class="panel panel-default">
                 <div class="panel-heading">
                     <h3 class="panel-title">{% trans "Head-to-Head" %}</h3>
@@ -95,7 +95,32 @@
                 </div>
             </div>
         </div>
-        <div class="col-md-4">
+        <div class="col-md-3">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h3 class="panel-title">{% trans "Game Fairness" %}</h3>
+                </div>
+                <div class="panel-body">
+                    <table id="fairness-results">
+                        <thead>
+                        <tr>
+                            <td>{% trans "Opponents" %}</td>
+                            <td>{% trans "Fairness" %}</td>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for opponent, fairness_item in fairness.iteritems %}
+                            <tr>
+                                <td><a href="{% url 'team_detail' team_id=opponent.id competition_slug=competition.slug %}">{{ opponent }}</a>:
+                                <td>{{ fairness_item.quality|floatformat:3 }}</td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
             <div class="panel panel-default">
                 <div class="panel-heading">
                     <h3 class="panel-title">{% trans "Statistics" %}</h3>

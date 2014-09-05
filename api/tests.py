@@ -2,13 +2,48 @@ from django.core.urlresolvers import reverse
 from rest_framework import status
 from rest_framework.test import APITestCase
 
+from game.models import Competition
+from game.tests.factories import UserFactory
 
-class CompetitionTests(APITestCase):
+
+def test_route(self, route):
+    user = UserFactory()
+    self.client.force_authenticate(user)
+
+    url = reverse('competition-list')
+    response = self.client.get(url)
+    self.assertEqual(response.status_code, status.HTTP_200_OK)
+    self.assertIsNotNone(response.data)
+
+
+class CompetitionListTests(APITestCase):
     def test_list_competitions(self):
         """
         Ensure we can list all competitions.
         """
-        url = reverse('competition-list')
-        response = self.client.get(url)
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertIsNotNone(response.data)
+        test_route(self, 'competition-list')
+
+
+class PlayersListTests(APITestCase):
+    def test_list_players(self):
+        """
+        Ensure we can list all players.
+        """
+        test_route(self, 'team-list')
+
+
+class AddResultTest(APITestCase):
+    def test_adding(self):
+        user = UserFactory()
+        self.client.force_authenticate(user)
+
+        data = {
+            'winner': UserFactory().username,
+            'looser': UserFactory().username,
+            'competition': Competition.objects.get_default_competition().slug
+        }
+
+        url = reverse('api_add_result')
+        response = self.client.post(url, data, format="json")
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        self.assertEqual(response.data, {'status': 'success'})

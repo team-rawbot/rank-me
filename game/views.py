@@ -4,7 +4,6 @@ from django.core.urlresolvers import reverse
 from django.http.response import HttpResponse
 from django.shortcuts import get_object_or_404, render, redirect
 
-
 from .forms import GameForm, CompetitionForm
 from .models import Competition, Game, HistoricalScore, Score, Team
 
@@ -32,6 +31,8 @@ def team_detail(request, competition_slug, team_id):
     games = wins + defeats
     score = team.get_score(competition)
 
+    fairness = team.get_fairness(competition)
+
     context = {
         'team': team,
         'head2head': head2head,
@@ -42,7 +43,8 @@ def team_detail(request, competition_slug, team_id):
         'defeats': defeats,
         'score': score,
         'competition': competition,
-        'stats_per_week': team.get_stats_per_week()
+        'stats_per_week': team.get_stats_per_week(),
+        'fairness': fairness,
     }
 
     return render(request, 'game/team.html', context)
