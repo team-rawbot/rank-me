@@ -18,8 +18,8 @@ define(["jquery", "underscore", "d3"], function ($, _, d3) {
                     values: [
                         { name: 'wins', width: 2,     value: wins / total, previous: 0 },
                         { name: 'defeats', width: 2,  value: defeats / total, previous: wins/total },
-                        { name: 'total', width: 4,    value: total, previous: 0 },
-                        { name: 'fairness', width: 4, value: fairness / 100 }
+                        { name: 'total', width: 6,    value: total, previous: 0 },
+                        { name: 'fairness', width: 6, value: fairness / 100 }
                     ]
                 });
             });
@@ -30,7 +30,7 @@ define(["jquery", "underscore", "d3"], function ($, _, d3) {
             container = container.parent();
             container.empty();
 
-            var margin = {top: 20, right: 15, bottom: 30, left: 140},
+            var margin = {top: 20, right: 20, bottom: 25, left: 130},
                 width = container.width() - margin.left - margin.right,
                 height = 600;
 
@@ -38,10 +38,10 @@ define(["jquery", "underscore", "d3"], function ($, _, d3) {
                 .rangeRound([0, width]);
 
             var y = d3.scale.ordinal()
-                .rangeRoundBands([0, height], .1);
+                .rangeRoundBands([0, height], .3);
 
             var color = d3.scale.ordinal()
-                .range(["#00ff00", "#ff0000", "#000000", "#0000ff"])
+                .range(["#89c571", "#d76b7a", "#222", "#628818"])
                 .domain(['wins', 'defeats', 'total', 'fairness']);
 
             var svg = d3.select(container[0]).append("svg")
@@ -70,22 +70,25 @@ define(["jquery", "underscore", "d3"], function ($, _, d3) {
                 .append("rect")
                 .attr("height", function(d) { return y.rangeBand() / d.width; })
                 .attr('y', function(d) { switch(d.name) {
-                        case 'total': return y.rangeBand() / 2;
-                        case 'fairness': return y.rangeBand() * (3/4);
+                        case 'total': return y.rangeBand() * (3/4) + 4;
+                        case 'fairness': return y.rangeBand() / 2 + 4;
                         default: return 0;
                     }
                 })
-                .attr('x', function(d) { return x(d.previous); })
+                .attr('x', function(d) { return x(d.previous ? d.previous : 0); })
                 .attr("width", function (d) { return x(d.value); })
                 .style("fill", function (d) { return color(d.name); });
 
             var yAxis = d3.svg.axis()
                 .scale(y)
+                .tickSize(0)
+                .tickPadding(5)
                 .orient("left");
 
             var xAxis = d3.svg.axis()
                 .scale(x)
                 .orient("bottom")
+                .ticks(5)
                 .tickFormat(d3.format(".0%"));
 
             svg.append("g")
@@ -96,6 +99,28 @@ define(["jquery", "underscore", "d3"], function ($, _, d3) {
             svg.append("g")
                 .attr("class", "y axis")
                 .call(yAxis);
+
+            var legend = svg
+                .append('g')
+                .attr('class', 'legend')
+              .selectAll('rect')
+                .data(color.domain())
+              .enter()
+                .append("g");
+
+            var columns = [-40, 20, 100, 160];
+            var dotWidth = 15;
+
+            legend.append("rect")
+                .attr("x", function(d, idx) { return columns[idx] })
+                .attr("y", -15)
+                .attr("width", dotWidth)
+                .attr("height", 10)
+                .style("fill", color);
+            legend.append("text")
+                .attr("x", function(d, idx) { return columns[idx] + dotWidth * 1.2 })
+                .attr("y", -5)
+                .text(function(d) { return d; });
         }
 
         function officeAvg(container) {
@@ -121,9 +146,9 @@ define(["jquery", "underscore", "d3"], function ($, _, d3) {
             container = container.parent();
             container.empty();
 
-            var margin = {top: 10, right: 15, bottom: 10, left: 15},
+            var margin = {top: 15, right: 5, bottom: 20, left: 35},
                 width = container.width() - margin.left - margin.right,
-                height = 200;
+                height = 170;
 
             var x = d3.scale.ordinal()
                 .rangeRoundBands([0, width], 0.1)
@@ -149,11 +174,37 @@ define(["jquery", "underscore", "d3"], function ($, _, d3) {
                 .append("g")
                 .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
+            var yAxis = d3.svg.axis()
+                .scale(y)
+                .outerTickSize(0)
+                .orient("left");
+
+            var xAxis = d3.svg.axis()
+                .scale(x)
+                .orient("bottom")
+                .tickFormat(function(d) { return 'W ' + d.split('.')[1]; });
+
+            svg.append("g")
+                .attr("class", "y axis")
+                .call(yAxis);
+
+            svg.append("g")
+                .attr("class", "x axis")
+                .attr("transform", "translate(0," + height + ")")
+                .call(xAxis);
+
+            var colors = [
+                {name: 'Player games', color: '#659dca'},
+                {name: 'Office total', color: '#996b7a'},
+                {name: 'Office average', color: '#ff5300'}
+            ];
+
             var played = svg.selectAll(".played")
                 .data(data)
               .enter()
                 .append("g")
                 .attr("class", "played")
+                .attr('fill', colors[0].color)
                 .attr("transform", function (d) { return "translate(" + x(d.week) + ", 0)"; });
 
             played.append("rect")
@@ -164,12 +215,36 @@ define(["jquery", "underscore", "d3"], function ($, _, d3) {
             svg.append('path')
                 .datum(data)
                 .attr('class', 'line')
+                .attr('stroke', colors[1].color)
                 .attr('d', line);
 
             svg.append('path')
                 .datum(data)
                 .attr('class', 'line')
+                .attr('stroke', colors[2].color)
                 .attr('d', lineAvg);
+
+            var legend = svg
+                .append('g')
+                .attr('class', 'legend')
+              .selectAll('rect')
+                .data(colors)
+              .enter()
+                .append("g");
+
+            var column = 130;
+            var dotWidth = 15;
+
+            legend.append("rect")
+                .attr("x", function(d, idx) { return 10 + column * idx })
+                .attr("y", -10)
+                .attr("width", dotWidth)
+                .attr("height", 10)
+                .style("fill", function(d) { return d.color; });
+            legend.append("text")
+                .attr("x", function(d, idx) { return column * idx + dotWidth * 2 })
+                .attr("y", 0)
+                .text(function(d) { return d.name; });
         }
 
         function drawChart() {
