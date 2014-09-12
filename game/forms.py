@@ -3,16 +3,24 @@ from django.contrib.auth import get_user_model
 from django.core.exceptions import ValidationError
 from django.utils.translation import ugettext as _
 
-from .models import Competition
+from .models import Competition, Game
 
 
-class GameForm(forms.Form):
-    winner = forms.ModelChoiceField(
-        queryset=get_user_model().objects.all().order_by('username')
-    )
-    loser = forms.ModelChoiceField(
-        queryset=get_user_model().objects.all().order_by('username')
-    )
+class GameForm(forms.ModelForm):
+
+    class Meta:
+        model = Game
+        fields = ('winner', 'loser')
+
+    def __init__(self, *args, **kwargs):
+        competition = kwargs.pop('competition')
+        super(GameForm, self).__init__(*args, **kwargs)
+
+        queryset = get_user_model().objects.filter(id__in=competition.players.all()).order_by('username')
+
+        self.fields['winner'].queryset = queryset
+        self.fields['loser'].queryset = queryset
+
 
     def clean(self):
         cleaned_data = super(GameForm, self).clean()
@@ -31,4 +39,4 @@ class GameForm(forms.Form):
 class CompetitionForm(forms.ModelForm):
     class Meta:
         model = Competition
-        fields = ('name', 'description', 'start_date', 'end_date')
+        fields = ('name', 'description', 'type', 'players', 'start_date', 'end_date')

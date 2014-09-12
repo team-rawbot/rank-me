@@ -6,11 +6,17 @@
 
 {% block content %}
     <div class="page-header">
-        <a href="{% url 'game_add' competition_slug=competition.slug %}" id="add-result-button" class="btn btn-primary pull-right">
-            <span class="glyphicon glyphicon-plus icon-spaced-right"></span>
-            {% trans "Add a result" %}
-        </a>
-        <h1>{{ competition }}</h1>
+         {% if user_can_edit_competition %}
+            <a href="{% url 'game_add' competition_slug=competition.slug %}" id="add-result-button" class="btn btn-primary pull-right">
+                <span class="glyphicon glyphicon-plus icon-spaced-right"></span>
+                {% trans "Add a result" %}
+            </a>
+        {% endif %}
+
+        <h1>
+            {{ competition }}
+            <small>{{ competition.get_type_name }}</small>
+        </h1>
     </div>
 
     <div class="row">
