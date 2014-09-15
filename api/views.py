@@ -65,7 +65,7 @@ class GameViewSet(viewsets.GenericViewSet):
         competition = None
 
         try:
-            if request.DATA['winner_id']:
+            if 'winner_id' in request.DATA:
                 winner = get_user_model().objects.get(id=request.DATA['winner_id'])
             else:
                 winner = get_user_model().objects.get(username=request.DATA['winner'])
@@ -75,7 +75,7 @@ class GameViewSet(viewsets.GenericViewSet):
             errors.append('Winner not found')
 
         try:
-            if request.DATA['loser_id']:
+            if 'loser_id' in request.DATA:
                 loser = get_user_model().objects.get(id=request.DATA['loser_id'])
             else:
                 loser = get_user_model().objects.get(username=request.DATA['loser'])
@@ -85,7 +85,7 @@ class GameViewSet(viewsets.GenericViewSet):
             errors.append('Loser not found')
 
         try:
-            if request.DATA['competition_id']:
+            if 'competition_id' in request.DATA:
                 competition = Competition.objects.get(id=request.DATA['competition_id'])
             else:
                 competition = Competition.objects.get(slug=request.DATA['competition'])
