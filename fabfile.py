@@ -58,9 +58,9 @@ def restart_process():
 
 
 @task
-def compile_less():
+def compile_css():
     with cd(env.project_root):
-        run('grunt less')
+        run('grunt compass')
 
 
 @task
@@ -69,7 +69,7 @@ def deploy(tag):
 
     execute(update_remote_git, tag=tag)
     execute(install_requirements)
-    execute(compile_less)
+    execute(compile_css)
     execute(install_static)
     execute(migrate_database)
 

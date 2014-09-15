@@ -42,6 +42,10 @@ Go to http://127.0.0.1:8000/api
 Assets management
 =================
 
+Install Sass and Compass::
+
+    bundle install
+
 Make sure you have grunt and bower installed::
 
     npm install -g bower grunt grunt-cli
@@ -51,10 +55,10 @@ Install project dependencies::
     npm install
     bower install
 
-Compute LESS with grunt::
+Compute Sass with grunt::
 
     # compile once
-    grunt less
+    grunt compass
 
     # keep looking at changes and recompile when needed
     grunt
