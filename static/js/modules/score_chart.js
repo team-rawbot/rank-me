@@ -139,6 +139,11 @@ define(["jquery", "underscore", "d3"], function($, _, d3) {
                     };
                 });
 
+                if(positions.length === 0) {
+                    svg.append('text').text('No games to display !');
+                    return;
+                }
+
                 setDomain();
 
                 var position = svg.selectAll('.position')
@@ -163,10 +168,11 @@ define(["jquery", "underscore", "d3"], function($, _, d3) {
                     .attr("transform", function(d, idx) { return "translate(" + x(idx + 1) + "," + y(d[attribute]) + ")"; })
                     .call(highlighter);
 
+                var itemNumber = data[Object.keys(data)[0]].length;
 
                 position.append("text")
                     .datum(function(d) { return {name: d.name, value: d.values[d.values.length - 1]}; })
-                    .attr("transform", function(d) { return "translate(" + x(50) + "," + y(d.value[attribute]) + ")"; })
+                    .attr("transform", function(d) { return "translate(" + x(itemNumber) + "," + y(d.value[attribute]) + ")"; })
                     .attr("x", 10)
                     .attr("dy", ".35em")
                     .style('fill', function(d) { return color(d.name); })
