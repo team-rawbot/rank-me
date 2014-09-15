@@ -4,3 +4,4 @@ envdir/*
 !envdir/.gitkeep
 static/main.css
 rankme.db
+.sass-cache
