@@ -2,21 +2,62 @@ define(["jquery", "underscore", "d3"], function($, _, d3) {
     var ScoreChart = function () {
         var modeSelector = 'input[name="score-chart-mode"]';
 
+        var svg;
+        var line;
         var attribute;
         var positions;
         var x, y;
+        var yAxis;
 
-        function setDomain() {
+        function setDomain(event) {
             x.domain([1, positions[0].values.length]);
 
             var bigger = d3.max(positions, function(p) { return d3.max(p.values, function(v) { return v[attribute]; })});
             var smaller = d3.min(positions, function(p) { return d3.min(p.values, function(v) { return v[attribute]; })});
 
-            if(attribute === 'position') {
-                y.domain([smaller, bigger]);
-            } else {
-                y.domain([bigger, smaller]);
+            var start = smaller;
+            var end = bigger;
+
+            if(attribute !== 'position') {
+                start = bigger;
+                end = smaller;
             }
+
+            if(event) {
+                // set the domain a first time so that we can compute the domain center
+                y.domain([start, end]);
+
+                var center = Math.max(event.sourceEvent.pageY - $(svg[0]).parent().offset().top, 0);
+                var domainCenter = Math.max(Math.min(y.invert(center), bigger), smaller);
+
+                start = domainCenter + ((start - domainCenter) * event.scale);
+                end = domainCenter + ((end - domainCenter) * event.scale);
+            }
+
+            y.domain([start, end]);
+        }
+
+        function redraw() {
+            var event = null;
+            var duration = 1250;
+
+            if(d3.event && d3.event.type == 'zoom') {
+                event = d3.event;
+                duration = 100;
+            }
+
+            var t = svg.selectAll(".position").transition().duration(duration);
+
+            setDomain(event);
+
+            // redraw relevent part of each item
+            t.select('path')
+                .attr('d', function(d) { return line(d.values); });
+
+            t.selectAll('circle')
+                .attr("transform", function(d, idx) { return "translate(" + x(idx + 1) + "," + y(d[attribute]) + ")"; });
+
+            svg.select('.y.axis').call(yAxis);
         }
 
         function drawChart(container) {
@@ -36,19 +77,8 @@ define(["jquery", "underscore", "d3"], function($, _, d3) {
 
                 attribute = $(modeSelector + ':checked').val();
                 $(modeSelector).on('change', function() {
-                    var t = svg.selectAll(".position").transition().duration(1250);
-
                     attribute = $(this).val();
-                    setDomain();
-
-                    // redraw relevent part of each item
-                    t.select('path')
-                        .attr('d', function(d) { return line(d.values); });
-
-                    t.selectAll('circle')
-                        .attr("transform", function(d, idx) { return "translate(" + x(idx + 1) + "," + y(d[attribute]) + ")"; });
-
-                     svg.select('.y.axis').call(yAxis);
+                    redraw();
                 });
 
                 var color = d3.scale.category20();
@@ -58,15 +88,21 @@ define(["jquery", "underscore", "d3"], function($, _, d3) {
                 y = d3.scale.linear()
                     .range([0, height]);
 
-                var line = d3.svg.line()
+                line = d3.svg.line()
                     .interpolate("linear")
                     .x(function(d, idx) { return x(idx + 1); })
                     .y(function(d) { return y(d[attribute]); });
 
-                var svg = d3.select(container[0])
+                var zoom = d3.behavior.zoom()
+                    .scaleExtent([0.1, 1])
+                    .on("zoom", redraw);
+
+                svg = d3.select(container[0])
                     .append('svg')
                     .attr('width', width + margin.left + margin.right)
                     .attr('height', height + margin.top + margin.bottom)
+                    .call(zoom)
+                    .style("pointer-events", "all")
                   .append('g')
                     .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
@@ -118,7 +154,7 @@ define(["jquery", "underscore", "d3"], function($, _, d3) {
                     .style('fill', function(d) { return color(d.name); })
                     .text(function(d) { return d.name; });
 
-                var yAxis = d3.svg.axis()
+                yAxis = d3.svg.axis()
                     .scale(y)
                     .ticks(20)
                     .tickSize(0)
