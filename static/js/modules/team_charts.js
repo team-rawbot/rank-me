@@ -41,7 +41,7 @@ define(["jquery", "underscore", "d3"], function ($, _, d3) {
                 .rangeRoundBands([0, height], .3);
 
             var color = d3.scale.ordinal()
-                .range(["#89c571", "#d76b7a", "#222", "#628818"])
+                .range(["#89c571", "#d76b7a", "#659dca", "#e1c170"])
                 .domain(['wins', 'defeats', 'total', 'fairness']);
 
             var svg = d3.select(container[0]).append("svg")
