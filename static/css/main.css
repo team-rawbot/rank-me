@@ -6495,6 +6495,12 @@ tr:nth-child(3) .rank-num {
   }
 }
 /* line 88, ../sass/_rankme.scss */
+path {
+  fill: none;
+  stroke-width: 2px;
+}
+
+/* line 93, ../sass/_rankme.scss */
 .axis path,
 .axis line {
   fill: none;
@@ -6502,13 +6508,18 @@ tr:nth-child(3) .rank-num {
   shape-rendering: crispEdges;
 }
 
-/* line 95, ../sass/_rankme.scss */
+/* line 100, ../sass/_rankme.scss */
 .axis path {
   display: none;
 }
 
-/* line 99, ../sass/_rankme.scss */
-.line {
-  fill: none;
-  stroke-width: 1.5px;
+/* line 104, ../sass/_rankme.scss */
+circle.highlighted,
+path.highlighted {
+  stroke-width: 3px;
+}
+
+/* line 109, ../sass/_rankme.scss */
+text.highlighted {
+  font-style: italic;
 }

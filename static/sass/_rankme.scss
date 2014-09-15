@@ -85,6 +85,11 @@ body {
   }
 }
 
+path {
+  fill: none;
+  stroke-width: 2px;
+}
+
 .axis path,
 .axis line {
   fill: none;
@@ -96,7 +101,12 @@ body {
   display: none;
 }
 
-.line {
-  fill: none;
-  stroke-width: 1.5px;
+circle.highlighted,
+path.highlighted {
+    stroke-width: 3px;
 }
+
+text.highlighted {
+    font-style: italic;
+}
+

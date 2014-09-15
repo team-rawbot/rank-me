@@ -135,7 +135,8 @@ define(["jquery", "underscore", "d3"], function($, _, d3) {
                 position.append('path')
                     .attr('d', function(d) { return line(d.values); })
                     .attr('class', 'line')
-                    .style("stroke", function (d) { return color(d.name); });
+                    .style("stroke", function (d) { return color(d.name); })
+                    .call(highlighter);
 
                 position.selectAll('circle')
                     .data(function(d) { return d.values; })
@@ -144,7 +145,9 @@ define(["jquery", "underscore", "d3"], function($, _, d3) {
                     .attr('r', function(d) { return d.played ? 5 : 0; })
                     .style('fill', function(d) { return d.win ? color(d.name) : 'white'; })
                     .style('stroke', function(d) { return color(d.name); })
-                    .attr("transform", function(d, idx) { return "translate(" + x(idx + 1) + "," + y(d[attribute]) + ")"; });
+                    .attr("transform", function(d, idx) { return "translate(" + x(idx + 1) + "," + y(d[attribute]) + ")"; })
+                    .call(highlighter);
+
 
                 position.append("text")
                     .datum(function(d) { return {name: d.name, value: d.values[d.values.length - 1]}; })
@@ -152,7 +155,8 @@ define(["jquery", "underscore", "d3"], function($, _, d3) {
                     .attr("x", 10)
                     .attr("dy", ".35em")
                     .style('fill', function(d) { return color(d.name); })
-                    .text(function(d) { return d.name; });
+                    .text(function(d) { return d.name; })
+                    .call(highlighter);
 
                 yAxis = d3.svg.axis()
                     .scale(y)
@@ -166,6 +170,25 @@ define(["jquery", "underscore", "d3"], function($, _, d3) {
                     .call(yAxis);
 
             });
+        }
+
+        function highlighter(elems) {
+            elems.each(function() {
+                d3.select(this)
+                    .attr('class', function(d) { return 'player-' + d.name; })
+                    .on('mouseover', highlight)
+                    .on('mouseout', unhighlight)
+            });
+        }
+
+        function highlight(d) {
+            var c = 'player-' + d.name;
+            d3.selectAll('.' + c).attr('class', 'highlighted ' + c);
+        }
+
+        function unhighlight(d) {
+            var c = 'player-' + d.name;
+            d3.selectAll('.' + c).attr('class', c);
         }
 
         return {
