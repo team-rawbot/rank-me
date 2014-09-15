@@ -1,6 +1,9 @@
 define(["jquery", "underscore", "d3"], function($, _, d3) {
     var ScoreChart = function () {
         var modeSelector = 'input[name="score-chart-mode"]';
+        var buttonSelector = '.move-chart';
+
+        var offset = 0;
 
         var svg;
         var line;
@@ -65,7 +68,23 @@ define(["jquery", "underscore", "d3"], function($, _, d3) {
                 return;
             }
 
-            d3.json(container.data('json'), function(err, data) {
+            $(buttonSelector).on('click', function () {
+                offset += $(this).data('movement');
+                offset = Math.max(offset, 0);
+                doDraw(container);
+            });
+
+            $(modeSelector).on('change', function() {
+                attribute = $(this).val();
+                redraw();
+            });
+
+            doDraw(container);
+        }
+
+        function doDraw(container) {
+            var url = container.data('json') + '/' + offset;
+            d3.json(url, function(err, data) {
                 if(err) {
                     alert(err);
                     return;
@@ -76,11 +95,6 @@ define(["jquery", "underscore", "d3"], function($, _, d3) {
                 var height = 400;
 
                 attribute = $(modeSelector + ':checked').val();
-                $(modeSelector).on('change', function() {
-                    attribute = $(this).val();
-                    redraw();
-                });
-
                 var color = d3.scale.category20();
 
                 x = d3.scale.linear()
@@ -97,6 +111,7 @@ define(["jquery", "underscore", "d3"], function($, _, d3) {
                     .scaleExtent([0.1, 1])
                     .on("zoom", redraw);
 
+                container.empty();
                 svg = d3.select(container[0])
                     .append('svg')
                     .attr('width', width + margin.left + margin.right)

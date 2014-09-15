@@ -91,10 +91,10 @@ def competition_detail(request, competition_slug):
 
 
 @login_required
-def competition_detail_score_chart(request, competition_slug):
+def competition_detail_score_chart(request, competition_slug, start=0):
     competition = get_object_or_404(Competition, slug=competition_slug)
     score_chart_data = HistoricalScore.objects.get_latest_results_by_team(
-        50, competition, True
+        50, competition, start, True
     )
     return HttpResponse(score_chart_data, mimetype='application/json')
 

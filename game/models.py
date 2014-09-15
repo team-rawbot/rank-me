@@ -376,7 +376,7 @@ class HistoricalScoreManager(models.Manager):
                 .order_by('-id')[:nb_games])
 
     def get_latest_results_by_team(self, nb_games, competition,
-                                   return_json=False):
+                                   start=0, return_json=False):
         """
         Get nb_games latest scores for each team
 
@@ -386,9 +386,10 @@ class HistoricalScoreManager(models.Manager):
 
         {team_a: [{skill: xx, played: xx, game: game_id}, ...]}
         """
+        nb_games += int(start) # add start to nb_games because slicing want the end position
         games = (Game.objects.filter(competitions=competition)
                  .order_by('-id')
-                 .prefetch_related('historical_scores')[:nb_games])
+                 .prefetch_related('historical_scores')[start:nb_games])
 
         teams = (Team.objects
                  .filter(
