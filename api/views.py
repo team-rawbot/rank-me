@@ -1,18 +1,15 @@
 import json
-from django.contrib.auth import login, get_user_model
+from django.contrib.auth import get_user_model
 from django.http import HttpResponse
-from django.shortcuts import get_object_or_404
 from django.utils.datastructures import MultiValueDictKeyError
-from rest_framework.response import Response
 from social.apps.django_app.utils import strategy
-from rest_framework.authtoken.models import Token
-from rest_framework.decorators import api_view
 from rest_framework import viewsets, status
-from api.serializers import TeamSerializer
+from rest_framework.response import Response
+from rest_framework.authtoken.models import Token
 
 from game.models import Competition, Team, Game
 
-from .serializers import CompetitionSerializer
+from .serializers import CompetitionSerializer, TeamSerializer, GameSerializer
 
 
 @strategy('social:complete')
@@ -50,46 +47,66 @@ class TeamViewSet(viewsets.ReadOnlyModelViewSet):
     serializer_class = TeamSerializer
 
 
-@api_view(['POST'])
-def add_result(request):
-    errors = []
-    try:
-        competition = Competition.objects.get(slug=request.DATA['competition'])
-    except MultiValueDictKeyError:
-        errors.append('No competition given')
-    except Competition.DoesNotExist as e:
-        competition = None
-        errors.append('Competition not found')
+class GameViewSet(viewsets.GenericViewSet):
+    """
+    API endpoint that allows Games to be viewed or edited.
+    """
+    queryset = Game.objects.all()
+    serializer_class = GameSerializer
 
-    try:
-        winner = get_user_model().objects.get(username=request.DATA['winner'])
-    except MultiValueDictKeyError:
-        errors.append('No winner given')
-    except get_user_model().DoesNotExist as e:
+    def create(self, request, *args, **kwargs):
+        """
+        API endpoint that allows to add a new result
+        """
+
+        errors = []
         winner = None
-        errors.append('Winner not found')
+        loser = None
+        competition = None
 
-    try:
-        looser = get_user_model().objects.get(username=request.DATA['looser'])
-    except MultiValueDictKeyError:
-        errors.append('No looser given')
-    except get_user_model().DoesNotExist as e:
-        looser = None
-        errors.append('Looser not found')
+        try:
+            if request.DATA['winner_id']:
+                winner = get_user_model().objects.get(id=request.DATA['winner_id'])
+            else:
+                winner = get_user_model().objects.get(username=request.DATA['winner'])
+        except MultiValueDictKeyError:
+            errors.append('No winner given')
+        except get_user_model().DoesNotExist as e:
+            errors.append('Winner not found')
 
-    if errors:
-        payload = {
-            'status': 'error',
-            'errors': errors
-        }
-        code = status.HTTP_400_BAD_REQUEST
-    else:
-        Game.objects.announce(
-            winner,
-            looser,
-            competition
-        )
-        payload = {'status': 'success', }
-        code = status.HTTP_201_CREATED
+        try:
+            if request.DATA['loser_id']:
+                loser = get_user_model().objects.get(id=request.DATA['loser_id'])
+            else:
+                loser = get_user_model().objects.get(username=request.DATA['loser'])
+        except MultiValueDictKeyError:
+            errors.append('No loser given')
+        except get_user_model().DoesNotExist as e:
+            errors.append('Loser not found')
 
-    return Response(payload, status=code)
+        try:
+            if request.DATA['competition_id']:
+                competition = Competition.objects.get(id=request.DATA['competition_id'])
+            else:
+                competition = Competition.objects.get(slug=request.DATA['competition'])
+        except MultiValueDictKeyError:
+            errors.append('No competition given')
+        except Competition.DoesNotExist as e:
+            errors.append('Competition not found')
+
+        if errors:
+            payload = {
+                'status': 'error',
+                'errors': errors
+            }
+            code = status.HTTP_400_BAD_REQUEST
+        else:
+            Game.objects.announce(
+                winner,
+                loser,
+                competition
+            )
+            payload = {'status': 'success', }
+            code = status.HTTP_201_CREATED
+
+        return Response(payload, status=code)
