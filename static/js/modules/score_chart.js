@@ -115,7 +115,7 @@ define(["jquery", "underscore", "d3"], function($, _, d3) {
                     .attr("transform", function(d) { return "translate(" + x(50) + "," + y(d.value[attribute]) + ")"; })
                     .attr("x", 10)
                     .attr("dy", ".35em")
-                    .style('stroke', function(d) { return color(d.name); })
+                    .style('fill', function(d) { return color(d.name); })
                     .text(function(d) { return d.name; });
 
                 var yAxis = d3.svg.axis()

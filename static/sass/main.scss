@@ -25,10 +25,11 @@ $link-color: $brand-info;
 $well-bg: lighten($brand-primary,33%);
 $well-border: lighten($brand-primary,25%);
 
-$panel-default-heading-bg: $well-bg;
+$panel-default-heading-bg: #f9ede7;
 $panel-default-border: $well-border;
 $panel-inner-border: $panel-default-border;
 
+$table-bg-accent: $well-bg;
 $table-border-color: $well-border;
 
 $navbar-default-bg: $brand-primary;
