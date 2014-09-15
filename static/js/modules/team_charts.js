@@ -16,10 +16,10 @@ define(["jquery", "underscore", "d3"], function ($, _, d3) {
                 data.push({
                     name: user,
                     values: [
-                        { name: 'wins', width: 2,     value: wins / total, previous: 0 },
-                        { name: 'defeats', width: 2,  value: defeats / total, previous: wins/total },
-                        { name: 'total', width: 6,    value: total, previous: 0 },
-                        { name: 'fairness', width: 6, value: fairness / 100 }
+                        { name: 'wins',     width: 2,  value: wins / total,     tooltip: wins + ' games',    previous: 0 },
+                        { name: 'defeats',  width: 2,  value: defeats / total,  tooltip: defeats + ' games', previous: wins/total },
+                        { name: 'total',    width: 6,  value: total,            tooltip: total + ' games',   previous: 0 },
+                        { name: 'fairness', width: 6,  value: fairness / 100,   tooltip: (Math.round(fairness * 100) / 100) + '%' }
                     ]
                 });
             });
@@ -77,7 +77,9 @@ define(["jquery", "underscore", "d3"], function ($, _, d3) {
                 })
                 .attr('x', function(d) { return x(d.previous ? d.previous : 0); })
                 .attr("width", function (d) { return x(d.value); })
-                .style("fill", function (d) { return color(d.name); });
+                .style("fill", function (d) { return color(d.name); })
+              .append('title')
+                .text(function (d) { return d.tooltip; });
 
             var yAxis = d3.svg.axis()
                 .scale(y)
@@ -142,8 +144,6 @@ define(["jquery", "underscore", "d3"], function ($, _, d3) {
                     average: average
                 });
             });
-
-            console.log(data);
 
             container = container.parent();
             container.empty();
@@ -212,7 +212,9 @@ define(["jquery", "underscore", "d3"], function ($, _, d3) {
             played.append("rect")
                 .attr("width", x.rangeBand())
                 .attr('height', function(d) { return height - y(d.playedGames); })
-                .attr('y', function(d) { return y(d.playedGames); });
+                .attr('y', function(d) { return y(d.playedGames); })
+              .append('title')
+                .text(function (d) { return d.playedGames + ' games'; });
 
             svg.append('path')
                 .datum(data)

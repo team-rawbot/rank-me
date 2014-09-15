@@ -178,6 +178,15 @@ define(["jquery", "underscore", "d3"], function($, _, d3) {
                     .attr('class', function(d) { return 'player-' + d.name; })
                     .on('mouseover', highlight)
                     .on('mouseout', unhighlight)
+                  .append('title')
+                    .text(function(d) {
+                        if(d.value) {
+                            d = d.value;
+                        } else if(d.values) {
+                            d = d.values[d.values.length - 1];
+                        }
+                        return 'Skill : ' + (Math.round(d.skill * 100) / 100) + '\r\nPosition : ' + d.position;
+                    })
             });
         }
 
