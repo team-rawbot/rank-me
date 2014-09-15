@@ -59,10 +59,11 @@
                         <input id="score-chart-mode-skill" name="score-chart-mode" type="radio" value="skill">
                         {% trans "Skill" %}
                     </label>
-                </div>
 
-                <button class="move-chart" data-movement="10">&lt;</button>
-                <button class="move-chart" data-movement="-10">&gt;</button>
+                    <button class="move-chart" data-movement="10">&lt;</button>
+                    <button class="reset-chart">Last 50</button>
+                    <button class="move-chart" data-movement="-10">&gt;</button>
+                </div>
 
                 <div id="score-chart-container" data-json="{% url 'competition_detail_score_chart' competition.slug %}"></div>
             </div>

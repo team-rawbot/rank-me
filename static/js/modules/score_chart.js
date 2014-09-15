@@ -1,7 +1,8 @@
 define(["jquery", "underscore", "d3"], function($, _, d3) {
     var ScoreChart = function () {
         var modeSelector = 'input[name="score-chart-mode"]';
-        var buttonSelector = '.move-chart';
+        var moveSelector = '.move-chart';
+        var resetSelector = '.reset-chart';
 
         var offset = 0;
 
@@ -68,9 +69,14 @@ define(["jquery", "underscore", "d3"], function($, _, d3) {
                 return;
             }
 
-            $(buttonSelector).on('click', function () {
+            $(moveSelector).on('click', function () {
                 offset += $(this).data('movement');
                 offset = Math.max(offset, 0);
+                doDraw(container);
+            });
+
+            $(resetSelector).on('click', function () {
+                offset = 0;
                 doDraw(container);
             });
 
