@@ -59,7 +59,7 @@ class Team(models.Model):
         return self.get_name()
 
     def get_name(self):
-        return u" / ".join([user.username for user in self.users.all()])
+        return u" / ".join([user.first_name.title() for user in self.users.all()])
 
     def get_competitions(self):
         return Competition.objects.filter(score__team=self)

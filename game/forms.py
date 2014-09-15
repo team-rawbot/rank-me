@@ -5,13 +5,26 @@ from django.utils.translation import ugettext as _
 
 from .models import Competition
 
+class UserChoiceField(forms.ModelChoiceField):
+    def label_from_instance(self, obj):
+        full_name = "%s %s" % (obj.first_name, obj.last_name)
+
+        if not full_name.strip():
+            display_name = obj.username
+        else:
+            display_name = full_name
+
+        return display_name.title()
+
 
 class GameForm(forms.Form):
-    winner = forms.ModelChoiceField(
-        queryset=get_user_model().objects.all().order_by('username')
+    winner = UserChoiceField(
+        queryset = get_user_model().objects.all().extra(select={'lower_first': 'lower(first_name)'}).order_by('lower_first'),
+        empty_label = ''
     )
-    loser = forms.ModelChoiceField(
-        queryset=get_user_model().objects.all().order_by('username')
+    loser = UserChoiceField(
+        queryset = get_user_model().objects.all().extra(select={'lower_first': 'lower(first_name)'}).order_by('lower_first'),
+        empty_label = ''
     )
 
     def clean(self):
