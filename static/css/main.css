@@ -6512,23 +6512,3 @@ tr:nth-child(3) .rank-num {
   fill: none;
   stroke-width: 1.5px;
 }
-
-/* line 104, ../sass/_rankme.scss */
-.score-chart-header {
-  position: relative;
-}
-/* line 107, ../sass/_rankme.scss */
-.score-chart-header > div,
-.score-chart-header > p {
-  position: absolute;
-  top: 5px;
-}
-/* line 113, ../sass/_rankme.scss */
-.score-chart-header > div {
-  left: 10px;
-}
-/* line 116, ../sass/_rankme.scss */
-.score-chart-header > p {
-  right: 10px;
-  color: slategray;
-}

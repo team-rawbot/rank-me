@@ -48,17 +48,21 @@
         </div>
 
         <div class="col-md-9">
-            <div class="score-chart-header">
-                <div>
-                    <label for="score-chart-mode-position">Position</label>
-                    <input id="score-chart-mode-position" name="score-chart-mode" type="radio" value="position" checked="checked">
+            <div class="well">
+                <div class="">
+                    <label for="score-chart-mode-position" class="radio-inline">
+                        <input id="score-chart-mode-position" name="score-chart-mode" type="radio" value="position" checked="checked">
+                        {% trans "Position" %}
+                    </label>
 
-                    <label for="score-chart-mode-skill">Skill</label>
-                    <input id="score-chart-mode-skill" name="score-chart-mode" type="radio" value="skill">
+                    <label for="score-chart-mode-skill" class="radio-inline">
+                        <input id="score-chart-mode-skill" name="score-chart-mode" type="radio" value="skill">
+                        {% trans "Skill" %}
+                    </label>
                 </div>
-            </div>
 
-            <div id="score-chart-container" class="well hidden-phone" data-json="{% url 'competition_detail_score_chart' competition.slug %}"></div>
+                <div id="score-chart-container" data-json="{% url 'competition_detail_score_chart' competition.slug %}"></div>
+            </div>
 
             <div class="latest-results panel panel-default">
                 <div class="panel-heading">
