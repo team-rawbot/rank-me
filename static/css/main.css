@@ -4039,13 +4039,13 @@ select[multiple].input-lg,
 .btn-default {
   color: #333;
   background-color: #fff;
-  border-color: #ccc;
+  border-color: #f7e0d9;
 }
 /* line 11, ../vendors/bootstrap-sass-official/assets/stylesheets/bootstrap/mixins/_buttons.scss */
 .btn-default:hover, .btn-default:focus, .btn-default:active, .btn-default.active, .open > .btn-default.dropdown-toggle {
   color: #333;
   background-color: #e6e6e6;
-  border-color: #adadad;
+  border-color: #ecb7a7;
 }
 /* line 20, ../vendors/bootstrap-sass-official/assets/stylesheets/bootstrap/mixins/_buttons.scss */
 .btn-default:active, .btn-default.active, .open > .btn-default.dropdown-toggle {
@@ -4054,7 +4054,7 @@ select[multiple].input-lg,
 /* line 28, ../vendors/bootstrap-sass-official/assets/stylesheets/bootstrap/mixins/_buttons.scss */
 .btn-default.disabled, .btn-default.disabled:hover, .btn-default.disabled:focus, .btn-default.disabled:active, .btn-default.disabled.active, .btn-default[disabled], .btn-default[disabled]:hover, .btn-default[disabled]:focus, .btn-default[disabled]:active, .btn-default[disabled].active, fieldset[disabled] .btn-default, fieldset[disabled] .btn-default:hover, fieldset[disabled] .btn-default:focus, fieldset[disabled] .btn-default:active, fieldset[disabled] .btn-default.active {
   background-color: #fff;
-  border-color: #ccc;
+  border-color: #f7e0d9;
 }
 /* line 38, ../vendors/bootstrap-sass-official/assets/stylesheets/bootstrap/mixins/_buttons.scss */
 .btn-default .badge {
@@ -4227,7 +4227,7 @@ select[multiple].input-lg,
 }
 
 /* line 124, ../vendors/bootstrap-sass-official/assets/stylesheets/bootstrap/_buttons.scss */
-.btn-lg {
+.btn-lg, .btn-group-lg > .btn {
   padding: 10px 16px;
   font-size: 20px;
   line-height: 1.33;
@@ -4235,7 +4235,7 @@ select[multiple].input-lg,
 }
 
 /* line 128, ../vendors/bootstrap-sass-official/assets/stylesheets/bootstrap/_buttons.scss */
-.btn-sm {
+.btn-sm, .btn-group-sm > .btn {
   padding: 5px 10px;
   font-size: 14px;
   line-height: 1.5;
@@ -4243,7 +4243,7 @@ select[multiple].input-lg,
 }
 
 /* line 132, ../vendors/bootstrap-sass-official/assets/stylesheets/bootstrap/_buttons.scss */
-.btn-xs {
+.btn-xs, .btn-group-xs > .btn {
   padding: 1px 5px;
   font-size: 14px;
   line-height: 1.5;
@@ -4479,6 +4479,254 @@ tbody.collapse.in {
     right: auto;
   }
 }
+/* line 6, ../vendors/bootstrap-sass-official/assets/stylesheets/bootstrap/_button-groups.scss */
+.btn-group,
+.btn-group-vertical {
+  position: relative;
+  display: inline-block;
+  vertical-align: middle;
+}
+/* line 11, ../vendors/bootstrap-sass-official/assets/stylesheets/bootstrap/_button-groups.scss */
+.btn-group > .btn,
+.btn-group-vertical > .btn {
+  position: relative;
+  float: left;
+}
+/* line 15, ../vendors/bootstrap-sass-official/assets/stylesheets/bootstrap/_button-groups.scss */
+.btn-group > .btn:hover, .btn-group > .btn:focus, .btn-group > .btn:active, .btn-group > .btn.active,
+.btn-group-vertical > .btn:hover,
+.btn-group-vertical > .btn:focus,
+.btn-group-vertical > .btn:active,
+.btn-group-vertical > .btn.active {
+  z-index: 2;
+}
+/* line 21, ../vendors/bootstrap-sass-official/assets/stylesheets/bootstrap/_button-groups.scss */
+.btn-group > .btn:focus,
+.btn-group-vertical > .btn:focus {
+  outline: 0;
+}
+
+/* line 30, ../vendors/bootstrap-sass-official/assets/stylesheets/bootstrap/_button-groups.scss */
+.btn-group .btn + .btn,
+.btn-group .btn + .btn-group,
+.btn-group .btn-group + .btn,
+.btn-group .btn-group + .btn-group {
+  margin-left: -1px;
+}
+
+/* line 39, ../vendors/bootstrap-sass-official/assets/stylesheets/bootstrap/_button-groups.scss */
+.btn-toolbar {
+  margin-left: -5px;
+}
+/* line 14, ../vendors/bootstrap-sass-official/assets/stylesheets/bootstrap/mixins/_clearfix.scss */
+.btn-toolbar:before, .btn-toolbar:after {
+  content: " ";
+  display: table;
+}
+/* line 19, ../vendors/bootstrap-sass-official/assets/stylesheets/bootstrap/mixins/_clearfix.scss */
+.btn-toolbar:after {
+  clear: both;
+}
+/* line 43, ../vendors/bootstrap-sass-official/assets/stylesheets/bootstrap/_button-groups.scss */
+.btn-toolbar .btn-group,
+.btn-toolbar .input-group {
+  float: left;
+}
+/* line 47, ../vendors/bootstrap-sass-official/assets/stylesheets/bootstrap/_button-groups.scss */
+.btn-toolbar > .btn,
+.btn-toolbar > .btn-group,
+.btn-toolbar > .input-group {
+  margin-left: 5px;
+}
+
+/* line 54, ../vendors/bootstrap-sass-official/assets/stylesheets/bootstrap/_button-groups.scss */
+.btn-group > .btn:not(:first-child):not(:last-child):not(.dropdown-toggle) {
+  border-radius: 0;
+}
+
+/* line 59, ../vendors/bootstrap-sass-official/assets/stylesheets/bootstrap/_button-groups.scss */
+.btn-group > .btn:first-child {
+  margin-left: 0;
+}
+/* line 61, ../vendors/bootstrap-sass-official/assets/stylesheets/bootstrap/_button-groups.scss */
+.btn-group > .btn:first-child:not(:last-child):not(.dropdown-toggle) {
+  border-bottom-right-radius: 0;
+  border-top-right-radius: 0;
+}
+
+/* line 66, ../vendors/bootstrap-sass-official/assets/stylesheets/bootstrap/_button-groups.scss */
+.btn-group > .btn:last-child:not(:first-child),
+.btn-group > .dropdown-toggle:not(:first-child) {
+  border-bottom-left-radius: 0;
+  border-top-left-radius: 0;
+}
+
+/* line 72, ../vendors/bootstrap-sass-official/assets/stylesheets/bootstrap/_button-groups.scss */
+.btn-group > .btn-group {
+  float: left;
+}
+
+/* line 75, ../vendors/bootstrap-sass-official/assets/stylesheets/bootstrap/_button-groups.scss */
+.btn-group > .btn-group:not(:first-child):not(:last-child) > .btn {
+  border-radius: 0;
+}
+
+/* line 79, ../vendors/bootstrap-sass-official/assets/stylesheets/bootstrap/_button-groups.scss */
+.btn-group > .btn-group:first-child > .btn:last-child,
+.btn-group > .btn-group:first-child > .dropdown-toggle {
+  border-bottom-right-radius: 0;
+  border-top-right-radius: 0;
+}
+
+/* line 84, ../vendors/bootstrap-sass-official/assets/stylesheets/bootstrap/_button-groups.scss */
+.btn-group > .btn-group:last-child > .btn:first-child {
+  border-bottom-left-radius: 0;
+  border-top-left-radius: 0;
+}
+
+/* line 89, ../vendors/bootstrap-sass-official/assets/stylesheets/bootstrap/_button-groups.scss */
+.btn-group .dropdown-toggle:active,
+.btn-group.open .dropdown-toggle {
+  outline: 0;
+}
+
+/* line 108, ../vendors/bootstrap-sass-official/assets/stylesheets/bootstrap/_button-groups.scss */
+.btn-group > .btn + .dropdown-toggle {
+  padding-left: 8px;
+  padding-right: 8px;
+}
+
+/* line 112, ../vendors/bootstrap-sass-official/assets/stylesheets/bootstrap/_button-groups.scss */
+.btn-group > .btn-lg + .dropdown-toggle, .btn-group-lg.btn-group > .btn + .dropdown-toggle {
+  padding-left: 12px;
+  padding-right: 12px;
+}
+
+/* line 119, ../vendors/bootstrap-sass-official/assets/stylesheets/bootstrap/_button-groups.scss */
+.btn-group.open .dropdown-toggle {
+  -webkit-box-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.125);
+  box-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.125);
+}
+/* line 123, ../vendors/bootstrap-sass-official/assets/stylesheets/bootstrap/_button-groups.scss */
+.btn-group.open .dropdown-toggle.btn-link {
+  -webkit-box-shadow: none;
+  box-shadow: none;
+}
+
+/* line 130, ../vendors/bootstrap-sass-official/assets/stylesheets/bootstrap/_button-groups.scss */
+.btn .caret {
+  margin-left: 0;
+}
+
+/* line 134, ../vendors/bootstrap-sass-official/assets/stylesheets/bootstrap/_button-groups.scss */
+.btn-lg .caret, .btn-group-lg > .btn .caret {
+  border-width: 5px 5px 0;
+  border-bottom-width: 0;
+}
+
+/* line 139, ../vendors/bootstrap-sass-official/assets/stylesheets/bootstrap/_button-groups.scss */
+.dropup .btn-lg .caret, .dropup .btn-group-lg > .btn .caret {
+  border-width: 0 5px 5px;
+}
+
+/* line 148, ../vendors/bootstrap-sass-official/assets/stylesheets/bootstrap/_button-groups.scss */
+.btn-group-vertical > .btn,
+.btn-group-vertical > .btn-group,
+.btn-group-vertical > .btn-group > .btn {
+  display: block;
+  float: none;
+  width: 100%;
+  max-width: 100%;
+}
+/* line 14, ../vendors/bootstrap-sass-official/assets/stylesheets/bootstrap/mixins/_clearfix.scss */
+.btn-group-vertical > .btn-group:before, .btn-group-vertical > .btn-group:after {
+  content: " ";
+  display: table;
+}
+/* line 19, ../vendors/bootstrap-sass-official/assets/stylesheets/bootstrap/mixins/_clearfix.scss */
+.btn-group-vertical > .btn-group:after {
+  clear: both;
+}
+/* line 160, ../vendors/bootstrap-sass-official/assets/stylesheets/bootstrap/_button-groups.scss */
+.btn-group-vertical > .btn-group > .btn {
+  float: none;
+}
+/* line 165, ../vendors/bootstrap-sass-official/assets/stylesheets/bootstrap/_button-groups.scss */
+.btn-group-vertical > .btn + .btn,
+.btn-group-vertical > .btn + .btn-group,
+.btn-group-vertical > .btn-group + .btn,
+.btn-group-vertical > .btn-group + .btn-group {
+  margin-top: -1px;
+  margin-left: 0;
+}
+
+/* line 175, ../vendors/bootstrap-sass-official/assets/stylesheets/bootstrap/_button-groups.scss */
+.btn-group-vertical > .btn:not(:first-child):not(:last-child) {
+  border-radius: 0;
+}
+/* line 178, ../vendors/bootstrap-sass-official/assets/stylesheets/bootstrap/_button-groups.scss */
+.btn-group-vertical > .btn:first-child:not(:last-child) {
+  border-top-right-radius: 4px;
+  border-bottom-right-radius: 0;
+  border-bottom-left-radius: 0;
+}
+/* line 182, ../vendors/bootstrap-sass-official/assets/stylesheets/bootstrap/_button-groups.scss */
+.btn-group-vertical > .btn:last-child:not(:first-child) {
+  border-bottom-left-radius: 4px;
+  border-top-right-radius: 0;
+  border-top-left-radius: 0;
+}
+
+/* line 187, ../vendors/bootstrap-sass-official/assets/stylesheets/bootstrap/_button-groups.scss */
+.btn-group-vertical > .btn-group:not(:first-child):not(:last-child) > .btn {
+  border-radius: 0;
+}
+
+/* line 191, ../vendors/bootstrap-sass-official/assets/stylesheets/bootstrap/_button-groups.scss */
+.btn-group-vertical > .btn-group:first-child:not(:last-child) > .btn:last-child,
+.btn-group-vertical > .btn-group:first-child:not(:last-child) > .dropdown-toggle {
+  border-bottom-right-radius: 0;
+  border-bottom-left-radius: 0;
+}
+
+/* line 196, ../vendors/bootstrap-sass-official/assets/stylesheets/bootstrap/_button-groups.scss */
+.btn-group-vertical > .btn-group:last-child:not(:first-child) > .btn:first-child {
+  border-top-right-radius: 0;
+  border-top-left-radius: 0;
+}
+
+/* line 205, ../vendors/bootstrap-sass-official/assets/stylesheets/bootstrap/_button-groups.scss */
+.btn-group-justified {
+  display: table;
+  width: 100%;
+  table-layout: fixed;
+  border-collapse: separate;
+}
+/* line 210, ../vendors/bootstrap-sass-official/assets/stylesheets/bootstrap/_button-groups.scss */
+.btn-group-justified > .btn,
+.btn-group-justified > .btn-group {
+  float: none;
+  display: table-cell;
+  width: 1%;
+}
+/* line 216, ../vendors/bootstrap-sass-official/assets/stylesheets/bootstrap/_button-groups.scss */
+.btn-group-justified > .btn-group .btn {
+  width: 100%;
+}
+/* line 220, ../vendors/bootstrap-sass-official/assets/stylesheets/bootstrap/_button-groups.scss */
+.btn-group-justified > .btn-group .dropdown-menu {
+  left: auto;
+}
+
+/* line 235, ../vendors/bootstrap-sass-official/assets/stylesheets/bootstrap/_button-groups.scss */
+[data-toggle="buttons"] > .btn > input[type="radio"],
+[data-toggle="buttons"] > .btn > input[type="checkbox"] {
+  position: absolute;
+  z-index: -1;
+  opacity: 0;
+  filter: alpha(opacity=0);
+}
+
 /* line 9, ../vendors/bootstrap-sass-official/assets/stylesheets/bootstrap/_navs.scss */
 .nav {
   margin-bottom: 0;
@@ -5011,12 +5259,12 @@ tbody.collapse.in {
   margin-bottom: 7px;
 }
 /* line 362, ../vendors/bootstrap-sass-official/assets/stylesheets/bootstrap/_navbar.scss */
-.navbar-btn.btn-sm {
+.navbar-btn.btn-sm, .btn-group-sm > .navbar-btn.btn {
   margin-top: 8.5px;
   margin-bottom: 8.5px;
 }
 /* line 365, ../vendors/bootstrap-sass-official/assets/stylesheets/bootstrap/_navbar.scss */
-.navbar-btn.btn-xs {
+.navbar-btn.btn-xs, .btn-group-xs > .navbar-btn.btn {
   margin-top: 14px;
   margin-bottom: 14px;
 }
@@ -6436,71 +6684,80 @@ body {
 }
 
 /* line 35, ../sass/_rankme.scss */
+.btn-default:hover,
+.btn-default:focus,
+.btn-default:active,
+.btn-default.active,
+.open > .btn-default.dropdown-toggle {
+  background-color: #f9ede7;
+}
+
+/* line 43, ../sass/_rankme.scss */
 .rank-num {
   text-align: right;
 }
-/* line 38, ../sass/_rankme.scss */
+/* line 46, ../sass/_rankme.scss */
 tr:first-child .rank-num {
   font-size: 24px;
   font-weight: bold;
 }
-/* line 42, ../sass/_rankme.scss */
+/* line 50, ../sass/_rankme.scss */
 tr:nth-child(2) .rank-num {
   font-size: 20px;
   font-weight: bold;
 }
-/* line 46, ../sass/_rankme.scss */
+/* line 54, ../sass/_rankme.scss */
 tr:nth-child(3) .rank-num {
   font-size: 16px;
   font-weight: bold;
 }
 
-/* line 52, ../sass/_rankme.scss */
+/* line 60, ../sass/_rankme.scss */
 .game-win {
   color: #89c571;
 }
-/* line 55, ../sass/_rankme.scss */
+/* line 63, ../sass/_rankme.scss */
 .game-win a {
   color: inherit;
   text-decoration: underline;
 }
 
-/* line 60, ../sass/_rankme.scss */
+/* line 68, ../sass/_rankme.scss */
 .game-defeat {
   color: #d76b7a;
 }
-/* line 63, ../sass/_rankme.scss */
+/* line 71, ../sass/_rankme.scss */
 .game-defeat a {
   color: inherit;
   text-decoration: underline;
 }
 
-/* line 69, ../sass/_rankme.scss */
+/* line 77, ../sass/_rankme.scss */
 .icon-spaced-right {
   margin-right: 0.5em;
 }
 
 @media (max-width: 991px) {
-  /* line 74, ../sass/_rankme.scss */
+  /* line 82, ../sass/_rankme.scss */
   body {
     padding-left: 15px;
     padding-right: 15px;
   }
 }
 @media (max-width: 767px) {
-  /* line 81, ../sass/_rankme.scss */
+  /* line 89, ../sass/_rankme.scss */
   body {
     padding: 20px 0;
     font-size: 14px;
   }
 }
-/* line 88, ../sass/_rankme.scss */
+/* line 96, ../sass/_rankme.scss */
 path {
   fill: none;
   stroke-width: 2px;
 }
 
-/* line 93, ../sass/_rankme.scss */
+/* line 101, ../sass/_rankme.scss */
 .axis path,
 .axis line {
   fill: none;
@@ -6508,18 +6765,18 @@ path {
   shape-rendering: crispEdges;
 }
 
-/* line 100, ../sass/_rankme.scss */
+/* line 108, ../sass/_rankme.scss */
 .axis path {
   display: none;
 }
 
-/* line 104, ../sass/_rankme.scss */
+/* line 112, ../sass/_rankme.scss */
 circle.highlighted,
 path.highlighted {
   stroke-width: 3px;
 }
 
-/* line 109, ../sass/_rankme.scss */
+/* line 117, ../sass/_rankme.scss */
 text.highlighted {
   font-style: italic;
 }

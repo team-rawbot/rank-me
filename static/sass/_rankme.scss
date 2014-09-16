@@ -32,6 +32,14 @@ body {
   vertical-align: middle;
 }
 
+.btn-default:hover,
+.btn-default:focus,
+.btn-default:active,
+.btn-default.active,
+.open > .btn-default.dropdown-toggle {
+    background-color: $brand-lighter;
+}
+
 .rank-num {
   text-align: right;
 

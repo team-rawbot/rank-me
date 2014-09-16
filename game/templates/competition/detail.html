@@ -48,24 +48,28 @@
         </div>
 
         <div class="col-md-9">
-            <div class="well">
-                <div class="">
-                    <label for="score-chart-mode-position" class="radio-inline">
-                        <input id="score-chart-mode-position" name="score-chart-mode" type="radio" value="position" checked="checked">
-                        {% trans "Position" %}
-                    </label>
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <div class="btn-group">
+                        <button class="move-chart btn btn-default btn-sm" data-movement="10"><span class="glyphicon glyphicon-chevron-left"></span></button>
+                        <button class="reset-chart btn btn-default btn-sm">Last 50</button>
+                        <button class="move-chart btn btn-default btn-sm" data-movement="-10"><span class="glyphicon glyphicon-chevron-right"></span></button>
+                    </div>
 
-                    <label for="score-chart-mode-skill" class="radio-inline">
-                        <input id="score-chart-mode-skill" name="score-chart-mode" type="radio" value="skill">
-                        {% trans "Skill" %}
-                    </label>
+                    <div class="pull-right">
+                        <label for="score-chart-mode-position" class="radio-inline">
+                            <input id="score-chart-mode-position" name="score-chart-mode" type="radio" value="position" checked="checked">
+                            {% trans "Position" %}
+                        </label>
 
-                    <button class="move-chart" data-movement="10">&lt;</button>
-                    <button class="reset-chart">Last 50</button>
-                    <button class="move-chart" data-movement="-10">&gt;</button>
+                        <label for="score-chart-mode-skill" class="radio-inline">
+                            <input id="score-chart-mode-skill" name="score-chart-mode" type="radio" value="skill">
+                            {% trans "Skill" %}
+                        </label>
+                    </div>
                 </div>
 
-                <div id="score-chart-container" data-json="{% url 'competition_detail_score_chart' competition.slug %}"></div>
+                <div id="score-chart-container" class="panel-body" data-json="{% url 'competition_detail_score_chart' competition.slug %}"></div>
             </div>
 
             <div class="latest-results panel panel-default">
