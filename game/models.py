@@ -566,7 +566,11 @@ class Competition(models.Model):
         return self.type == 0
 
 
-    def can_add_result(self, user):
+    def user_has_read_access(self, user):
+        return self.user_has_write_access()
+
+
+    def user_has_write_access(self, user):
         if self.is_public():
             return True
 

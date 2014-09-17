@@ -7,6 +7,8 @@ from django.shortcuts import get_object_or_404, render, redirect
 from .forms import GameForm, CompetitionForm
 from .models import Competition, Game, HistoricalScore, Score, Team
 
+from .decorators import authorized_user
+
 
 def index(request):
     if request.user.is_authenticated():
@@ -71,10 +73,12 @@ def competition_add(request):
 
 
 @login_required
+@authorized_user
 def competition_detail(request, competition_slug):
     """
     User logged in => homepage
     User not logged => login page
+    User not authorized in competition => homepage
     """
     competition = get_object_or_404(Competition, slug=competition_slug)
 
@@ -85,7 +89,7 @@ def competition_detail(request, competition_slug):
         'latest_results': latest_results,
         'score_board': score_board,
         'competition': competition,
-        'user_can_edit_competition': competition.can_add_result(request.user),
+        'user_can_edit_competition': competition.user_has_write_access(request.user),
     }
 
     return render(request, 'competition/detail.html', context)
