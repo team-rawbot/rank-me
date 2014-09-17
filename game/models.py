@@ -542,6 +542,10 @@ class CompetitionManager(models.Manager):
         return self.get_queryset().get(pk=1)
 
 
+    def get_visible_for_user(self, user):
+        return self.filter(Q(type=0) | Q(players=user.id)).distinct()
+
+
 class Competition(models.Model):
     name = models.CharField(max_length=255)
     description = models.TextField(blank=True)

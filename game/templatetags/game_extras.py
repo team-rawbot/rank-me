@@ -6,10 +6,11 @@ register = template.Library()
 from django.template.defaultfilters import floatformat
 
 
-@register.inclusion_tag('competition/_list.html')
-def competitions_list():
+@register.inclusion_tag('competition/_list.html', takes_context = True)
+def competitions_list(context):
+    request = context['request']
     return {
-        'competitions': Competition.objects.all().order_by('name')
+        'competitions': Competition.objects.get_visible_for_user(request.user).order_by('name')
     }
 
 @register.filter
