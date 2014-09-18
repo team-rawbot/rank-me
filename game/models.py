@@ -554,16 +554,7 @@ class Competition(models.Model):
     teams = models.ManyToManyField(Team, through=Score)
     games = models.ManyToManyField(Game, related_name='competitions')
     slug = models.SlugField()
-    type = models.PositiveIntegerField(default=0)
     players = models.ManyToManyField(settings.AUTH_USER_MODEL, related_name='competitions')
-
-    def get_type_name(self):
-        types = ["public", "private", "invitation-only", "hidden"]
-        return types[self.type]
-
-
-    def is_public(self):
-        return self.type == 0
 
 
     def user_has_read_access(self, user):
@@ -571,9 +562,6 @@ class Competition(models.Model):
 
 
     def user_has_write_access(self, user):
-        if self.is_public():
-            return True
-
         if self.players.filter(id=user.id).count() == 1:
             return True
 

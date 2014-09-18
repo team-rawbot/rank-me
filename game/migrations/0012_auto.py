@@ -70,8 +70,7 @@ class Migration(SchemaMigration):
             'players': ('django.db.models.fields.related.ManyToManyField', [], {'related_name': "'competitions'", 'symmetrical': 'False', 'to': u"orm['auth.User']"}),
             'slug': ('django.db.models.fields.SlugField', [], {'max_length': '50'}),
             'start_date': ('django.db.models.fields.DateTimeField', [], {'default': 'datetime.datetime.now'}),
-            'teams': ('django.db.models.fields.related.ManyToManyField', [], {'to': u"orm['game.Team']", 'through': u"orm['game.Score']", 'symmetrical': 'False'}),
-            'type': ('django.db.models.fields.PositiveIntegerField', [], {'default': '0'})
+            'teams': ('django.db.models.fields.related.ManyToManyField', [], {'to': u"orm['game.Team']", 'through': u"orm['game.Score']", 'symmetrical': 'False'})
         },
         u'game.game': {
             'Meta': {'object_name': 'Game'},

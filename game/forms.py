@@ -39,4 +39,4 @@ class GameForm(forms.ModelForm):
 class CompetitionForm(forms.ModelForm):
     class Meta:
         model = Competition
-        fields = ('name', 'description', 'type', 'players', 'start_date', 'end_date')
+        fields = ('name', 'description', 'players', 'start_date', 'end_date')
