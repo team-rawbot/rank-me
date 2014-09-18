@@ -12,6 +12,7 @@ define(["jquery", "underscore", "d3"], function($, _, d3) {
         var positions;
         var x, y;
         var yAxis;
+        var zoomCenter;
 
         function setDomain(event) {
             x.domain([1, positions[0].values.length]);
@@ -31,8 +32,13 @@ define(["jquery", "underscore", "d3"], function($, _, d3) {
                 // set the domain a first time so that we can compute the domain center
                 y.domain([start, end]);
 
-                var center = Math.max(event.sourceEvent.pageY - $(svg[0]).parent().offset().top, 0);
-                var domainCenter = Math.max(Math.min(y.invert(center), bigger), smaller);
+                if(typeof(zoomCenter) === 'undefined' || event.sourceEvent.type == 'wheel') {
+                    zoomCenter = Math.max(event.sourceEvent.pageY - $(svg[0]).parent().offset().top, 0);
+                } else {
+                    zoomCenter += event.sourceEvent.movementY;
+                }
+
+                var domainCenter = Math.max(Math.min(y.invert(zoomCenter), bigger), smaller);
 
                 start = domainCenter + ((start - domainCenter) * event.scale);
                 end = domainCenter + ((end - domainCenter) * event.scale);
