@@ -543,7 +543,7 @@ class CompetitionManager(models.Manager):
 
 
     def get_visible_for_user(self, user):
-        return self.filter(Q(type=0) | Q(players=user.id)).distinct()
+        return self.filter(Q(players=user.id)).distinct()
 
 
 class Competition(models.Model):
