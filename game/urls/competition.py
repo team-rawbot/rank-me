@@ -7,4 +7,5 @@ urlpatterns = patterns(
     url(r'^game/new/$', 'game_add', name='game_add'),
     url(r'^game/remove/(?P<game_id>\d+)$', 'game_remove', name='game_remove'),
     url(r'^team/(?P<team_id>\d+)/$', 'team_detail', name='team_detail'),
+    url(r'^join/$', 'competition_join', name='competition_join'),
 )

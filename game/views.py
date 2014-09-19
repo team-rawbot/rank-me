@@ -113,6 +113,19 @@ def competition_detail_score_chart(request, competition_slug):
 
 
 @login_required
+def competition_join(request, competition_slug):
+    competition = get_object_or_404(Competition, slug=competition_slug)
+
+    if not competition.user_has_write_access(request.user):
+        competition.players.add(request.user)
+        messages.add_message(request, messages.SUCCESS, 'Welcome in competition!')
+
+    return redirect(reverse('competition_detail', kwargs={
+        'competition_slug': competition.slug
+    }))
+
+
+@login_required
 @authorized_user
 def game_add(request, competition_slug):
     competition = get_object_or_404(Competition, slug=competition_slug)
