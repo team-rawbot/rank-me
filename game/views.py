@@ -64,7 +64,6 @@ def team_general_detail(request, team_id):
 
 
 @login_required
-@authorized_user
 def competition_add(request):
     if request.method == 'POST':
         form = CompetitionForm(request.POST)

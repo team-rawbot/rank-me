@@ -1,6 +1,6 @@
 from django.core.urlresolvers import reverse
 from django.http import HttpResponseRedirect, HttpResponse
-from django.shortcuts import get_object_or_404
+from django.shortcuts import get_object_or_404, render
 from .models import Competition
 
 def authorized_user(func):
@@ -13,6 +13,11 @@ def authorized_user(func):
         if competition.user_has_write_access(request.user):
             return func(request, *args, **kwargs)
 
-        return HttpResponse('Unauthorized', status=401)
+
+        context = {
+            'competition': competition,
+        }
+
+        return render(request, 'competition/no_access.html', context)
 
     return decorator
