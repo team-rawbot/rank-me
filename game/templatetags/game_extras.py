@@ -18,7 +18,7 @@ def competitions_list(context):
 def all_competitions_list(context):
     request = context['request']
     return {
-        'competitions': Competition.objects.get_visible_for_user(request.user).order_by('name')
+        'competitions': Competition.objects.all().order_by('name')
     }
 
 
