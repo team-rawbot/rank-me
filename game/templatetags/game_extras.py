@@ -13,6 +13,15 @@ def competitions_list(context):
         'competitions': Competition.objects.get_visible_for_user(request.user).order_by('name')
     }
 
+
+@register.inclusion_tag('competition/_list.html', takes_context = True)
+def all_competitions_list(context):
+    request = context['request']
+    return {
+        'competitions': Competition.objects.get_visible_for_user(request.user).order_by('name')
+    }
+
+
 @register.filter
 def as_percentage_of(part, whole):
     try:

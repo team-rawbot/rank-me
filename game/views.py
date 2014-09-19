@@ -20,6 +20,12 @@ def index(request):
 
 
 @login_required
+def competition_list_all(request):
+    return render(request, 'competition/list_all.html')
+
+
+@login_required
+@authorized_user
 def team_detail(request, competition_slug, team_id):
     competition = get_object_or_404(Competition, slug=competition_slug)
     team = get_object_or_404(Team, pk=team_id)
@@ -50,6 +56,7 @@ def team_detail(request, competition_slug, team_id):
 
 
 @login_required
+@authorized_user
 def team_general_detail(request, team_id):
     team = get_object_or_404(Team, pk=team_id)
 
@@ -57,6 +64,7 @@ def team_general_detail(request, team_id):
 
 
 @login_required
+@authorized_user
 def competition_add(request):
     if request.method == 'POST':
         form = CompetitionForm(request.POST)
@@ -96,6 +104,7 @@ def competition_detail(request, competition_slug):
 
 
 @login_required
+@authorized_user
 def competition_detail_score_chart(request, competition_slug):
     competition = get_object_or_404(Competition, slug=competition_slug)
     score_chart_data = HistoricalScore.objects.get_latest_results_by_team(
@@ -105,6 +114,7 @@ def competition_detail_score_chart(request, competition_slug):
 
 
 @login_required
+@authorized_user
 def game_add(request, competition_slug):
     competition = get_object_or_404(Competition, slug=competition_slug)
 
@@ -131,6 +141,7 @@ def game_add(request, competition_slug):
 
 
 @login_required
+@authorized_user
 def game_remove(request, game_id, competition_slug):
     game = get_object_or_404(Game, pk=game_id)
     competition = get_object_or_404(Competition, slug=competition_slug)
