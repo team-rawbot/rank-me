@@ -9,6 +9,17 @@ class UserProfile(models.Model):
     user = models.OneToOneField(User, related_name='profile')
     avatar = models.CharField(max_length=255, blank=True)
 
+    def full_name(self):
+        full_name = "%s %s" % (self.user.first_name, self.user.last_name)
+
+        if not full_name.strip():
+            display_name = self.user.username
+        else:
+            display_name = full_name
+
+        return display_name.title()
+
+
 
 @receiver(post_init, sender=User)
 def user_post_init(sender, instance, **kwargs):

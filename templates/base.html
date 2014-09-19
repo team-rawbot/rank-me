@@ -66,7 +66,9 @@
 
     <script type="text/javascript">
         var appDatas = {
-            "username": "{{ user.username }}"
+            "user_id": "{{ user.id }}",
+            "username": "{{ user.username }}",
+            "fullname": "{{ user.get_profile.full_name }}"
         };
     </script>
 

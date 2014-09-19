@@ -20,7 +20,7 @@ define(['jquery'], function($) {
      * @param field
      */
     function selectAs(field, event) {
-        var option = $('#id_' + field + ' option:contains("' + appDatas.username + '")');
+        var option = $('#id_' + field + ' option[value=' + appDatas.user_id + ']');
 
         if(option && !alreadySelected) {
             option.attr('selected', 'selected');
