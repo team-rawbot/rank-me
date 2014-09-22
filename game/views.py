@@ -69,7 +69,7 @@ def competition_add(request):
         form = CompetitionForm(request.POST)
 
         if form.is_valid():
-            competition = form.save()
+            competition = form.save(request.user)
 
             return redirect('competition_detail',
                             competition_slug=competition.slug)

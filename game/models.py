@@ -555,7 +555,7 @@ class Competition(models.Model):
     games = models.ManyToManyField(Game, related_name='competitions')
     slug = models.SlugField()
     players = models.ManyToManyField(settings.AUTH_USER_MODEL, related_name='competitions')
-
+    creator = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='my_competitions', default=1)
 
     def user_has_read_access(self, user):
         return self.user_has_write_access()

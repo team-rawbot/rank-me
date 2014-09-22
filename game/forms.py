@@ -40,3 +40,10 @@ class CompetitionForm(forms.ModelForm):
     class Meta:
         model = Competition
         fields = ('name', 'description', 'players', 'start_date', 'end_date')
+
+    def save(self, user):
+        competition = super(CompetitionForm, self).save()
+        competition.creator = user
+        competition.save()
+
+        return competition
