@@ -18,7 +18,8 @@
                     <tr><th>{% trans "First name" %}</th><td>{{ user.first_name }}</td></tr>
                     <tr><th>{% trans "Last name" %}</th><td>{{ user.last_name }}</td></tr>
                     <tr><th>{% trans "E-mail" %}</th><td>{{ user.email }}</td></tr>
-                    <tr><th>{% trans "Twitter" %}</th><td>{{ user.email }}</td></tr>
+                    <tr><th>{% trans "Twitter" %}</th><td>{{ user.get_profile.twitter }}</td></tr>
+                    <tr><th>{% trans "Slack" %}</th><td>{{ user.get_profile.slack }}</td></tr>
                 </table>
             </div>
         </div>
