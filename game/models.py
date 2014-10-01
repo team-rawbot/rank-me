@@ -85,8 +85,6 @@ class Team(models.Model):
         head2head = {}
         fairnesses = self.get_fairness(competition)
 
-        print fairnesses
-
         games = self.get_games(competition)
 
         for game in games:
