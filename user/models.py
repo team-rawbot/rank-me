@@ -22,6 +22,9 @@ class UserProfile(models.Model):
 
         return display_name.title()
 
+    def __unicode__(self):
+        return self.full_name();
+
 
 
 @receiver(post_init, sender=User)
