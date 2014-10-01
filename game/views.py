@@ -128,16 +128,21 @@ def game_add(request, competition_slug):
 
 
 @login_required
-def game_remove(request, game_id, competition_slug):
-    game = get_object_or_404(Game, pk=game_id)
-    competition = get_object_or_404(Competition, slug=competition_slug)
+def game_remove(request, competition_slug):
+    if request.method == 'POST':
+        game_id = request.POST['game_id']
 
-    last_game = Game.objects.get_latest(competition)[0]
+        game = get_object_or_404(Game, pk=game_id)
+        competition = get_object_or_404(Competition, slug=competition_slug)
 
-    if last_game.id == game.id:
-        Game.objects.delete(game, competition)
-        messages.add_message(request, messages.SUCCESS, 'Last game was deleted.')
+        last_game = Game.objects.get_latest(competition)[0]
+
+        if last_game.id == game.id:
+            Game.objects.delete(game, competition)
+            messages.add_message(request, messages.SUCCESS, 'Last game was deleted.')
+        else:
+            messages.add_message(request, messages.ERROR, 'Trying to delete a game that is not the last.')
     else:
-        messages.add_message(request, messages.ERROR, 'Trying to delete a game that is not the last.')
+        messages.add_message(request, messages.ERROR, 'Unknown error try again.')
 
     return redirect('game.views.competition_detail', competition_slug=competition_slug)
