@@ -172,6 +172,16 @@ class Team(models.Model):
         else:
             return 0
 
+    def get_current_streak(self, competition):
+        games = self.get_games(competition)
+        streak = 0
+        for game in games:
+            if game.winner_id == self.id:
+                streak += 1
+            else:
+                break
+        return streak
+
     def get_or_create_score(self, competition):
         try:
             score = Score.objects.get(
