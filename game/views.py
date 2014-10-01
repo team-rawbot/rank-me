@@ -4,6 +4,7 @@ from django.core.urlresolvers import reverse
 from django.db.models.query_utils import Q
 from django.http.response import HttpResponse
 from django.shortcuts import get_object_or_404, render, redirect
+from django.views.decorators.http import require_POST
 
 from .forms import GameForm, CompetitionForm
 from .models import Competition, Game, HistoricalScore, Score, Team
@@ -129,30 +130,28 @@ def game_add(request, competition_slug):
 
 
 @login_required
+@require_POST
 def game_remove(request, competition_slug):
-    if request.method == 'POST':
-        game_id = request.POST['game_id']
+    game_id = request.POST['game_id']
 
-        game = get_object_or_404(Game, pk=game_id)
-        competition = get_object_or_404(Competition, slug=competition_slug)
+    game = get_object_or_404(Game, pk=game_id)
+    competition = get_object_or_404(Competition, slug=competition_slug)
 
-        last_game = Game.objects.get_latest(competition)[0]
+    last_game = Game.objects.get_latest(competition)[0]
 
-        if last_game.id == game.id:
-            Game.objects.delete(game, competition)
+    if last_game.id == game.id:
+        Game.objects.delete(game, competition)
 
-            # Remove the team score from the competition if it was its only game
-            teams = [last_game.winner, last_game.loser]
-            for team in teams:
-                count = Game.objects.filter(Q(winner=team) | Q(loser=team), competitions=competition).count()
-                print str(team) + " : " + str(count)
-                if count == 0:
-                    Score.objects.filter(competition=competition, team=team).delete()
+        # Remove the team score from the competition if it was its only game
+        teams = [last_game.winner, last_game.loser]
+        for team in teams:
+            count = Game.objects.filter(Q(winner=team) | Q(loser=team), competitions=competition).count()
+            print str(team) + " : " + str(count)
+            if count == 0:
+                Score.objects.filter(competition=competition, team=team).delete()
 
-            messages.add_message(request, messages.SUCCESS, 'Last game was deleted.')
-        else:
-            messages.add_message(request, messages.ERROR, 'Trying to delete a game that is not the last.')
+        messages.add_message(request, messages.SUCCESS, 'Last game was deleted.')
     else:
-        messages.add_message(request, messages.ERROR, 'Unknown error try again.')
+        messages.add_message(request, messages.ERROR, 'Trying to delete a game that is not the last.')
 
     return redirect('game.views.competition_detail', competition_slug=competition_slug)
