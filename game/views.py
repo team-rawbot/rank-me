@@ -1,6 +1,7 @@
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.core.urlresolvers import reverse
+from django.db.models.query_utils import Q
 from django.http.response import HttpResponse
 from django.shortcuts import get_object_or_404, render, redirect
 
@@ -139,6 +140,15 @@ def game_remove(request, competition_slug):
 
         if last_game.id == game.id:
             Game.objects.delete(game, competition)
+
+            # Remove the team score from the competition if it was its only game
+            teams = [last_game.winner, last_game.loser]
+            for team in teams:
+                count = Game.objects.filter(Q(winner=team) | Q(loser=team), competitions=competition).count()
+                print str(team) + " : " + str(count)
+                if count == 0:
+                    Score.objects.filter(competition=competition, team=team).delete()
+
             messages.add_message(request, messages.SUCCESS, 'Last game was deleted.')
         else:
             messages.add_message(request, messages.ERROR, 'Trying to delete a game that is not the last.')
