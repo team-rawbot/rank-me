@@ -3,24 +3,25 @@ from django.contrib.auth import get_user_model
 from django.core.exceptions import ValidationError
 from django.utils.translation import ugettext as _
 
-from .models import Competition, Game
+from .models import Competition, Game, Team
 
 
-class GameForm(forms.ModelForm):
-
-    class Meta:
-        model = Game
-        fields = ('winner', 'loser')
+class GameForm(forms.Form):
+    # values overriden in __init__ !
+    winner = forms.ModelChoiceField(queryset=Team.objects.none())
+    loser = forms.ModelChoiceField(queryset=Team.objects.none())
 
     def __init__(self, *args, **kwargs):
-        competition = kwargs.pop('competition')
+        self.competition = kwargs.pop('competition')
         super(GameForm, self).__init__(*args, **kwargs)
 
-        queryset = get_user_model().objects.filter(id__in=competition.players.all()).order_by('username')
+        queryset = get_user_model().objects.filter(id__in=self.competition.players.all()).order_by('username')
 
         self.fields['winner'].queryset = queryset
         self.fields['loser'].queryset = queryset
 
+    def save(self):
+        Game.objects.announce(self.winner, self.loser, self.competition)
 
     def clean(self):
         cleaned_data = super(GameForm, self).clean()
