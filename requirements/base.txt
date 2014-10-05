@@ -14,5 +14,4 @@ requests-oauthlib==0.4.1
 requests==2.4.1
 six==1.8.0
 slacker==0.3.9
-South==1.0
 trueskill==0.4.3
