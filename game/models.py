@@ -242,7 +242,7 @@ class Team(models.Model):
 
 class GameManager(models.Manager):
     def get_latest(self, competition=None):
-        games = (self.get_query_set()
+        games = (self.get_queryset()
                  .select_related('winner', 'loser')
                  .prefetch_related('winner__users', 'loser__users')
                  .order_by('-date'))
@@ -498,7 +498,7 @@ class HistoricalScoreManager(models.Manager):
 
 class ScoreManager(models.Manager):
     def get_score_board(self, competition):
-        return (self.get_query_set().filter(competition=competition)
+        return (self.get_queryset().filter(competition=competition)
                 .order_by('-score').prefetch_related('team__users'))
 
     def get_ranking_by_team(self, competition):
