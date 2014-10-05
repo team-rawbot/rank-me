@@ -5,3 +5,4 @@ envdir/*
 static/css/main.css
 rankme.db
 .sass-cache
+.vagrant

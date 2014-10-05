@@ -1,0 +1,90 @@
+---
+- hosts: all
+  vars:
+      normal_user: vagrant
+      DATABASE_URL: "postgres://vagrant:vagrant@localhost/rankme"
+      SECRET_KEY: notsosecret
+  remote_user: "{{ normal_user }}"
+  tasks:
+  - name: ensure sudoers file allows to run all commands without password
+    lineinfile: dest=/etc/sudoers line="%sudo ALL=(ALL) NOPASSWD:ALL" regexp="^%sudo ALL=NOPASSWD:ALL$"
+    sudo: yes
+  - name: ensure wheezy-backports repo is enabled
+    apt_repository: state=present repo="deb http://cdn.debian.net/debian wheezy-backports main"
+    sudo: yes
+  - name: ensure apt cache is up-to-date
+    apt: update_cache=true
+    sudo: yes
+  - name: ensure base packages are installed
+    apt: pkg={{ item }} state=installed
+    sudo: yes
+    with_items:
+        - rubygems
+        - nodejs
+        - bundler
+        - python-virtualenv
+  - name: ensure nodejs can be invoked as "node"
+    command: update-alternatives --install /usr/bin/node nodejs /usr/bin/nodejs 100
+    sudo: yes
+  - name: ensure gems are installed
+    command: bundle install --gemfile=/vagrant/Gemfile
+    sudo: yes
+  - name: ensure npm is installed
+    shell: curl https://www.npmjs.org/install.sh | sudo sh creates=/usr/bin/npm
+  - name: ensure grunt & bower are installed
+    npm: name={{ item }} state=present global=yes
+    with_items:
+        - grunt
+        - grunt-cli
+        - bower
+    sudo: yes
+  - name: ensure js dependencies are installed
+    shell: cd /vagrant && npm install && bower install
+  - name: compile sass
+    shell: cd /vagrant && grunt compass
+
+
+  - name: ensure postgresql is installed
+    apt: pkg={{ item }} state=installed
+    with_items:
+        - postgresql
+        - python-psycopg2
+        - python-dev
+        - libpq-dev
+    sudo: yes
+  - name: ensure vagrant user has access to postgresql
+    postgresql_user: name={{ normal_user }} state=present role_attr_flags=SUPERUSER
+    sudo_user: postgres
+    sudo: yes
+  - name: ensure vagrant user has access to postgresql with password
+    postgresql_user: name={{ normal_user }} password={{ normal_user }} state=present
+    sudo_user: postgres
+    sudo: yes
+  - name: ensure database exists
+    postgresql_db: name=rankme owner={{ normal_user }} state=present
+    sudo_user: postgres
+    sudo: yes
+
+  - name: ensure env settings are set
+    copy: "dest=/vagrant/envdir/{{ item.key }} content={{ item.value }}"
+    with_items:
+        - { key: DATABASE_URL, value: "{{ DATABASE_URL }}" }
+        - { key: SECRET_KEY, value: "{{ SECRET_KEY }}" }
+        - { key: DJANGO_SETTINGS_MODULE, value: "rankme.settings.local" }
+        - { key: SOCIAL_AUTH_TWITTER_KEY, value: "changeme" }
+        - { key: SOCIAL_AUTH_TWITTER_SECRET, value: "changeme" }
+
+  - name: create venv
+    pip: name=setuptools>=0.7 virtualenv=~/env/
+  - name: install requirements in venv
+    pip: requirements=/vagrant/requirements/dev.txt virtualenv=~/env/
+  - name: install psycopg2 in venv
+    pip: name=psycopg2 virtualenv=~/env/
+  - name: sync the database
+    command: "~/env/bin/python /vagrant/manage.py syncdb --all --noinput"
+  - name: fake the migrations
+    command: "~/env/bin/python /vagrant/manage.py migrate --fake"
+
+  - name: enable shell shortcuts
+    lineinfile: dest=~/.bashrc line='alias manage.py="~/env/bin/python /vagrant/manage.py"'
+  - lineinfile: dest=~/.bashrc line='alias runserver="~/env/bin/python /vagrant/manage.py runserver_plus 0.0.0.0:8000"'
