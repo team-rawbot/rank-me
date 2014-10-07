@@ -80,10 +80,8 @@
     pip: requirements=/vagrant/requirements/dev.txt virtualenv=~/env/
   - name: install psycopg2 in venv
     pip: name=psycopg2 virtualenv=~/env/
-  - name: sync the database
-    command: "~/env/bin/python /vagrant/manage.py syncdb --all --noinput"
-  - name: fake the migrations
-    command: "~/env/bin/python /vagrant/manage.py migrate --fake"
+  - name: Execute the migrations
+    command: "~/env/bin/python /vagrant/manage.py migrate"
 
   - name: enable shell shortcuts
     lineinfile: dest=~/.bashrc line='alias manage.py="~/env/bin/python /vagrant/manage.py"'
