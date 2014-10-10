@@ -170,7 +170,6 @@ def game_remove(request, competition_slug):
         teams = [last_game.winner, last_game.loser]
         for team in teams:
             count = Game.objects.filter(Q(winner=team) | Q(loser=team), competitions=competition).count()
-            print str(team) + " : " + str(count)
             if count == 0:
                 Score.objects.filter(competition=competition, team=team).delete()
 
