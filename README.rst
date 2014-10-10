@@ -1,6 +1,36 @@
 Installation
 ============
 
+Using Vagrant
+-------------
+
+Run the following command::
+
+    vagrant up
+
+This will create a box and install everything you need. Once it's installed,
+use ``vagrant ssh`` to SSH to the box and use the ``runserver`` alias to run
+the development server. You'll then be able to connect to
+http://ip.of.the.box:8000/.
+
+To run management commands, use the ``manage.py``
+alias (notice there's no leading dot) from anywhere in your box. You'll
+probably want to run ``manage.py createsuperuser`` to create a super user and
+then login on ``/admin/``, sparing the need to setup Twitter authentication
+(see below).
+
+Manually
+--------
+
+You'll need the following installed on your computer:
+
+* Python 2.7
+* python-dev
+* libpq-dev (if using PostgreSQL)
+* Nodejs
+* NPM
+* Compass
+
 (optional) create a virtualenv with virtualenvwrapper::
 
     mkvirtualenv rankme
@@ -25,22 +55,8 @@ To run the tests::
 
     ./manage.py test
 
-Twitter authentication
-======================
-
-Most of the application requires to be authenticated. This means you'll get
-redirected to Twitter if you try to access a protected page. If you don't want
-to register a Twitter app to get an API key and secret, you can just create a
-user with ``./manage.py createsuperuser``, go to ``/admin`` and log in. Once you're
-authenticated, you'll be able to go through the whole application.
-
-API documentation
-=================
-
-Go to http://127.0.0.1:8000/api
-
 Assets management
-=================
+~~~~~~~~~~~~~~~~~
 
 Install Sass and Compass::
 
@@ -62,6 +78,20 @@ Compute Sass with grunt::
 
     # keep looking at changes and recompile when needed
     grunt
+
+Twitter authentication
+======================
+
+Most of the application requires to be authenticated. This means you'll get
+redirected to Twitter if you try to access a protected page. If you don't want
+to register a Twitter app to get an API key and secret, you can just create a
+user with ``./manage.py createsuperuser``, go to ``/admin`` and log in. Once you're
+authenticated, you'll be able to go through the whole application.
+
+API documentation
+=================
+
+Go to http://127.0.0.1:8000/api
 
 Deployment
 ==========
