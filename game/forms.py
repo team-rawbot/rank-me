@@ -14,8 +14,8 @@ class UserChoiceField(forms.ModelChoiceField):
 
 class GameForm(forms.Form):
     # values overridden in __init__ !
-    winner = forms.ModelChoiceField(queryset=Team.objects.none())
-    loser = forms.ModelChoiceField(queryset=Team.objects.none())
+    winner = UserChoiceField(queryset=Team.objects.none(), empty_label='')
+    loser = UserChoiceField(queryset=Team.objects.none(), empty_label='')
 
     def __init__(self, *args, **kwargs):
         self.competition = kwargs.pop('competition')
