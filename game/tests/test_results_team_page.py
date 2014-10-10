@@ -4,7 +4,7 @@ from django.core.urlresolvers import reverse
 from game.models import Competition, Game
 from rankme.utils import RankMeTestCase
 
-from .factories import UserFactory
+from .factories import UserFactory, CompetitionFactory
 
 User = get_user_model()
 
@@ -13,8 +13,11 @@ class TestResultsTeamPage(RankMeTestCase):
     def setUp(self):
         super(TestResultsTeamPage, self).setUp()
 
-        self.default_competition = Competition.objects.get_default_competition()
+        # Create one competition and one user.
+        # Then add this user to the competition
+        self.default_competition = CompetitionFactory()
         self.user = UserFactory()
+        self.default_competition.players.add(self.user)
 
     def login(self):
         self.client.login(username=self.user.username, password='password')

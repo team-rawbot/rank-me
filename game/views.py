@@ -6,20 +6,25 @@ from django.http.response import HttpResponse
 from django.shortcuts import get_object_or_404, render, redirect
 from django.views.decorators.http import require_POST
 
+from .decorators import authorized_user
 from .forms import GameForm, CompetitionForm
 from .models import Competition, Game, HistoricalScore, Score, Team
 
 
 def index(request):
     if request.user.is_authenticated():
-        return redirect(reverse('competition_detail', kwargs={
-            'competition_slug': 'default-competition'
-        }))
+        return redirect(reverse('competition_list_all'))
     else:
         return render(request, 'user/login.html')
 
 
 @login_required
+def competition_list_all(request):
+    return render(request, 'competition/list_all.html')
+
+
+@login_required
+@authorized_user
 def team_detail(request, competition_slug, team_id):
     competition = get_object_or_404(Competition, slug=competition_slug)
     team = get_object_or_404(Team, pk=team_id)
@@ -64,7 +69,7 @@ def competition_add(request):
         form = CompetitionForm(request.POST)
 
         if form.is_valid():
-            competition = form.save()
+            competition = form.save(request.user)
 
             return redirect('competition_detail',
                             competition_slug=competition.slug)
@@ -75,10 +80,12 @@ def competition_add(request):
 
 
 @login_required
+@authorized_user
 def competition_detail(request, competition_slug):
     """
     User logged in => homepage
     User not logged => login page
+    User not authorized in competition => request access page
     """
     competition = get_object_or_404(Competition, slug=competition_slug)
 
@@ -89,12 +96,14 @@ def competition_detail(request, competition_slug):
         'latest_results': latest_results,
         'score_board': score_board,
         'competition': competition,
+        'user_can_edit_competition': competition.user_has_write_access(request.user),
     }
 
     return render(request, 'competition/detail.html', context)
 
 
 @login_required
+@authorized_user
 def competition_detail_score_chart(request, competition_slug, start=0):
     competition = get_object_or_404(Competition, slug=competition_slug)
     score_chart_data = HistoricalScore.objects.get_latest_results_by_team(
@@ -104,11 +113,25 @@ def competition_detail_score_chart(request, competition_slug, start=0):
 
 
 @login_required
+def competition_join(request, competition_slug):
+    competition = get_object_or_404(Competition, slug=competition_slug)
+
+    if not competition.user_has_write_access(request.user):
+        competition.players.add(request.user)
+        messages.add_message(request, messages.SUCCESS, 'Welcome in competition!')
+
+    return redirect(reverse('competition_detail', kwargs={
+        'competition_slug': competition.slug
+    }))
+
+
+@login_required
+@authorized_user
 def game_add(request, competition_slug):
     competition = get_object_or_404(Competition, slug=competition_slug)
 
     if request.method == 'POST':
-        form = GameForm(request.POST)
+        form = GameForm(request.POST, competition=competition)
 
         if form.is_valid():
             Game.objects.announce(
@@ -121,7 +144,7 @@ def game_add(request, competition_slug):
                 'competition_slug': competition.slug
             }))
     else:
-        form = GameForm()
+        form = GameForm(competition=competition)
 
     return render(request, 'game/add.html', {
         'form': form,
@@ -130,6 +153,7 @@ def game_add(request, competition_slug):
 
 
 @login_required
+@authorized_user
 @require_POST
 def game_remove(request, competition_slug):
     game_id = request.POST['game_id']

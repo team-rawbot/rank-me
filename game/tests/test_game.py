@@ -5,7 +5,7 @@ import mock
 
 from rankme.utils import RankMeTestCase
 
-from .factories import UserFactory
+from .factories import UserFactory, CompetitionFactory
 from ..models import Competition, Game
 from ..signals import game_played
 
@@ -16,7 +16,7 @@ class TestGameAnnouncement(RankMeTestCase):
 
         # Create 4 dummy users
         self.users = [UserFactory() for id in range(4)]
-        self.default_competition = Competition.objects.get_default_competition()
+        self.default_competition = CompetitionFactory()
 
     def test_game_announcement(self):
         Game.objects.announce(self.users[0], self.users[1],

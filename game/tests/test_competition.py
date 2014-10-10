@@ -8,7 +8,7 @@ from django.utils import timezone
 from rankme.utils import RankMeTestCase
 
 from ..models import Competition
-from .factories import UserFactory
+from .factories import UserFactory, CompetitionFactory
 
 
 class TestCompetition(RankMeTestCase):
@@ -28,13 +28,14 @@ class TestCompetition(RankMeTestCase):
         response = self.client.post(reverse('competition_add'), {
             'name': 'ATP Tournament 2014',
             'description': 'Official ATP tournament',
+            'players': [self.user.id],
             'start_date': '2014-05-03 00:00:00',
             'end_date': '2014-06-03 00:00:00'
         })
         self.assertRedirects(response, reverse('competition_detail', kwargs={
             'competition_slug': 'atp-tournament-2014'
         }))
-        self.assertEqual(Competition.objects.all().count(), 2)
+        self.assertEqual(Competition.objects.all().count(), 1)
         competition = Competition.objects.get(slug='atp-tournament-2014')
         self.assertEqual(competition.name, 'ATP Tournament 2014')
         self.assertEqual(competition.description, 'Official ATP tournament')
@@ -45,3 +46,25 @@ class TestCompetition(RankMeTestCase):
                 pytz.timezone(settings.TIME_ZONE)
             )
         )
+
+    def test_access_on_competition(self):
+        """
+        John has no access to defaut_competition by default
+        Then add John to default_competition
+        """
+        competition = CompetitionFactory()
+
+        john = UserFactory()
+        self.client.login(username=john.username, password='password')
+
+        response = self.client.get(reverse('competition_detail', kwargs={
+            'competition_slug': competition.slug
+        }))
+        self.assertContains(response, '<h1>Access denied</h1>')
+
+        competition.players.add(john)
+
+        response = self.client.get(reverse('competition_detail', kwargs={
+            'competition_slug': competition.slug
+        }))
+        self.assertContains(response, "<h1>%s</h1>" % competition.name)
