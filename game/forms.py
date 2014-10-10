@@ -1,6 +1,7 @@
 from django import forms
 from django.contrib.auth import get_user_model
 from django.core.exceptions import ValidationError
+from django.template.defaultfilters import slugify
 from django.utils.translation import ugettext as _
 
 from .models import Competition, Game, Team
@@ -13,8 +14,8 @@ class UserChoiceField(forms.ModelChoiceField):
 
 class GameForm(forms.Form):
     # values overridden in __init__ !
-    winner = forms.ModelChoiceField(queryset=Team.objects.none())
-    loser = forms.ModelChoiceField(queryset=Team.objects.none())
+    winner = UserChoiceField(queryset=Team.objects.none(), empty_label='')
+    loser = UserChoiceField(queryset=Team.objects.none(), empty_label='')
 
     def __init__(self, *args, **kwargs):
         self.competition = kwargs.pop('competition')
@@ -53,7 +54,10 @@ class CompetitionForm(forms.ModelForm):
 
     def save(self, creator):
         competition = super(CompetitionForm, self).save(commit=False)
+        competition.slug = slugify(competition.name)
         competition.creator = creator
+
         competition.save()
+        self.save_m2m()
 
         return competition
