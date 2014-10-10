@@ -9,7 +9,7 @@
 </head>
 <body class="{% block body_class %}{% endblock %}">
     <nav class="navbar navbar-default navbar-fixed-top">
-        <div class="container-fluid">
+        <div class="container-fluid wrapper--default">
             <div class="navbar-header">
                 {% if user and user.is_authenticated %}
                 <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#main-navbar">
@@ -57,7 +57,7 @@
         </div>
     </nav>
 
-    <div class="app container-fluid">
+    <div class="app container-fluid wrapper--default">
         <div class="messages">
             {% for message in messages %}
                 <div class="alert alert-{{ message.tags }}">{{ message }}</div>

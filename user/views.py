@@ -10,7 +10,7 @@ from .forms import UserProfileForm, UserForm
 
 @login_required
 def index(request):
-    scores = itertools.chain.from_iterable([t.scores.all() for t in request.user.teams.all()])
+    scores = list(itertools.chain.from_iterable([t.scores.all() for t in request.user.teams.all()]))
     return render(request, 'user/profile.html', {
         'user': request.user,
         'profile': request.user.get_profile(),
