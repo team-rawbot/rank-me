@@ -32,18 +32,33 @@ class PlayersListTests(APITestCase):
         test_route(self, 'team-list')
 
 
-class AddResultTest(APITestCase):
-    def test_adding(self):
+class GameCreateTest(APITestCase):
+    def test_create_with_slug(self):
         user = UserFactory()
         self.client.force_authenticate(user)
 
         data = {
             'winner': UserFactory().username,
-            'looser': UserFactory().username,
+            'loser': UserFactory().username,
             'competition': CompetitionFactory().slug
         }
 
-        url = reverse('api_add_result')
+        url = reverse('game-list')
+        response = self.client.post(url, data, format="json")
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        self.assertEqual(response.data, {'status': 'success'})
+
+    def test_create_with_ids(self):
+        user = UserFactory()
+        self.client.force_authenticate(user)
+
+        data = {
+            'winner_id': UserFactory().id,
+            'loser_id': UserFactory().id,
+            'competition_id': CompetitionFactory().id
+        }
+
+        url = reverse('game-list')
         response = self.client.post(url, data, format="json")
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         self.assertEqual(response.data, {'status': 'success'})
