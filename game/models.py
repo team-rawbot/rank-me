@@ -551,7 +551,7 @@ class CompetitionManager(models.Manager):
         return self.get_queryset().get(pk=1)
 
     def get_visible_for_user(self, user):
-        return self.filter(Q(players=user.id)).distinct()
+        return self.filter(Q(players=user.id) | Q(creator_id=user.id)).distinct()
 
 
 class Competition(models.Model):
@@ -582,4 +582,5 @@ class Competition(models.Model):
         return self.user_has_write_access()
 
     def user_has_write_access(self, user):
-        return self.players.filter(id=user.id).count() == 1
+        return (self.players.filter(id=user.id).count() == 1 or
+                self.creator_id == user.id)
