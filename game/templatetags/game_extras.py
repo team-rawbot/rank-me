@@ -1,12 +1,13 @@
 from django import template
+from django.template.defaultfilters import floatformat
 
 from ..models import Competition
 
+
 register = template.Library()
-from django.template.defaultfilters import floatformat
 
 
-@register.inclusion_tag('competition/_list.html', takes_context = True)
+@register.inclusion_tag('competition/_list.html', takes_context=True)
 def competitions_list(context):
     request = context['request']
     return {
@@ -14,9 +15,8 @@ def competitions_list(context):
     }
 
 
-@register.inclusion_tag('competition/_list.html', takes_context = True)
-def all_competitions_list(context):
-    request = context['request']
+@register.inclusion_tag('competition/_list.html')
+def all_competitions_list():
     return {
         'competitions': Competition.objects.all().order_by('name')
     }

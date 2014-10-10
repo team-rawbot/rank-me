@@ -6,10 +6,9 @@ from django.http.response import HttpResponse
 from django.shortcuts import get_object_or_404, render, redirect
 from django.views.decorators.http import require_POST
 
+from .decorators import authorized_user
 from .forms import GameForm, CompetitionForm
 from .models import Competition, Game, HistoricalScore, Score, Team
-
-from .decorators import authorized_user
 
 
 def index(request):
@@ -86,7 +85,7 @@ def competition_detail(request, competition_slug):
     """
     User logged in => homepage
     User not logged => login page
-    User not authorized in competition => homepage
+    User not authorized in competition => request access page
     """
     competition = get_object_or_404(Competition, slug=competition_slug)
 
