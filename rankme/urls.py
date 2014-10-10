@@ -10,6 +10,7 @@ urlpatterns = patterns(
     url(r'^all-competitions', 'game.views.competition_list_all', name='competition-list-all'),
     url(r'', include('game.urls')),
     url(r'', include('api.urls')),
+    url(r'^profile/', include('user.urls')),
     url('', include('social.apps.django_app.urls', namespace='social')),
     url(r'^logout/$', 'django.contrib.auth.views.logout', {
         'next_page': '/'

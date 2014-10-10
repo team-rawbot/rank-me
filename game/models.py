@@ -59,7 +59,7 @@ class Team(models.Model):
         return self.get_name()
 
     def get_name(self):
-        return u" / ".join([user.username for user in self.users.all()])
+        return u" / ".join([user.first_name.title() for user in self.users.all()])
 
     def get_competitions(self):
         return Competition.objects.filter(score__team=self)
@@ -84,8 +84,6 @@ class Team(models.Model):
         """
         head2head = {}
         fairnesses = self.get_fairness(competition)
-
-        print fairnesses
 
         games = self.get_games(competition)
 
@@ -172,6 +170,16 @@ class Team(models.Model):
         else:
             return 0
 
+    def get_current_streak(self, competition):
+        games = self.get_games(competition)
+        streak = 0
+        for game in games:
+            if game.winner_id == self.id:
+                streak += 1
+            else:
+                break
+        return streak
+
     def get_or_create_score(self, competition):
         try:
             score = Score.objects.get(
@@ -234,7 +242,7 @@ class Team(models.Model):
 
 class GameManager(models.Manager):
     def get_latest(self, competition=None):
-        games = (self.get_query_set()
+        games = (self.get_queryset()
                  .select_related('winner', 'loser')
                  .prefetch_related('winner__users', 'loser__users')
                  .order_by('-date'))
@@ -376,7 +384,7 @@ class HistoricalScoreManager(models.Manager):
                 .order_by('-id')[:nb_games])
 
     def get_latest_results_by_team(self, nb_games, competition,
-                                   return_json=False):
+                                   start=0, return_json=False):
         """
         Get nb_games latest scores for each team
 
@@ -386,9 +394,10 @@ class HistoricalScoreManager(models.Manager):
 
         {team_a: [{skill: xx, played: xx, game: game_id}, ...]}
         """
+        nb_games += int(start) # add start to nb_games because slicing want the end position
         games = (Game.objects.filter(competitions=competition)
                  .order_by('-id')
-                 .prefetch_related('historical_scores')[:nb_games])
+                 .prefetch_related('historical_scores')[start:nb_games])
 
         teams = (Team.objects
                  .filter(
@@ -489,7 +498,7 @@ class HistoricalScoreManager(models.Manager):
 
 class ScoreManager(models.Manager):
     def get_score_board(self, competition):
-        return (self.get_query_set().filter(competition=competition)
+        return (self.get_queryset().filter(competition=competition)
                 .order_by('-score').prefetch_related('team__users'))
 
     def get_ranking_by_team(self, competition):

@@ -4,7 +4,6 @@ from django.conf import settings
 from slacker import Slacker
 
 logger = logging.getLogger(__name__)
-_slacker = None
 
 # Check required settings
 for required_setting in ['SLACK_API_TOKEN', 'SLACK_CHANNEL']:
@@ -21,16 +20,13 @@ def post_message(message):
     """
     Post the given message on slack, or just log it if debug mode is enabled.
     """
-    global _slacker
-
-    if _slacker is None:
-        _slacker = Slacker(settings.SLACK_API_TOKEN)
+    slacker = Slacker(settings.SLACK_API_TOKEN)
 
     if is_debug_enabled():
         logger.info(message)
     else:
         try:
-            _slacker.chat.post_message(settings.SLACK_CHANNEL, message,
+            slacker.chat.post_message(settings.SLACK_CHANNEL, message,
                                        link_names=True)
         except Exception:
             logger.exception("Unable to send slack message")

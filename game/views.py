@@ -1,8 +1,10 @@
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.core.urlresolvers import reverse
+from django.db.models.query_utils import Q
 from django.http.response import HttpResponse
 from django.shortcuts import get_object_or_404, render, redirect
+from django.views.decorators.http import require_POST
 
 from .forms import GameForm, CompetitionForm
 from .models import Competition, Game, HistoricalScore, Score, Team
@@ -33,6 +35,7 @@ def team_detail(request, competition_slug, team_id):
     head2head = team.get_head2head(competition)
     last_results = team.get_recent_stats(competition, 10)
     longest_streak = team.get_longest_streak(competition)
+    current_streak = team.get_current_streak(competition)
 
     wins = team.get_wins(competition)
     defeats = team.get_defeats(competition)
@@ -44,6 +47,7 @@ def team_detail(request, competition_slug, team_id):
         'head2head': head2head,
         'last_results': last_results,
         'longest_streak': longest_streak,
+        'current_streak': current_streak,
         'games': games,
         'wins': wins,
         'defeats': defeats,
@@ -104,10 +108,10 @@ def competition_detail(request, competition_slug):
 
 @login_required
 @authorized_user
-def competition_detail_score_chart(request, competition_slug):
+def competition_detail_score_chart(request, competition_slug, start=0):
     competition = get_object_or_404(Competition, slug=competition_slug)
     score_chart_data = HistoricalScore.objects.get_latest_results_by_team(
-        50, competition, True
+        50, competition, start, True
     )
     return HttpResponse(score_chart_data, mimetype='application/json')
 
@@ -154,7 +158,10 @@ def game_add(request, competition_slug):
 
 @login_required
 @authorized_user
-def game_remove(request, game_id, competition_slug):
+@require_POST
+def game_remove(request, competition_slug):
+    game_id = request.POST['game_id']
+
     game = get_object_or_404(Game, pk=game_id)
     competition = get_object_or_404(Competition, slug=competition_slug)
 
@@ -162,6 +169,15 @@ def game_remove(request, game_id, competition_slug):
 
     if last_game.id == game.id:
         Game.objects.delete(game, competition)
+
+        # Remove the team score from the competition if it was its only game
+        teams = [last_game.winner, last_game.loser]
+        for team in teams:
+            count = Game.objects.filter(Q(winner=team) | Q(loser=team), competitions=competition).count()
+            print str(team) + " : " + str(count)
+            if count == 0:
+                Score.objects.filter(competition=competition, team=team).delete()
+
         messages.add_message(request, messages.SUCCESS, 'Last game was deleted.')
     else:
         messages.add_message(request, messages.ERROR, 'Trying to delete a game that is not the last.')

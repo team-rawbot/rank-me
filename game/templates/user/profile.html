@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+{% load i18n static %}
+
+{% block content %}
+<div class="team">
+    <header class="page-header">
+        <h1>{{ profile.full_name }}</h1>
+        <a href="{% url 'edit_profile' %}" class="btn btn-sm btn-primary">{% trans "Edit" %}</a>
+    </header>
+
+    <div class="row">
+        <div class="col-md-6">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h3 class="panel-title">{% trans "Information" %}</h3>
+                </div>
+                <table class="table tabble-stripped">
+                    <tr><th>{% trans "Username" %}</th><td>{{ user.username }}</td></tr>
+                    <tr><th>{% trans "First name" %}</th><td>{{ user.first_name }}</td></tr>
+                    <tr><th>{% trans "Last name" %}</th><td>{{ user.last_name }}</td></tr>
+                    <tr><th>{% trans "E-mail" %}</th><td>{{ user.email }}</td></tr>
+                    <tr><th>{% trans "Twitter" %}</th><td>{{ user.get_profile.twitter }}</td></tr>
+                    <tr><th>{% trans "Slack" %}</th><td>{{ user.get_profile.slack }}</td></tr>
+                </table>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h3 class="panel-title">{% trans "Competitions" %}</h3>
+                </div>
+                <table class="table tabble-stripped">
+                    <thead>
+                        <tr>
+                            <th>Competition</th>
+                            <th>Score (µ)</th>
+                            <th>σ</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for score in scores %}
+                            <tr>
+                                <td>{{ score.competition.name }}</td>
+                                <td>{{ score.score|floatformat:"2" }}</td>
+                                <td>{{ score.stdev|floatformat:"3" }}</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+</div>
+{% endblock %}

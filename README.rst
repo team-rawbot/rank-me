@@ -1,6 +1,36 @@
 Installation
 ============
 
+Using Vagrant
+-------------
+
+Run the following command::
+
+    vagrant up
+
+This will create a box and install everything you need. Once it's installed,
+use ``vagrant ssh`` to SSH to the box and use the ``runserver`` alias to run
+the development server. You'll then be able to connect to
+http://ip.of.the.box:8000/.
+
+To run management commands, use the ``manage.py``
+alias (notice there's no leading dot) from anywhere in your box. You'll
+probably want to run ``manage.py createsuperuser`` to create a super user and
+then login on ``/admin/``, sparing the need to setup Twitter authentication
+(see below).
+
+Manually
+--------
+
+You'll need the following installed on your computer:
+
+* Python 2.7
+* python-dev
+* libpq-dev (if using PostgreSQL)
+* Nodejs
+* NPM
+* Compass
+
 (optional) create a virtualenv with virtualenvwrapper::
 
     mkvirtualenv rankme
@@ -25,6 +55,30 @@ To run the tests::
 
     ./manage.py test
 
+Assets management
+~~~~~~~~~~~~~~~~~
+
+Install Sass and Compass::
+
+    bundle install
+
+Make sure you have grunt and bower installed::
+
+    npm install -g bower grunt grunt-cli
+
+Install project dependencies::
+
+    npm install
+    bower install
+
+Compute Sass with grunt::
+
+    # compile once
+    grunt compass
+
+    # keep looking at changes and recompile when needed
+    grunt
+
 Twitter authentication
 ======================
 
@@ -38,26 +92,6 @@ API documentation
 =================
 
 Go to http://127.0.0.1:8000/api
-
-Assets management
-=================
-
-Make sure you have grunt and bower installed::
-
-    npm install -g bower grunt grunt-cli
-
-Install project dependencies::
-
-    npm install
-    bower install
-
-Compute LESS with grunt::
-
-    # compile once
-    grunt less
-
-    # keep looking at changes and recompile when needed
-    grunt
 
 Deployment
 ==========

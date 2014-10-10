@@ -18,7 +18,7 @@
             <h3 class="panel-title">{% trans "Games per week" %}</h3>
         </div>
         <div class="panel-body games-per-week">
-            <table id="games-per-week" border="1">
+            <table id="games-per-week" class="table">
                 <thead>
                     <tr>
                         <td>{% trans "Week" %}</td>
@@ -74,7 +74,7 @@
                     <h3 class="panel-title">{% trans "Head-to-Head" %}</h3>
                 </div>
                 <div class="panel-body head-2-head">
-                    <table id="head-2-head-results">
+                    <table id="head-2-head-results" class="table">
                         <thead>
                             <tr>
                                 <td>{% trans "Opponents" %}</td>
@@ -131,6 +131,10 @@
                         <tr>
                             <th>{% trans "Longest Winning Streak" %}</th>
                             <td>{{ longest_streak }}</td>
+                        </tr>
+                        <tr>
+                            <th>{% trans "Current Winning Streak" %}</th>
+                            <td>{{ current_streak }}</td>
                         </tr>
                     </tbody>
                 </table>

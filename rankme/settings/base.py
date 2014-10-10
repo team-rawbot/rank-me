@@ -120,7 +120,6 @@ INSTALLED_APPS = (
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'south',
     'game',
     'user',
     'slack',
@@ -161,6 +160,8 @@ LOGGING = {
         },
     }
 }
+
+TEST_RUNNER = 'django.test.runner.DiscoverRunner'
 
 AUTHENTICATION_BACKENDS = (
     'social.backends.twitter.TwitterOAuth',

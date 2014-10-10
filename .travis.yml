@@ -1,6 +1,8 @@
 language: python
 python:
-  - "3.3"
+# Tests for Python 3 are disabled for now because of
+# https://code.djangoproject.com/ticket/23455
+#  - "3.3"
   - "2.7"
 env:
     global:

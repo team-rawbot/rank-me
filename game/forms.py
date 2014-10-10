@@ -5,6 +5,10 @@ from django.utils.translation import ugettext as _
 
 from .models import Competition, Game, Team
 
+class UserChoiceField(forms.ModelChoiceField):
+    def label_from_instance(self, obj):
+        return obj.get_profile().full_name()
+
 
 class GameForm(forms.Form):
     # values overriden in __init__ !
@@ -15,7 +19,7 @@ class GameForm(forms.Form):
         self.competition = kwargs.pop('competition')
         super(GameForm, self).__init__(*args, **kwargs)
 
-        queryset = get_user_model().objects.filter(id__in=self.competition.players.all()).order_by('username')
+        queryset = get_user_model().objects.filter(id__in=self.competition.players.all()).extra(select={'lower_first': 'lower(first_name)'}).order_by('lower_first')
 
         self.fields['winner'].queryset = queryset
         self.fields['loser'].queryset = queryset

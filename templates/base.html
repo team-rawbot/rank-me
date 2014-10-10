@@ -4,7 +4,7 @@
 <head>
     <title>Rank-me</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link href="{% static "main.css" %}" rel="stylesheet" media="screen">
+    <link href="{% static "css/main.css" %}" rel="stylesheet" media="screen">
     <link href="http://fonts.googleapis.com/css?family=Source+Sans+Pro:400,600" rel="stylesheet" type="text/css">
 </head>
 <body class="{% block body_class %}{% endblock %}">
@@ -47,6 +47,7 @@
                             <b class="caret"></b>
                         </a>
                         <ul class="dropdown-menu dropdown-menu-right" role="menu">
+                            <li><a href="{% url 'profile' %}">{% trans "Profile" %}</a></li>
                             <li><a href="{% url 'auth_logout' %}">{% trans "Log out" %}</a></li>
                         </ul>
                     </li>
@@ -68,11 +69,13 @@
 
     <script type="text/javascript">
         var appDatas = {
-            "username": "{{ user.username }}"
+            "user_id": "{{ user.id }}",
+            "username": "{{ user.username }}",
+            "fullname": "{{ user.get_profile.full_name }}"
         };
     </script>
 
     <!-- Ze Javascript -->
-    <script type="text/javascript" src="{% static "vendors/requirejs/require.js" %}" data-main="{% static "assets/js/main.js" %}"></script>
+    <script type="text/javascript" src="{% static "vendors/requirejs/require.js" %}" data-main="{% static "js/main.js" %}"></script>
 </body>
 </html>

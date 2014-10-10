@@ -2,5 +2,7 @@
 node_modules/*
 envdir/*
 !envdir/.gitkeep
-static/main.css
+static/css/main.css
 rankme.db
+.sass-cache
+.vagrant
