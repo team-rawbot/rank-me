@@ -67,4 +67,4 @@ class TestCompetition(RankMeTestCase):
         response = self.client.get(reverse('competition_detail', kwargs={
             'competition_slug': competition.slug
         }))
-        self.assertContains(response, "<h1>%s</h1>" % competition.name)
+        self.assertContains(response, "<h1>%s" % competition.name)
