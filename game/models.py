@@ -264,6 +264,9 @@ class GameManager(models.Manager):
             loser: the user id (or tuple of user ids) of the users who lost the
             game.
         """
+        if not competition.is_active():
+            raise InactiveCompetitionError()
+
         winner, created = Team.objects.get_or_create_from_players(winner)
         loser, created = Team.objects.get_or_create_from_players(loser)
 
@@ -566,6 +569,9 @@ class Competition(models.Model):
 
     objects = CompetitionManager()
 
+    class Meta:
+        ordering = ('name',)
+
     def __unicode__(self):
         return self.name
 
@@ -584,3 +590,26 @@ class Competition(models.Model):
 
     def user_is_admin(self, user):
         return self.creator_id == user.id
+
+    def is_over(self):
+        """
+        Return if the competition end date is reached.
+        """
+        return self.end_date is not None and self.end_date < timezone.now()
+
+    def is_started(self):
+        """
+        Return if the competition start date has passed.
+        """
+
+        return self.start_date <= timezone.now()
+
+    def is_active(self):
+        """
+        Return True if the competition has started and is not over yet.
+        """
+        return self.is_started() and not self.is_over()
+
+
+class InactiveCompetitionError(Exception):
+    pass

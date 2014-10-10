@@ -6,19 +6,30 @@
 
 {% block content %}
     <div class="page-header">
-         {% if user_can_edit_competition %}
-            <a href="{% url 'game_add' competition_slug=competition.slug %}" id="add-result-button" class="btn btn-primary pull-right">
+        {% if user_can_edit_competition %}
+            <a href="{% url 'game_add' competition_slug=competition.slug %}"
+                id="add-result-button" class="btn btn-primary pull-right {% if not competition.is_active %}disabled{% endif %}">
                 <span class="glyphicon glyphicon-plus icon-spaced-right"></span>
                 {% trans "Add a result" %}
             </a>
         {% endif %}
 
-        <h1>
-            {{ competition }}
+        <h1>{{ competition }}
             {% if user_is_admin_of_competition %}
-                <small><a href="{% url 'competition_edit' competition_slug=competition.slug %}">Edit</a></small>
+                <a href="{% url 'competition_edit' competition_slug=competition.slug %}"
+                    class="btn">Edit</a>
             {% endif %}
         </h1>
+
+        {% if not competition.is_active %}
+            <div class="alert alert-info">
+                {% if competition.is_over %}
+                    {% blocktrans with end_date=competition.end_date %}Ended on {{ end_date }}{% endblocktrans %}
+                {% elif not competition.is_started %}
+                    {% blocktrans with start_date=competition.start_date %}Starts on {{ start_date }}{% endblocktrans %}
+                {% endif %}
+            </div>
+        {% endif %}
 
         {% if competition.description %}
             <p class="description">{{ competition.description | linebreaksbr }}</p>
@@ -105,7 +116,7 @@
                                         <form action="{% url 'game_remove' competition_slug=competition.slug %}" method="POST">
                                             {% csrf_token %}
                                             <input type="hidden" name="game_id" value="{{ game.id }}">
-                                            <button type="submit" class="btn btn-danger">
+                                            <button type="submit" class="btn btn-danger {% if not competition.is_active %}disabled{% endif %}">
                                                 <span class="glyphicon glyphicon-trash icon-spaced-right"></span>
                                                 {% trans "Remove" %}
                                             </button>

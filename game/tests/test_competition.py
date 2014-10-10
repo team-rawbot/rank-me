@@ -53,7 +53,7 @@ class TestCompetition(RankMeTestCase):
         response = self.client.get(reverse('competition_edit', kwargs={
             'competition_slug': competition.slug
         }))
-        self.assertEqual(401, response.status_code)
+        self.assertEqual(403, response.status_code)
 
         john = UserFactory()
         competition.creator_id = john.id
@@ -86,5 +86,4 @@ class TestCompetition(RankMeTestCase):
         response = self.client.get(reverse('competition_detail', kwargs={
             'competition_slug': competition.slug
         }))
-
-        self.assertContains(response, competition.name)
+        self.assertContains(response, "<h1>%s" % competition.name)
