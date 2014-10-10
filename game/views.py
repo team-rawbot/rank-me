@@ -12,10 +12,15 @@ from .models import Competition, Game, HistoricalScore, Score, Team
 
 
 def index(request):
-    if request.user.is_authenticated():
-        return redirect(reverse('competition_list_all'))
-    else:
+    if not request.user.is_authenticated():
+        # Public homepage
         return render(request, 'user/login.html')
+
+    # Private homepage
+    context = {
+        'competitions': Competition.objects.get_visible_for_user(request.user)
+    }
+    return render(request, 'homepage/index.html', context)
 
 
 @login_required
