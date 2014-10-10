@@ -13,7 +13,16 @@
             </a>
         {% endif %}
 
-        <h1>{{ competition }}</h1>
+        <h1>
+            {{ competition }}
+            {% if user_is_admin_of_competition %}
+                <small><a href="{% url 'competition_edit' competition_slug=competition.slug %}">Edit</a></small>
+            {% endif %}
+        </h1>
+
+        {% if competition.description %}
+            <p class="description">{{ competition.description | linebreaksbr }}</p>
+        {% endif %}
     </div>
 
     <div class="row">
