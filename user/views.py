@@ -2,19 +2,27 @@ from django.contrib.auth.decorators import login_required
 from django.core.urlresolvers import reverse_lazy
 from django.forms.models import inlineformset_factory
 from django.http.response import HttpResponseRedirect
-from django.shortcuts import render
+from django.shortcuts import get_object_or_404, render
 import itertools
 
-from .forms import UserProfileForm, UserForm
+from .forms import User, UserProfileForm, UserForm
 
 
 @login_required
-def index(request):
+def index(request, user_id=None):
+    if user_id:
+        displayed_user = get_object_or_404(User, pk=user_id)
+    else:
+        displayed_user = request.user
+
+    profile = displayed_user.get_profile();
+
     scores = itertools.chain.from_iterable([t.scores.all() for t in request.user.teams.all()])
     return render(request, 'user/profile.html', {
         'user': request.user,
-        'profile': request.user.get_profile(),
-        'scores': scores
+        'profile': profile,
+        'scores': scores,
+        'can_edit': displayed_user == request.user,
     })
 
 

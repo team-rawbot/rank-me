@@ -5,7 +5,9 @@
 <div class="team">
     <header class="page-header">
         <h1>{{ profile.full_name }}</h1>
-        <a href="{% url 'edit_profile' %}" class="btn btn-sm btn-primary">{% trans "Edit" %}</a>
+        {% if can_edit %}
+            <a href="{% url 'edit_profile' %}" class="btn btn-sm btn-primary">{% trans "Edit" %}</a>
+        {% endif %}
     </header>
 
     <div class="row">
