@@ -1,7 +1,9 @@
 from django.contrib.auth import get_user_model
-from game.models import Competition
-import factory
 from django.utils import timezone
+
+import factory
+
+from ..models import Competition
 
 
 class UserFactory(factory.django.DjangoModelFactory):
@@ -17,6 +19,5 @@ class CompetitionFactory(factory.django.DjangoModelFactory):
 
     name = factory.Sequence(lambda n: 'competition%d' % n)
     start_date = timezone.now()
-    end_date = timezone.now()
-    slug = "liip-competition"
-    creator_id = 1
+    end_date = None
+    creator = factory.SubFactory(UserFactory)
