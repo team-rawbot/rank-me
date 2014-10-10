@@ -550,7 +550,6 @@ class CompetitionManager(models.Manager):
     def get_default_competition(self):
         return self.get_queryset().get(pk=1)
 
-
     def get_visible_for_user(self, user):
         return self.filter(Q(players=user.id)).distinct()
 
@@ -563,18 +562,10 @@ class Competition(models.Model):
     teams = models.ManyToManyField(Team, through=Score)
     games = models.ManyToManyField(Game, related_name='competitions')
     slug = models.SlugField()
-    players = models.ManyToManyField(settings.AUTH_USER_MODEL, related_name='competitions')
-    creator = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='my_competitions', default=1)
-
-    def user_has_read_access(self, user):
-        return self.user_has_write_access()
-
-
-    def user_has_write_access(self, user):
-        if self.players.filter(id=user.id).count() == 1:
-            return True
-
-        return False
+    players = models.ManyToManyField(settings.AUTH_USER_MODEL,
+                                     related_name='competitions')
+    creator = models.ForeignKey(settings.AUTH_USER_MODEL,
+                                related_name='my_competitions')
 
     objects = CompetitionManager()
 
@@ -586,3 +577,9 @@ class Competition(models.Model):
             self.slug = slugify(self.name)
 
         super(Competition, self).save(*args, **kwargs)
+
+    def user_has_read_access(self, user):
+        return self.user_has_write_access()
+
+    def user_has_write_access(self, user):
+        return self.players.filter(id=user.id).count() == 1
