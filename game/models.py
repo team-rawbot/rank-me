@@ -620,6 +620,7 @@ class Club(models.Model):
     slug = models.SlugField()
     description = models.TextField(blank=True)
     members = models.ManyToManyField(settings.AUTH_USER_MODEL, related_name='clubs', blank=True)
+    creator = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='my_clubs', default=1)
 
     #objects = ClubManager()
 
@@ -633,4 +634,4 @@ class Club(models.Model):
         super(Club, self).save(*args, **kwargs)
 
     def user_is_admin(self, user):
-        return True
+        return self.creator_id == user.id

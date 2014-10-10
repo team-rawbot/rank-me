@@ -6,7 +6,9 @@
 
 {% block content %}
     <div class="page-header">
-        <a href="{% url 'club_edit' club_slug=club.slug %}" class="btn btn-primary pull-right">Edit</a>
+        {% if user_can_edit_club %}
+            <a href="{% url 'club_edit' club_slug=club.slug %}" class="btn btn-primary pull-right">Edit</a>
+        {% endif %}
         <h1>{{ club }}</h1>
     </div>
 

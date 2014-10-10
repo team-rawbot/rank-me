@@ -241,7 +241,7 @@ def club_add(request):
         form = ClubForm(request.POST)
 
         if form.is_valid():
-            club = form.save()
+            club = form.save(request.user)
 
             return redirect('club_detail',
                             club_slug=club.slug)
@@ -257,6 +257,7 @@ def club_detail(request, club_slug):
 
     context = {
         'club': club,
+        'user_can_edit_club': club.user_is_admin(request.user)
     }
 
     return render(request, 'club/detail.html', context)
@@ -276,11 +277,15 @@ def club_edit(request, club_slug):
         form = ClubForm(request.POST, instance=club)
 
         if form.is_valid():
-            club = form.save()
+            club = form.save(request.user)
 
             return redirect('club_detail',
                             club_slug=club.slug)
     else:
         form = ClubForm(instance=club)
 
-    return render(request, 'club/edit.html', {'form': form})
+    context = {
+        'form': form
+    }
+
+    return render(request, 'club/edit.html', context)
