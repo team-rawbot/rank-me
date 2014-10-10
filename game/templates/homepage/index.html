@@ -5,7 +5,68 @@
 {% block body_class %}home{% endblock %}
 
 {% block content %}
-    <div class="page-header">
-        <h1>Title</h1>
+<div class="row">
+    <div class="col-md-3">
+        <div class="panel panel-default">
+            <div class="quick-profile panel-body">
+                <div class="media">
+                    <div class="pull-left">{% include 'game/_player_avatar.html' with class="media-object" %}</div>
+                    <div class="media-body">
+                        <h4 class="quick-profile__title">{{ user.get_profile.full_name }}<br /><small>{{ user }}</small></h4>
+                    </div>
+                </div>
+                <hr>
+                <a href="{% url 'edit_profile' %}">Edit your profile</a>
+            </div>
+        </div>
     </div>
+    <div class="col-md-6">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h3 class="panel-title">{% trans "Recent activity" %}</h3>
+            </div>
+            <table class="table table-striped table-bordered">
+                <tbody>
+                    <tr>
+                        <td>Training</td>
+                        <td>Benoît lost against Matthieu</td>
+                        <td class="text-muted">3 hours ago</td>
+                    </tr>
+                    <tr>
+                        <td>Liip Lausanne</td>
+                        <td>Benoît won against Matthieu</td>
+                        <td class="text-muted">3 hours ago</td>
+                    </tr>
+                    <tr>
+                        <td>Liip Fribourg</td>
+                        <td>Benoît lost against Jean-Bernard</td>
+                        <td class="text-muted">3 hours ago</td>
+                    </tr>
+                    <tr>
+                        <td>Liip Lausanne</td>
+                        <td>Benoît won against Matthieu</td>
+                        <td class="text-muted">3 hours ago</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h3 class="panel-title">{% trans "Your competitions" %}</h3>
+            </div>
+            <ul class="list-group">
+                {% for competition in competitions %}
+                    <li class="list-group-item">
+                        <a href="{% url "competition_detail" competition_slug=competition.slug %}">
+                            <span class="pull-right text-muted">{rank}</span>
+                            {{ competition }}
+                        </a>
+                    </li>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+</div>
 {% endblock %}

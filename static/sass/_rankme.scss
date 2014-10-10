@@ -124,3 +124,12 @@ text.highlighted {
 .panel-body > *:last-child {
   margin-bottom: 0;
 }
+
+.panel-body > *:first-child {
+  margin-top: 0;
+}
+
+.quick-profile .user-avatar {
+    width: 64px;
+    margin-right: 0;
+}
