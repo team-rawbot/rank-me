@@ -86,3 +86,4 @@
   - name: enable shell shortcuts
     lineinfile: dest=~/.bashrc line='alias manage.py="~/env/bin/python /vagrant/manage.py"'
   - lineinfile: dest=~/.bashrc line='alias runserver="~/env/bin/python /vagrant/manage.py runserver_plus 0.0.0.0:8000"'
+  - lineinfile: dest=~/.bashrc line='. ~/env/bin/activate'

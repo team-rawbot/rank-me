@@ -113,7 +113,7 @@ def competition_detail_score_chart(request, competition_slug, start=0):
     score_chart_data = HistoricalScore.objects.get_latest_results_by_team(
         50, competition, start, True
     )
-    return HttpResponse(score_chart_data, mimetype='application/json')
+    return HttpResponse(score_chart_data, content_type='application/json')
 
 
 @login_required
