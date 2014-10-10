@@ -102,7 +102,7 @@
                                         <form action="{% url 'game_remove' competition_slug=competition.slug %}" method="POST">
                                             {% csrf_token %}
                                             <input type="hidden" name="game_id" value="{{ game.id }}">
-                                            <button type="submit" class="btn btn-danger">
+                                            <button type="submit" class="btn btn-danger {% if not competition.is_active %}disabled{% endif %}">
                                                 <span class="glyphicon glyphicon-trash icon-spaced-right"></span>
                                                 {% trans "Remove" %}
                                             </button>

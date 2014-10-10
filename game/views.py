@@ -180,10 +180,18 @@ def game_add(request, competition_slug):
 @authorized_user
 @require_POST
 def game_remove(request, competition_slug):
-    game_id = request.POST['game_id']
 
-    game = get_object_or_404(Game, pk=game_id)
     competition = get_object_or_404(Competition, slug=competition_slug)
+
+    if not competition.is_active():
+        messages.add_message(
+            request, messages.ERROR, _("The competition is not active.")
+        )
+
+        return redirect(reverse('homepage'))
+
+    game_id = request.POST['game_id']
+    game = get_object_or_404(Game, pk=game_id)
 
     last_game = Game.objects.get_latest(competition)[0]
 
