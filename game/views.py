@@ -111,17 +111,17 @@ def competition_edit(request, competition_slug):
         form = CompetitionForm(request.POST, instance=competition)
 
         if form.is_valid():
-            competition = form.save()
+            competition = form.save(request.user)
 
             return redirect('competition_detail',
                             competition_slug=competition.slug)
     else:
-        context = {
-            'form': CompetitionForm(instance=competition),
-            'competition': competition
-        }
+        form = CompetitionForm(instance=competition)
 
-    return render(request, 'competition/edit.html', context)
+    return render(request, 'competition/edit.html', {
+        'form': form,
+        'competition': competition
+    })
 
 
 @login_required
