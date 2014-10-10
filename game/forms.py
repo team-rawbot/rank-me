@@ -66,7 +66,7 @@ class CompetitionForm(forms.ModelForm):
 class ClubForm(forms.ModelForm):
     class Meta:
         model = Club
-        fields = ('name', 'description', 'members')
+        fields = ('name', 'description', 'members', 'logo')
 
     def save(self, creator):
         club = super(ClubForm, self).save(commit=False)
