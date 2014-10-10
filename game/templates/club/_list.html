@@ -1,0 +1,5 @@
+{% for club in clubs %}
+<li>
+    <a href="{% url "club_detail" club_slug=club.slug %}">{{ club }}</a>
+</li>
+{% endfor %}

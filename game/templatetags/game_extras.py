@@ -1,7 +1,7 @@
 from django import template
 from django.template.defaultfilters import floatformat
 
-from ..models import Competition
+from ..models import Club, Competition
 
 
 register = template.Library()
@@ -28,3 +28,10 @@ def as_percentage_of(part, whole):
         return floatformat(float(part) / whole * 100, 2) + '%'
     except (ValueError, ZeroDivisionError):
         return ""
+
+
+@register.inclusion_tag('club/_list.html')
+def all_clubs_list():
+    return {
+        'clubs': Club.objects.all().order_by('name')
+    }

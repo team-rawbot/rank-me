@@ -9,7 +9,7 @@ from django.views.decorators.http import require_POST
 
 from .decorators import authorized_user
 from .forms import GameForm, CompetitionForm, ClubForm
-from .models import Competition, Game, HistoricalScore, Score, Team
+from .models import Club, Competition, Game, HistoricalScore, Score, Team
 
 
 def index(request):
@@ -189,10 +189,25 @@ def club_add(request):
         if form.is_valid():
             club = form.save()
 
-#            return redirect('club_detail',
-#                            club_slug=club.slug)
-            return HttpResponse(u"Bravo. Nouveau club \"%s\" créé" % club.name)
+            return redirect('club_detail',
+                            club_slug=club.slug)
     else:
         form = ClubForm()
 
     return render(request, 'club/new.html', {'form': form})
+
+
+@login_required
+def club_detail(request, club_slug):
+    club = get_object_or_404(Club, slug=club_slug)
+
+    context = {
+        'club': club,
+    }
+
+    return render(request, 'club/detail.html', context)
+
+
+@login_required
+def club_list_all(request):
+    return render(request, 'club/list_all.html')
