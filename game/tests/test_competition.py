@@ -46,3 +46,25 @@ class TestCompetition(RankMeTestCase):
                 pytz.timezone(settings.TIME_ZONE)
             )
         )
+
+    def test_access_on_competition(self):
+        """
+        John has no access to defaut_competition by default
+        Then add John to default_competition
+        """
+        competition = Competition.objects.get_default_competition()
+
+        john = UserFactory()
+        self.client.login(username=john.username, password='password')
+
+        response = self.client.get(reverse('competition_detail', kwargs={
+            'competition_slug': competition.slug
+        }))
+        self.assertContains(response, '<h1>Access denied</h1>')
+
+        competition.players.add(john)
+
+        response = self.client.get(reverse('competition_detail', kwargs={
+            'competition_slug': competition.slug
+        }))
+        self.assertContains(response, '<h1>Default competition</h1>')
