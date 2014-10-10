@@ -6,7 +6,7 @@ from django.http.response import HttpResponse
 from django.shortcuts import get_object_or_404, render, redirect
 from django.views.decorators.http import require_POST
 
-from .decorators import authorized_user
+from .decorators import authorized_user, user_is_admin
 from .forms import GameForm, CompetitionForm
 from .models import Competition, Game, HistoricalScore, Score, Team
 
@@ -103,8 +103,7 @@ def competition_detail(request, competition_slug):
     return render(request, 'competition/detail.html', context)
 
 
-@login_required
-@authorized_user
+@user_is_admin
 def competition_edit(request, competition_slug):
     competition = get_object_or_404(Competition, slug=competition_slug)
 
