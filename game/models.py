@@ -569,6 +569,9 @@ class Competition(models.Model):
 
     objects = CompetitionManager()
 
+    class Meta:
+        ordering = ('name',)
+
     def __unicode__(self):
         return self.name
 

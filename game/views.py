@@ -4,6 +4,7 @@ from django.core.urlresolvers import reverse
 from django.db.models.query_utils import Q
 from django.http.response import HttpResponse
 from django.shortcuts import get_object_or_404, render, redirect
+from django.utils import timezone
 from django.utils.translation import ugettext_lazy as _
 from django.views.decorators.http import require_POST
 
@@ -21,7 +22,22 @@ def index(request):
 
 @login_required
 def competition_list_all(request):
-    return render(request, 'competition/list_all.html')
+    upcoming_competitions = Competition.objects.filter(
+        start_date__gt=timezone.now()
+    )
+    ongoing_competitions = Competition.objects.filter(
+        Q(start_date__lte=timezone.now()) & (Q(end_date__gt=timezone.now()) |
+            Q(end_date__isnull=True))
+    )
+    past_competitions = Competition.objects.filter(
+        end_date__lte=timezone.now()
+    )
+
+    return render(request, 'competition/list_all.html', {
+        'upcoming_competitions': upcoming_competitions,
+        'ongoing_competitions': ongoing_competitions,
+        'past_competitions': past_competitions
+    })
 
 
 @login_required
