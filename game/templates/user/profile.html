@@ -4,7 +4,7 @@
 {% block content %}
 <div class="team">
     <header class="page-header">
-        <a href="{% url 'edit_profile' %}" class="btn btn-primary pull-right">{% trans "Edit profile" %}</a>
+        <a href="{% url 'edit_profile' %}" class="btn btn-primary pull-right">{% trans "Edit your profile" %}</a>
         <h1>
             {% include 'game/_player_avatar.html' %}
             {{ profile.full_name }}

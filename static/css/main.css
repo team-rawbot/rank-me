@@ -1504,7 +1504,7 @@ hr {
   margin-top: 22px;
   margin-bottom: 22px;
   border: 0;
-  border-top: 1px solid #eeeeee;
+  border-top: 1px solid #f9ede7;
 }
 
 /* line 125, ../vendors/bootstrap-sass-official/assets/stylesheets/bootstrap/_scaffolding.scss */
@@ -5633,6 +5633,49 @@ a.thumbnail.active {
   color: #843534;
 }
 
+/* line 10, ../vendors/bootstrap-sass-official/assets/stylesheets/bootstrap/_media.scss */
+.media,
+.media-body {
+  overflow: hidden;
+  zoom: 1;
+}
+
+/* line 17, ../vendors/bootstrap-sass-official/assets/stylesheets/bootstrap/_media.scss */
+.media,
+.media .media {
+  margin-top: 15px;
+}
+
+/* line 21, ../vendors/bootstrap-sass-official/assets/stylesheets/bootstrap/_media.scss */
+.media:first-child {
+  margin-top: 0;
+}
+
+/* line 26, ../vendors/bootstrap-sass-official/assets/stylesheets/bootstrap/_media.scss */
+.media-object {
+  display: block;
+}
+
+/* line 31, ../vendors/bootstrap-sass-official/assets/stylesheets/bootstrap/_media.scss */
+.media-heading {
+  margin: 0 0 5px;
+}
+
+/* line 40, ../vendors/bootstrap-sass-official/assets/stylesheets/bootstrap/_media.scss */
+.media > .pull-left {
+  margin-right: 10px;
+}
+/* line 43, ../vendors/bootstrap-sass-official/assets/stylesheets/bootstrap/_media.scss */
+.media > .pull-right {
+  margin-left: 10px;
+}
+
+/* line 53, ../vendors/bootstrap-sass-official/assets/stylesheets/bootstrap/_media.scss */
+.media-list {
+  padding-left: 0;
+  list-style: none;
+}
+
 /* line 10, ../vendors/bootstrap-sass-official/assets/stylesheets/bootstrap/_list-group.scss */
 .list-group {
   margin-bottom: 20px;
@@ -5646,7 +5689,7 @@ a.thumbnail.active {
   padding: 10px 15px;
   margin-bottom: -1px;
   background-color: #fff;
-  border: 1px solid #ddd;
+  border: 1px solid #f9ede7;
 }
 /* line 31, ../vendors/bootstrap-sass-official/assets/stylesheets/bootstrap/_list-group.scss */
 .list-group-item:first-child {
@@ -6789,4 +6832,15 @@ text.highlighted {
 /* line 124, ../sass/_rankme.scss */
 .panel-body > *:last-child {
   margin-bottom: 0;
+}
+
+/* line 128, ../sass/_rankme.scss */
+.panel-body > *:first-child {
+  margin-top: 0;
+}
+
+/* line 133, ../sass/_rankme.scss */
+.quick-profile .user-avatar {
+  width: 64px;
+  margin-right: 0;
 }
