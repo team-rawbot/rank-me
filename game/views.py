@@ -4,6 +4,7 @@ from django.core.urlresolvers import reverse
 from django.db.models.query_utils import Q
 from django.http.response import HttpResponse
 from django.shortcuts import get_object_or_404, render, redirect
+from django.utils.translation import ugettext_lazy as _
 from django.views.decorators.http import require_POST
 
 from .decorators import authorized_user
@@ -129,6 +130,13 @@ def competition_join(request, competition_slug):
 @authorized_user
 def game_add(request, competition_slug):
     competition = get_object_or_404(Competition, slug=competition_slug)
+
+    if not competition.is_active():
+        messages.add_message(
+            request, messages.ERROR, _("The competition is not active.")
+        )
+
+        return redirect(reverse('homepage'))
 
     if request.method == 'POST':
         form = GameForm(request.POST, competition=competition)

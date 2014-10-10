@@ -7,13 +7,19 @@
 {% block content %}
     <div class="page-header">
          {% if user_can_edit_competition %}
-            <a href="{% url 'game_add' competition_slug=competition.slug %}" id="add-result-button" class="btn btn-primary pull-right">
-                <span class="glyphicon glyphicon-plus icon-spaced-right"></span>
-                {% trans "Add a result" %}
-            </a>
+        <a href="{% url 'game_add' competition_slug=competition.slug %}"
+            id="add-result-button" class="btn btn-primary pull-right {% if not competition.is_active %}disabled{% endif %}">
+            <span class="glyphicon glyphicon-plus icon-spaced-right"></span>
+            {% trans "Add a result" %}
+        </a>
         {% endif %}
-
-        <h1>{{ competition }}</h1>
+        <h1>{{ competition }}
+            {% if not competition.is_active %}
+                <small>
+                    ({% if competition.is_over %}{% blocktrans with end_date=competition.end_date %}ended on {{ end_date }}{% endblocktrans %}{% elif not competition.is_started %}{% blocktrans with start_date=competition.start_date %}starts on {{ start_date }}{% endblocktrans %}{% endif %})
+                </small>
+            {% endif %}
+        </h1>
     </div>
 
     <div class="row">
