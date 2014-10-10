@@ -1,23 +1,20 @@
-from django.core.urlresolvers import reverse
-from django.http import HttpResponseRedirect, HttpResponse
 from django.shortcuts import get_object_or_404, render
 from .models import Competition
+
 
 def authorized_user(func):
     """
     Check that user has read access to the competition
     """
     def decorator(request, *args, **kwargs):
-        competition = get_object_or_404(Competition, slug=kwargs['competition_slug'])
+        competition = get_object_or_404(Competition,
+                                        slug=kwargs['competition_slug'])
 
         if competition.user_has_write_access(request.user):
             return func(request, *args, **kwargs)
 
-
-        context = {
+        return render(request, 'competition/no_access.html', {
             'competition': competition,
-        }
-
-        return render(request, 'competition/no_access.html', context)
+        })
 
     return decorator
