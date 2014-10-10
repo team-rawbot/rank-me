@@ -16,9 +16,12 @@ class TestAddResultPage(RankMeTestCase):
             'competition_slug': competition.slug
         })
 
-        # create 2 users
+        # create 2 users and add them into the competition
         laurent = UserFactory()
         rolf = UserFactory()
+
+        competition.players.add(laurent)
+        competition.players.add(rolf)
 
         # Unauthenticated users should be redirected to the login form to add a
         # result

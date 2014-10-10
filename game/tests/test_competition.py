@@ -28,6 +28,7 @@ class TestCompetition(RankMeTestCase):
         response = self.client.post(reverse('competition_add'), {
             'name': 'ATP Tournament 2014',
             'description': 'Official ATP tournament',
+            'players': [self.user.id],
             'start_date': '2014-05-03 00:00:00',
             'end_date': '2014-06-03 00:00:00'
         })

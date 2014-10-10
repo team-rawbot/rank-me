@@ -25,6 +25,8 @@ class TestResultsPage(RankMeTestCase):
     def test_page_without_results(self):
         john = UserFactory()
 
+        self.default_competition.players.add(john)
+
         self.client.login(username=john.username, password='password')
         response = self.client.get(reverse('competition_detail', kwargs={
             'competition_slug': self.default_competition.slug
@@ -46,6 +48,8 @@ class TestResultsPage(RankMeTestCase):
 
         john = UserFactory()
 
+        self.default_competition.players.add(john)
+
         self.client.login(username=john.username, password='password')
         response = self.client.get(reverse('competition_detail', kwargs={
             'competition_slug': self.default_competition.slug
@@ -56,6 +60,9 @@ class TestResultsPage(RankMeTestCase):
         # create 2 users (automatically creates corresponding teams)
         laurent = UserFactory()
         rolf = UserFactory()
+
+        self.default_competition.players.add(laurent)
+        self.default_competition.players.add(rolf)
 
         # create 1 game
         game = Game.objects.announce(laurent, rolf, self.default_competition)

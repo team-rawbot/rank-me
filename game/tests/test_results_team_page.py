@@ -13,8 +13,11 @@ class TestResultsTeamPage(RankMeTestCase):
     def setUp(self):
         super(TestResultsTeamPage, self).setUp()
 
+        # Create one competition and one user.
+        # Then add this user to the competition
         self.default_competition = Competition.objects.get_default_competition()
         self.user = UserFactory()
+        self.default_competition.players.add(self.user)
 
     def login(self):
         self.client.login(username=self.user.username, password='password')
