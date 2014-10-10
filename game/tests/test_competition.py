@@ -47,6 +47,25 @@ class TestCompetition(RankMeTestCase):
             )
         )
 
+    def test_edit_competition(self):
+        competition = CompetitionFactory()
+
+        response = self.client.get(reverse('competition_edit', kwargs={
+            'competition_slug': competition.slug
+        }))
+        self.assertEqual(403, response.status_code)
+
+        john = UserFactory()
+        competition.creator_id = john.id
+        competition.save()
+
+        self.client.login(username=john.username, password='password')
+
+        response = self.client.get(reverse('competition_edit', kwargs={
+            'competition_slug': competition.slug
+        }))
+        self.assertEqual(200, response.status_code)
+
     def test_access_on_competition(self):
         """
         John has no access to defaut_competition by default
@@ -67,4 +86,4 @@ class TestCompetition(RankMeTestCase):
         response = self.client.get(reverse('competition_detail', kwargs={
             'competition_slug': competition.slug
         }))
-        self.assertContains(response, "<h1>%s</h1>" % competition.name)
+        self.assertContains(response, "<h1>%s" % competition.name)

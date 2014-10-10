@@ -11,6 +11,9 @@ body {
   margin-left: auto;
   margin-right: auto;
 }
+  .wrapper--default {
+    max-width: 1280px;
+  }
   .wrapper--small {
     max-width: 400px;
   }
@@ -118,3 +121,6 @@ text.highlighted {
     font-style: italic;
 }
 
+.panel-body > *:last-child {
+  margin-bottom: 0;
+}

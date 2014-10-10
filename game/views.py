@@ -5,10 +5,12 @@ from django.core.urlresolvers import reverse
 from django.db.models.query_utils import Q
 from django.http.response import HttpResponse
 from django.shortcuts import get_object_or_404, render, redirect
+from django.utils import timezone
+from django.utils.translation import ugettext_lazy as _
 from django.views.decorators.http import require_POST
 
-from .decorators import authorized_user
-from .forms import GameForm, CompetitionForm, ClubForm
+from .decorators import authorized_user, user_is_admin
+from .forms import GameForm, ClubForm, CompetitionForm
 from .models import Club, Competition, Game, HistoricalScore, Score, Team
 
 
@@ -21,7 +23,22 @@ def index(request):
 
 @login_required
 def competition_list_all(request):
-    return render(request, 'competition/list_all.html')
+    upcoming_competitions = Competition.objects.filter(
+        start_date__gt=timezone.now()
+    )
+    ongoing_competitions = Competition.objects.filter(
+        Q(start_date__lte=timezone.now()) & (Q(end_date__gt=timezone.now()) |
+            Q(end_date__isnull=True))
+    )
+    past_competitions = Competition.objects.filter(
+        end_date__lte=timezone.now()
+    )
+
+    return render(request, 'competition/list_all.html', {
+        'upcoming_competitions': upcoming_competitions,
+        'ongoing_competitions': ongoing_competitions,
+        'past_competitions': past_competitions
+    })
 
 
 @login_required
@@ -98,9 +115,32 @@ def competition_detail(request, competition_slug):
         'score_board': score_board,
         'competition': competition,
         'user_can_edit_competition': competition.user_has_write_access(request.user),
+        'user_is_admin_of_competition': competition.user_is_admin(request.user)
     }
 
     return render(request, 'competition/detail.html', context)
+
+
+@login_required
+@user_is_admin
+def competition_edit(request, competition_slug):
+    competition = get_object_or_404(Competition, slug=competition_slug)
+
+    if request.method == 'POST':
+        form = CompetitionForm(request.POST, instance=competition)
+
+        if form.is_valid():
+            competition = form.save(request.user)
+
+            return redirect('competition_detail',
+                            competition_slug=competition.slug)
+    else:
+        form = CompetitionForm(instance=competition)
+
+    return render(request, 'competition/edit.html', {
+        'form': form,
+        'competition': competition
+    })
 
 
 @login_required
@@ -131,6 +171,13 @@ def competition_join(request, competition_slug):
 def game_add(request, competition_slug):
     competition = get_object_or_404(Competition, slug=competition_slug)
 
+    if not competition.is_active():
+        messages.add_message(
+            request, messages.ERROR, _("The competition is not active.")
+        )
+
+        return redirect(reverse('homepage'))
+
     if request.method == 'POST':
         form = GameForm(request.POST, competition=competition)
 
@@ -157,10 +204,18 @@ def game_add(request, competition_slug):
 @authorized_user
 @require_POST
 def game_remove(request, competition_slug):
-    game_id = request.POST['game_id']
 
-    game = get_object_or_404(Game, pk=game_id)
     competition = get_object_or_404(Competition, slug=competition_slug)
+
+    if not competition.is_active():
+        messages.add_message(
+            request, messages.ERROR, _("The competition is not active.")
+        )
+
+        return redirect(reverse('homepage'))
+
+    game_id = request.POST['game_id']
+    game = get_object_or_404(Game, pk=game_id)
 
     last_game = Game.objects.get_latest(competition)[0]
 
@@ -171,7 +226,6 @@ def game_remove(request, competition_slug):
         teams = [last_game.winner, last_game.loser]
         for team in teams:
             count = Game.objects.filter(Q(winner=team) | Q(loser=team), competitions=competition).count()
-            print str(team) + " : " + str(count)
             if count == 0:
                 Score.objects.filter(competition=competition, team=team).delete()
 

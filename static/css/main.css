@@ -6659,31 +6659,36 @@ body {
 }
 
 /* line 14, ../sass/_rankme.scss */
+.wrapper--default {
+  max-width: 1280px;
+}
+
+/* line 17, ../sass/_rankme.scss */
 .wrapper--small {
   max-width: 400px;
 }
 
-/* line 18, ../sass/_rankme.scss */
+/* line 21, ../sass/_rankme.scss */
 .messages {
   margin-top: 20px;
 }
 
-/* line 22, ../sass/_rankme.scss */
+/* line 25, ../sass/_rankme.scss */
 .user-avatar {
   width: 32px;
   margin-right: 0.5em;
 }
-/* line 26, ../sass/_rankme.scss */
+/* line 29, ../sass/_rankme.scss */
 .page-header .user-avatar {
   width: 48px;
 }
 
-/* line 31, ../sass/_rankme.scss */
+/* line 34, ../sass/_rankme.scss */
 .table > tbody > tr > td {
   vertical-align: middle;
 }
 
-/* line 35, ../sass/_rankme.scss */
+/* line 38, ../sass/_rankme.scss */
 .btn-default:hover,
 .btn-default:focus,
 .btn-default:active,
@@ -6692,72 +6697,72 @@ body {
   background-color: #f9ede7;
 }
 
-/* line 43, ../sass/_rankme.scss */
+/* line 46, ../sass/_rankme.scss */
 .rank-num {
   text-align: right;
 }
-/* line 46, ../sass/_rankme.scss */
+/* line 49, ../sass/_rankme.scss */
 tr:first-child .rank-num {
   font-size: 24px;
   font-weight: bold;
 }
-/* line 50, ../sass/_rankme.scss */
+/* line 53, ../sass/_rankme.scss */
 tr:nth-child(2) .rank-num {
   font-size: 20px;
   font-weight: bold;
 }
-/* line 54, ../sass/_rankme.scss */
+/* line 57, ../sass/_rankme.scss */
 tr:nth-child(3) .rank-num {
   font-size: 16px;
   font-weight: bold;
 }
 
-/* line 60, ../sass/_rankme.scss */
+/* line 63, ../sass/_rankme.scss */
 .game-win {
   color: #89c571;
 }
-/* line 63, ../sass/_rankme.scss */
+/* line 66, ../sass/_rankme.scss */
 .game-win a {
   color: inherit;
   text-decoration: underline;
 }
 
-/* line 68, ../sass/_rankme.scss */
+/* line 71, ../sass/_rankme.scss */
 .game-defeat {
   color: #d76b7a;
 }
-/* line 71, ../sass/_rankme.scss */
+/* line 74, ../sass/_rankme.scss */
 .game-defeat a {
   color: inherit;
   text-decoration: underline;
 }
 
-/* line 77, ../sass/_rankme.scss */
+/* line 80, ../sass/_rankme.scss */
 .icon-spaced-right {
   margin-right: 0.5em;
 }
 
 @media (max-width: 991px) {
-  /* line 82, ../sass/_rankme.scss */
+  /* line 85, ../sass/_rankme.scss */
   body {
     padding-left: 15px;
     padding-right: 15px;
   }
 }
 @media (max-width: 767px) {
-  /* line 89, ../sass/_rankme.scss */
+  /* line 92, ../sass/_rankme.scss */
   body {
     padding: 20px 0;
     font-size: 14px;
   }
 }
-/* line 96, ../sass/_rankme.scss */
+/* line 99, ../sass/_rankme.scss */
 path {
   fill: none;
   stroke-width: 2px;
 }
 
-/* line 101, ../sass/_rankme.scss */
+/* line 104, ../sass/_rankme.scss */
 .axis path,
 .axis line {
   fill: none;
@@ -6765,18 +6770,23 @@ path {
   shape-rendering: crispEdges;
 }
 
-/* line 108, ../sass/_rankme.scss */
+/* line 111, ../sass/_rankme.scss */
 .axis path {
   display: none;
 }
 
-/* line 112, ../sass/_rankme.scss */
+/* line 115, ../sass/_rankme.scss */
 circle.highlighted,
 path.highlighted {
   stroke-width: 3px;
 }
 
-/* line 117, ../sass/_rankme.scss */
+/* line 120, ../sass/_rankme.scss */
 text.highlighted {
   font-style: italic;
+}
+
+/* line 124, ../sass/_rankme.scss */
+.panel-body > *:last-child {
+  margin-bottom: 0;
 }

@@ -15,13 +15,6 @@ def competitions_list(context):
     }
 
 
-@register.inclusion_tag('competition/_list.html')
-def all_competitions_list():
-    return {
-        'competitions': Competition.objects.all().order_by('name')
-    }
-
-
 @register.filter
 def as_percentage_of(part, whole):
     try:

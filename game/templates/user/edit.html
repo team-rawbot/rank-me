@@ -1,11 +1,17 @@
 {% extends "base.html" %}
-{% load i18n static %}
+{% load i18n static bootstrap %}
 
 {% block content %}
+<div class="wrapper--small wrapper">
+    <header class="page-header">
+        <h1>{% trans "Edit profile" %}</h1>
+    </header>
+
     <form action="{% url 'edit_profile' %}" method="post">
         {% csrf_token %}
-        {{ user_form.as_p }}
-        {{ profile_form.as_p }}
-        <input type="submit" value="Submit" />
+        {{ user_form|bootstrap }}
+        {{ profile_form|bootstrap }}
+        <input type="submit" value="{% trans "Save" %}" class="btn btn-primary" />
     </form>
+</div>
 {% endblock %}

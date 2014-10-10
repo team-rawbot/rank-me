@@ -16,8 +16,8 @@ def index(request, user_id=None):
         displayed_user = request.user
 
     profile = displayed_user.get_profile();
-
-    scores = itertools.chain.from_iterable([t.scores.all() for t in request.user.teams.all()])
+    
+    scores = list(itertools.chain.from_iterable([t.scores.all() for t in request.user.teams.all()]))
     return render(request, 'user/profile.html', {
         'user': request.user,
         'profile': profile,
