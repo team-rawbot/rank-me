@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+
+{% load static i18n bootstrap %}
+
+{% block body_class %}add-club{% endblock %}
+
+{% block content %}
+<div class="wrapper--small wrapper">
+    <header class="page-header">
+        <h1>{% trans "Create a club" %}</h1>
+    </header>
+
+    <form id="add-club" action="" method="post">
+        {% csrf_token %}
+        {{ form|bootstrap }}
+        <p><input type="submit" value="{% trans "Create" %}" class="btn btn-primary" /></p>
+    </form>
+</div>
+{% endblock %}

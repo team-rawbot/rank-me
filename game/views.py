@@ -7,7 +7,7 @@ from django.shortcuts import get_object_or_404, render, redirect
 from django.views.decorators.http import require_POST
 
 from .decorators import authorized_user
-from .forms import GameForm, CompetitionForm
+from .forms import GameForm, CompetitionForm, ClubForm
 from .models import Competition, Game, HistoricalScore, Score, Team
 
 
@@ -179,3 +179,18 @@ def game_remove(request, competition_slug):
         messages.add_message(request, messages.ERROR, 'Trying to delete a game that is not the last.')
 
     return redirect('game.views.competition_detail', competition_slug=competition_slug)
+
+@login_required
+def club_add(request):
+    if request.method == 'POST':
+        form = ClubForm(request.POST)
+
+        if form.is_valid():
+            club = form.save()
+
+            return redirect('club_detail',
+                            club_slug=club.slug)
+    else:
+        form = ClubForm()
+
+    return render(request, 'club/new.html', {'form': form})

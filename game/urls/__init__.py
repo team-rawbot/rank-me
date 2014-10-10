@@ -10,4 +10,5 @@ urlpatterns = patterns(
         include('game.urls.competition')),
     url(r'^team/(?P<team_id>\d+)/$', 'team_general_detail',
         name='team_general_detail'),
+    url(r'^club/new/$', 'club_add', name='club_add'),
 )

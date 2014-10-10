@@ -3,7 +3,7 @@ from django.contrib.auth import get_user_model
 from django.core.exceptions import ValidationError
 from django.utils.translation import ugettext as _
 
-from .models import Competition, Game, Team
+from .models import Competition, Club, Team
 
 
 class UserChoiceField(forms.ModelChoiceField):
@@ -57,3 +57,9 @@ class CompetitionForm(forms.ModelForm):
         competition.save()
 
         return competition
+
+
+class ClubForm(forms.ModelForm):
+    class Meta:
+        model = Club
+        fields = ('name', 'description', 'members')

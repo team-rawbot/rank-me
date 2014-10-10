@@ -581,3 +581,21 @@ class Competition(models.Model):
     def user_has_write_access(self, user):
         return (self.players.filter(id=user.id).count() == 1 or
                 self.creator_id == user.id)
+
+
+class Club(models.Model):
+    name = models.CharField(max_length=255)
+    slug = models.SlugField()
+    description = models.TextField(blank=True)
+    members = models.ManyToManyField(settings.AUTH_USER_MODEL, related_name='clubs')
+
+    #objects = ClubManager()
+
+    def __unicode__(self):
+        return self.name
+
+    def save(self, *args, **kwargs):
+        if not self.slug:
+            self.slug = slugify(self.name)
+
+        super(Club, self).save(*args, **kwargs)
