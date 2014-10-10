@@ -14,9 +14,7 @@ from .decorators import authorized_user
 
 def index(request):
     if request.user.is_authenticated():
-        return redirect(reverse('competition_detail', kwargs={
-            'competition_slug': 'default-competition'
-        }))
+        return redirect(reverse('competition_list_all'))
     else:
         return render(request, 'user/login.html')
 
