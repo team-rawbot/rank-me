@@ -58,7 +58,6 @@ def team_detail(request, competition_slug, team_id):
 
 
 @login_required
-@authorized_user
 def team_general_detail(request, team_id):
     team = get_object_or_404(Team, pk=team_id)
 
