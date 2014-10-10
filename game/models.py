@@ -581,3 +581,6 @@ class Competition(models.Model):
     def user_has_write_access(self, user):
         return (self.players.filter(id=user.id).count() == 1 or
                 self.creator_id == user.id)
+
+    def user_is_admin(self, user):
+        return self.creator_id == user.id

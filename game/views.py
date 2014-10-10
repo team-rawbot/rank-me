@@ -6,7 +6,7 @@ from django.http.response import HttpResponse
 from django.shortcuts import get_object_or_404, render, redirect
 from django.views.decorators.http import require_POST
 
-from .decorators import authorized_user
+from .decorators import authorized_user, user_is_admin
 from .forms import GameForm, CompetitionForm
 from .models import Competition, Game, HistoricalScore, Score, Team
 
@@ -97,9 +97,32 @@ def competition_detail(request, competition_slug):
         'score_board': score_board,
         'competition': competition,
         'user_can_edit_competition': competition.user_has_write_access(request.user),
+        'user_is_admin_of_competition': competition.user_is_admin(request.user)
     }
 
     return render(request, 'competition/detail.html', context)
+
+
+@login_required
+@user_is_admin
+def competition_edit(request, competition_slug):
+    competition = get_object_or_404(Competition, slug=competition_slug)
+
+    if request.method == 'POST':
+        form = CompetitionForm(request.POST, instance=competition)
+
+        if form.is_valid():
+            competition = form.save(request.user)
+
+            return redirect('competition_detail',
+                            competition_slug=competition.slug)
+    else:
+        form = CompetitionForm(instance=competition)
+
+    return render(request, 'competition/edit.html', {
+        'form': form,
+        'competition': competition
+    })
 
 
 @login_required
