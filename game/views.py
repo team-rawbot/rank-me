@@ -103,6 +103,7 @@ def competition_detail(request, competition_slug):
     return render(request, 'competition/detail.html', context)
 
 
+@login_required
 @user_is_admin
 def competition_edit(request, competition_slug):
     competition = get_object_or_404(Competition, slug=competition_slug)

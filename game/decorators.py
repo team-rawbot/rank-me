@@ -1,4 +1,4 @@
-from django.http import HttpResponse
+from django.core.exceptions import PermissionDenied
 from django.shortcuts import get_object_or_404, render
 
 from .models import Competition
@@ -21,6 +21,7 @@ def authorized_user(func):
 
     return decorator
 
+
 def user_is_admin(func):
     """
     Check that user is admin of competition
@@ -32,6 +33,6 @@ def user_is_admin(func):
         if competition.user_is_admin(request.user):
             return func(request, *args, **kwargs)
 
-        return HttpResponse('Unauthorized', status=401)
+        raise PermissionDenied()
 
     return decorator

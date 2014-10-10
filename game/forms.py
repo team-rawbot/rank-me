@@ -52,12 +52,10 @@ class CompetitionForm(forms.ModelForm):
         model = Competition
         fields = ('name', 'description', 'players', 'start_date', 'end_date')
 
-    def save(self, creator = None):
+    def save(self, creator):
         competition = super(CompetitionForm, self).save(commit=False)
         competition.slug = slugify(competition.name)
-
-        if not creator is None:
-            competition.creator = creator
+        competition.creator = creator
 
         competition.save()
         self.save_m2m()
