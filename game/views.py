@@ -1,3 +1,4 @@
+# -*- coding: UTF-8 -*-
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.core.urlresolvers import reverse
@@ -188,8 +189,9 @@ def club_add(request):
         if form.is_valid():
             club = form.save()
 
-            return redirect('club_detail',
-                            club_slug=club.slug)
+#            return redirect('club_detail',
+#                            club_slug=club.slug)
+            return HttpResponse(u"Bravo. Nouveau club \"%s\" créé" % club.name)
     else:
         form = ClubForm()
 

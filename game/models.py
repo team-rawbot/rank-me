@@ -587,7 +587,7 @@ class Club(models.Model):
     name = models.CharField(max_length=255)
     slug = models.SlugField()
     description = models.TextField(blank=True)
-    members = models.ManyToManyField(settings.AUTH_USER_MODEL, related_name='clubs')
+    members = models.ManyToManyField(settings.AUTH_USER_MODEL, related_name='clubs', blank=True)
 
     #objects = ClubManager()
 
