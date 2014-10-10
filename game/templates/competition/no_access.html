@@ -10,7 +10,7 @@
         <h1>{% trans "Access denied" %}</h1>
     </header>
 
-    <p>You don't have access to the competition <strong>{{ competition }}</strong> yet.</p>
-    <p><a href="{% url "competition_join" competition_slug=competition.slug %}" class="btn btn-info btn-block">Request access now</a></p>
+    <p>{% blocktrans %}You don't have access to the competition <strong>{{ competition }}</strong> yet.{% endblocktrans %}</p>
+    <p><a href="{% url "competition_join" competition_slug=competition.slug %}" class="btn btn-info btn-block">{% trans "Request access now" %}</a></p>
 </div>
 {% endblock %}
