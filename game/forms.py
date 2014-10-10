@@ -67,3 +67,12 @@ class ClubForm(forms.ModelForm):
     class Meta:
         model = Club
         fields = ('name', 'description', 'members')
+
+    def save(self):
+        club = super(ClubForm, self).save(commit=False)
+        club.slug = slugify(club.name)
+
+        club.save()
+        self.save_m2m()
+
+        return club

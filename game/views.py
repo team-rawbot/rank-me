@@ -9,7 +9,7 @@ from django.utils import timezone
 from django.utils.translation import ugettext_lazy as _
 from django.views.decorators.http import require_POST
 
-from .decorators import authorized_user, user_is_admin
+from .decorators import authorized_user, user_is_admin, user_can_edit_club
 from .forms import GameForm, ClubForm, CompetitionForm
 from .models import Club, Competition, Game, HistoricalScore, Score, Team
 
@@ -265,3 +265,22 @@ def club_detail(request, club_slug):
 @login_required
 def club_list_all(request):
     return render(request, 'club/list_all.html')
+
+
+@login_required
+@user_can_edit_club
+def club_edit(request, club_slug):
+    club = get_object_or_404(Club, slug=club_slug)
+
+    if request.method == 'POST':
+        form = ClubForm(request.POST, instance=club)
+
+        if form.is_valid():
+            club = form.save()
+
+            return redirect('club_detail',
+                            club_slug=club.slug)
+    else:
+        form = ClubForm(instance=club)
+
+    return render(request, 'club/edit.html', {'form': form})

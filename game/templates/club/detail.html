@@ -6,6 +6,7 @@
 
 {% block content %}
     <div class="page-header">
+        <a href="{% url 'club_edit' club_slug=club.slug %}" class="btn btn-primary pull-right">Edit</a>
         <h1>{{ club }}</h1>
     </div>
 

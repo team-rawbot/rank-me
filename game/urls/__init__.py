@@ -12,5 +12,6 @@ urlpatterns = patterns(
         name='team_general_detail'),
     url(r'^clubs/$', 'club_list_all', name='club_list_all'),
     url(r'^clubs/new/$', 'club_add', name='club_add'),
+    url(r'^clubs/(?P<club_slug>[\w-]+)/edit/', 'club_edit', name='club_edit'),
     url(r'^clubs/(?P<club_slug>[\w-]+)/', 'club_detail', name='club_detail'),
 )

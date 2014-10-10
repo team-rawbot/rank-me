@@ -631,3 +631,6 @@ class Club(models.Model):
             self.slug = slugify(self.name)
 
         super(Club, self).save(*args, **kwargs)
+
+    def user_is_admin(self, user):
+        return True
