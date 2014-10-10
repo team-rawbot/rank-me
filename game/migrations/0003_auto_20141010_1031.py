@@ -9,14 +9,14 @@ class Migration(migrations.Migration):
 
     dependencies = [
         migrations.swappable_dependency(settings.AUTH_USER_MODEL),
-        ('game', '0002_create_default_competition'),
+        ('game', '0001_initial'),
     ]
 
     operations = [
         migrations.AddField(
             model_name='competition',
             name='creator',
-            field=models.ForeignKey(related_name=b'my_competitions', default=1, to=settings.AUTH_USER_MODEL),
+            field=models.ForeignKey(related_name=b'my_competitions', to=settings.AUTH_USER_MODEL),
             preserve_default=True,
         ),
         migrations.AddField(
