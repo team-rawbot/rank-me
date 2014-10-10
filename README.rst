@@ -11,7 +11,7 @@ Run the following command::
 This will create a box and install everything you need. Once it's installed,
 use ``vagrant ssh`` to SSH to the box and use the ``runserver`` alias to run
 the development server. You'll then be able to connect to
-http://ip.of.the.box:8000/.
+http://localhost:8000/.
 
 To run management commands, use the ``manage.py``
 alias (notice there's no leading dot) from anywhere in your box. You'll
