@@ -6,7 +6,7 @@ from game.models import Competition, Game
 
 from rankme.utils import RankMeTestCase
 
-from .factories import UserFactory
+from .factories import UserFactory, CompetitionFactory
 
 User = get_user_model()
 
@@ -14,7 +14,7 @@ User = get_user_model()
 class TestResultsPage(RankMeTestCase):
     def setUp(self):
         super(TestResultsPage, self).setUp()
-        self.default_competition = Competition.objects.get_default_competition()
+        self.default_competition = CompetitionFactory()
 
     def test_page_availability(self):
         response = self.client.get(reverse('competition_detail', kwargs={

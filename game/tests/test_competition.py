@@ -8,7 +8,7 @@ from django.utils import timezone
 from rankme.utils import RankMeTestCase
 
 from ..models import Competition
-from .factories import UserFactory
+from .factories import UserFactory, CompetitionFactory
 
 
 class TestCompetition(RankMeTestCase):
@@ -35,7 +35,7 @@ class TestCompetition(RankMeTestCase):
         self.assertRedirects(response, reverse('competition_detail', kwargs={
             'competition_slug': 'atp-tournament-2014'
         }))
-        self.assertEqual(Competition.objects.all().count(), 2)
+        self.assertEqual(Competition.objects.all().count(), 1)
         competition = Competition.objects.get(slug='atp-tournament-2014')
         self.assertEqual(competition.name, 'ATP Tournament 2014')
         self.assertEqual(competition.description, 'Official ATP tournament')
@@ -52,7 +52,7 @@ class TestCompetition(RankMeTestCase):
         John has no access to defaut_competition by default
         Then add John to default_competition
         """
-        competition = Competition.objects.get_default_competition()
+        competition = CompetitionFactory()
 
         john = UserFactory()
         self.client.login(username=john.username, password='password')
@@ -67,4 +67,4 @@ class TestCompetition(RankMeTestCase):
         response = self.client.get(reverse('competition_detail', kwargs={
             'competition_slug': competition.slug
         }))
-        self.assertContains(response, '<h1>Default competition</h1>')
+        self.assertContains(response, "<h1>%s</h1>" % competition.name)

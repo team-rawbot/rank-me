@@ -1,13 +1,13 @@
 from rankme.utils import RankMeTestCase
 
-from .factories import UserFactory
+from .factories import UserFactory, CompetitionFactory
 from ..models import Competition, HistoricalScore, Game
 
 
 class TestHistoricalScore(RankMeTestCase):
     def test_historical_score(self):
         users = [UserFactory() for _ in range(3)]
-        default_competition = Competition.objects.get_default_competition()
+        default_competition = CompetitionFactory()
 
         game = Game.objects.announce(users[0], users[1], default_competition)
         self.assertEqual(HistoricalScore.objects.count(), 2)

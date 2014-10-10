@@ -3,7 +3,7 @@ from rest_framework import status
 from rest_framework.test import APITestCase
 
 from game.models import Competition
-from game.tests.factories import UserFactory
+from game.tests.factories import UserFactory, CompetitionFactory
 
 
 def test_route(self, route):
@@ -40,7 +40,7 @@ class AddResultTest(APITestCase):
         data = {
             'winner': UserFactory().username,
             'looser': UserFactory().username,
-            'competition': Competition.objects.get_default_competition().slug
+            'competition': CompetitionFactory().slug
         }
 
         url = reverse('api_add_result')

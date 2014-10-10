@@ -547,9 +547,6 @@ class HistoricalScore(models.Model):
 
 
 class CompetitionManager(models.Manager):
-    def get_default_competition(self):
-        return self.get_queryset().get(pk=1)
-
     def get_visible_for_user(self, user):
         return self.filter(Q(players=user.id) | Q(creator_id=user.id)).distinct()
 

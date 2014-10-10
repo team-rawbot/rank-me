@@ -6,7 +6,7 @@ from trueskill import Rating, rate_1vs1
 
 from rankme.utils import RankMeTestCase
 from ..models import Competition, Game
-from .factories import UserFactory
+from .factories import UserFactory, CompetitionFactory
 
 
 class RecalculateCommandTestCase(RankMeTestCase):
@@ -15,7 +15,7 @@ class RecalculateCommandTestCase(RankMeTestCase):
         Test the recalculate command.
         """
         users = [UserFactory(), UserFactory()]
-        default_competition = Competition.objects.get_default_competition()
+        default_competition = CompetitionFactory()
 
         Game.objects.announce(users[0], users[1], default_competition)
         Game.objects.announce(users[0], users[1], default_competition)

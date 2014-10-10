@@ -3,7 +3,7 @@ from django.core.urlresolvers import reverse
 
 from rankme.utils import RankMeTestCase
 
-from .factories import UserFactory
+from .factories import UserFactory, CompetitionFactory
 from ..models import Competition
 
 User = get_user_model()
@@ -11,7 +11,7 @@ User = get_user_model()
 
 class TestAddResultPage(RankMeTestCase):
     def test_form_validation(self):
-        competition = Competition.objects.get_default_competition()
+        competition = CompetitionFactory()
         game_add_url = reverse('game_add', kwargs={
             'competition_slug': competition.slug
         })

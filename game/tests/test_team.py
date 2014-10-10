@@ -4,7 +4,7 @@ import mock
 
 from rankme.utils import RankMeTestCase
 
-from .factories import UserFactory
+from .factories import UserFactory, CompetitionFactory
 from ..models import Competition, Game, Team
 from ..signals import team_ranking_changed
 
@@ -15,7 +15,7 @@ class TestTeamGetOrCreate(RankMeTestCase):
 
         # Create 4 dummy users
         self.users = [UserFactory() for id in range(4)]
-        self.default_competition = Competition.objects.get_default_competition()
+        self.default_competition = CompetitionFactory()
 
     def assertUsersEqual(self, first, second):
         def users_to_id_list(users):
@@ -211,7 +211,7 @@ class TestTeamSignals(RankMeTestCase):
     def setUp(self):
         super(TestTeamSignals, self).setUp()
 
-        self.default_competition = Competition.objects.get_default_competition()
+        self.default_competition = CompetitionFactory()
 
     def test_team_ranking_changed_signal(self):
         team_ranking_changed_receiver = receiver(
