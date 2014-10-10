@@ -4,7 +4,7 @@ from django.http import HttpResponse
 from django.shortcuts import get_object_or_404
 from django.utils.datastructures import MultiValueDictKeyError
 from rest_framework.response import Response
-from social.apps.django_app.utils import strategy
+from social.apps.django_app.utils import psa
 from rest_framework.authtoken.models import Token
 from rest_framework.decorators import api_view
 from rest_framework import viewsets, status
@@ -15,7 +15,7 @@ from game.models import Competition, Team, Game
 from .serializers import CompetitionSerializer
 
 
-@strategy('social:complete')
+@psa('social:complete')
 def register_by_access_token(request, backend):
     backend = request.strategy.backend
     token = {
