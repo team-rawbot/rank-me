@@ -46,9 +46,9 @@ class CompetitionForm(forms.ModelForm):
         model = Competition
         fields = ('name', 'description', 'players', 'start_date', 'end_date')
 
-    def save(self, user):
-        competition = super(CompetitionForm, self).save()
-        competition.creator = user
+    def save(self, creator):
+        competition = super(CompetitionForm, self).save(commit=False)
+        competition.creator = creator
         competition.save()
 
         return competition
