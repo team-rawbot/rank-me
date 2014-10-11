@@ -1,10 +1,14 @@
 from django.conf.urls import patterns, url, include
-from rest_framework import routers
+from rest_framework_extensions.routers import ExtendedSimpleRouter
 
-from .views import CompetitionViewSet, TeamViewSet, GameViewSet
+from .views import CompetitionViewSet, TeamViewSet, TeamPerCompetitionViewSet, GameViewSet
 
-router = routers.DefaultRouter()
-router.register(r'competitions', CompetitionViewSet)
+router = ExtendedSimpleRouter()
+
+competition_router = router.register(r'competitions', CompetitionViewSet)
+competition_router.register(r'teams', TeamPerCompetitionViewSet,
+                            base_name='competitions-teams', parents_query_lookups=['competition__teams'])
+
 router.register(r'teams', TeamViewSet)
 router.register(r'games', GameViewSet)
 

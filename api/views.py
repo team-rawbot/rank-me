@@ -6,6 +6,7 @@ from social.apps.django_app.utils import psa
 from rest_framework import viewsets, status
 from rest_framework.response import Response
 from rest_framework.authtoken.models import Token
+from rest_framework_extensions.mixins import NestedViewSetMixin
 
 from game.models import Competition, Team, Game
 
@@ -45,6 +46,10 @@ class TeamViewSet(viewsets.ReadOnlyModelViewSet):
     """
     model = Team
     serializer_class = TeamSerializer
+
+
+class TeamPerCompetitionViewSet(NestedViewSetMixin, TeamViewSet):
+    pass
 
 
 class GameViewSet(viewsets.ReadOnlyModelViewSet):

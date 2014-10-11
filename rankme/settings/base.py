@@ -128,6 +128,7 @@ INSTALLED_APPS = (
     'bootstrapform',
     'rest_framework',
     'rest_framework.authtoken',
+    'rest_framework_extensions',
 )
 
 # A sample logging configuration. The only tangible logging
