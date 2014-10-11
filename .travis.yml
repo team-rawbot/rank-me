@@ -14,3 +14,5 @@ script:
     - python manage.py test
 before_script:
     - psql -c 'create database rankme;' -U postgres
+services:
+  - redis-server

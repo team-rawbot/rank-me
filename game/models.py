@@ -1,6 +1,8 @@
 import operator
 import json
 import six
+import time
+
 from collections import defaultdict, OrderedDict
 from itertools import groupby
 
@@ -11,6 +13,7 @@ from django.db.models import Q
 from django.template.defaultfilters import slugify
 from django.utils import timezone
 from trueskill import Rating, rate_1vs1, quality_1vs1
+from activity_feed import ActivityFeed
 
 from .signals import game_played, team_ranking_changed
 
@@ -267,6 +270,12 @@ class GameManager(models.Manager):
         if not competition.is_active():
             raise InactiveCompetitionError()
 
+        players = {
+            'winner': winner,
+            'loser': loser
+        }
+
+
         winner, created = Team.objects.get_or_create_from_players(winner)
         loser, created = Team.objects.get_or_create_from_players(loser)
 
@@ -275,6 +284,16 @@ class GameManager(models.Manager):
 
         game_played.send(sender=game)
         game.update_score()
+
+        date = time.time()
+        event = {
+            'competition': competition.name,
+            'body': '{winner} won against {loser}'.format(winner=players['winner'], loser=players['loser']),
+            'date': date
+        }
+
+        activity_feed = ActivityFeed()
+        activity_feed.add_item('foo', event, date)
 
         return game
 

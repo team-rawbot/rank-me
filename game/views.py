@@ -1,3 +1,5 @@
+import ast
+
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.core.urlresolvers import reverse
@@ -7,6 +9,8 @@ from django.shortcuts import get_object_or_404, render, redirect
 from django.utils import timezone
 from django.utils.translation import ugettext_lazy as _
 from django.views.decorators.http import require_POST
+
+from activity_feed import ActivityFeed
 
 from .decorators import authorized_user, user_is_admin
 from .forms import GameForm, CompetitionForm
@@ -19,8 +23,17 @@ def index(request):
         return render(request, 'user/login.html')
 
     # Private homepage
+    activity_feed = ActivityFeed()
+
+    raw_events = activity_feed.feed('foo', 1)
+    events = []
+
+    for event in raw_events:
+        events.append(ast.literal_eval(event))
+
     context = {
-        'competitions': Competition.objects.get_visible_for_user(request.user)
+        'competitions': Competition.objects.get_visible_for_user(request.user),
+        'events': events
     }
     return render(request, 'homepage/index.html', context)
 

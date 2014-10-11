@@ -25,28 +25,16 @@
             <div class="panel-heading">
                 <h3 class="panel-title">{% trans "Recent activity" %}</h3>
             </div>
+
             <table class="table table-striped table-bordered">
                 <tbody>
+                    {% for event in events %}
                     <tr>
-                        <td>Training</td>
-                        <td>Benoît lost against Matthieu</td>
-                        <td class="text-muted">3 hours ago</td>
+                        <td>{{ event.competition }}</td>
+                        <td>{{ event.body }}</td>
+                        <td class="text-muted">{{ event.date }}</td> <!-- 3 hours ago -->
                     </tr>
-                    <tr>
-                        <td>Liip Lausanne</td>
-                        <td>Benoît won against Matthieu</td>
-                        <td class="text-muted">3 hours ago</td>
-                    </tr>
-                    <tr>
-                        <td>Liip Fribourg</td>
-                        <td>Benoît lost against Jean-Bernard</td>
-                        <td class="text-muted">3 hours ago</td>
-                    </tr>
-                    <tr>
-                        <td>Liip Lausanne</td>
-                        <td>Benoît won against Matthieu</td>
-                        <td class="text-muted">3 hours ago</td>
-                    </tr>
+                    {% endfor %}
                 </tbody>
             </table>
         </div>
