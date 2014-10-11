@@ -35,23 +35,23 @@ class CompetitionViewSet(viewsets.ReadOnlyModelViewSet):
     """
     API endpoint that allows competitions to be viewed or edited.
     """
-    queryset = Competition.objects.all()
+    model = Competition
     serializer_class = CompetitionSerializer
 
 
 class TeamViewSet(viewsets.ReadOnlyModelViewSet):
     """
-    API endpoint that allows competitions to be viewed or edited.
+    API endpoint that allows teams to be viewed or edited.
     """
-    queryset = Team.objects.all()
+    model = Team
     serializer_class = TeamSerializer
 
 
-class GameViewSet(viewsets.GenericViewSet):
+class GameViewSet(viewsets.ReadOnlyModelViewSet):
     """
     API endpoint that allows Games to be viewed or edited.
     """
-    queryset = Game.objects.all()
+    model = Game
     serializer_class = GameSerializer
 
     def create(self, request, *args, **kwargs):
