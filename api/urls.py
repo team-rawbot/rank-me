@@ -20,6 +20,7 @@ urlpatterns = patterns(
             'api.views.register_by_access_token',
             name='register_by_access_token',
         ),
+        url(r'^$', router.get_api_root_view(), name='api-root'),
         url(r'^', include(router.urls)),
         url(r'^auth/', include('rest_framework.urls', namespace='rest_framework')),
         ])),
