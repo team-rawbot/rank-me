@@ -27,6 +27,9 @@ $link-color: $brand-info;
 $well-bg: lighten($brand-primary,33%);
 $well-border: lighten($brand-primary,25%);
 
+$hr-border: $brand-lighter;
+$list-group-border: $brand-lighter;
+
 $panel-default-heading-bg: $brand-lighter;
 $panel-default-border: $well-border;
 $panel-inner-border: $panel-default-border;
@@ -89,7 +92,7 @@ $icon-font-path: "../vendors/bootstrap-sass-official/assets/fonts/bootstrap/";
 @import "../vendors/bootstrap-sass-official/assets/stylesheets/bootstrap/thumbnails";
 @import "../vendors/bootstrap-sass-official/assets/stylesheets/bootstrap/alerts";
 // @import "../vendors/bootstrap-sass-official/assets/stylesheets/bootstrap/progress-bars";
-// @import "../vendors/bootstrap-sass-official/assets/stylesheets/bootstrap/media";
+@import "../vendors/bootstrap-sass-official/assets/stylesheets/bootstrap/media";
 @import "../vendors/bootstrap-sass-official/assets/stylesheets/bootstrap/list-group";
 @import "../vendors/bootstrap-sass-official/assets/stylesheets/bootstrap/panels";
 // @import "../vendors/bootstrap-sass-official/assets/stylesheets/bootstrap/responsive-embed";
