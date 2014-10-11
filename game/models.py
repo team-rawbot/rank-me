@@ -4,10 +4,11 @@ import six
 from collections import defaultdict, OrderedDict
 from itertools import groupby
 
+from django.contrib.auth import get_user_model
 from django.conf import settings
 from django.core.exceptions import ValidationError
 from django.db import models
-from django.db.models import Q
+from django.db.models import Prefetch, Q
 from django.template.defaultfilters import slugify
 from django.utils import timezone
 from trueskill import Rating, rate_1vs1, quality_1vs1
@@ -68,11 +69,17 @@ class Team(models.Model):
         """
         Fetch the list of games played by the team, filtered by competition.
         """
+        User = get_user_model()
+        users_with_profile_qs = User.objects.select_related('profile')
+
         games = Game.objects.filter(
             Q(winner_id=self.id) | Q(loser_id=self.id)
         ).filter(competitions=competition).order_by('-date').select_related(
             'winner', 'loser'
-        ).prefetch_related('winner__users', 'loser__users')
+        ).prefetch_related(
+            Prefetch('winner__users', queryset=users_with_profile_qs),
+            Prefetch('loser__users', queryset=users_with_profile_qs),
+        )
 
         return games
 
@@ -242,9 +249,16 @@ class Team(models.Model):
 
 class GameManager(models.Manager):
     def get_latest(self, competition=None):
+        User = get_user_model()
+        users_with_profile_qs = User.objects.select_related('profile')
+
         games = (self.get_queryset()
-                 .select_related('winner', 'loser')
-                 .prefetch_related('winner__users', 'loser__users')
+                 .select_related('winner', 'loser', 'winner__users__profile',
+                 'loser__users__profile')
+                 .prefetch_related(
+                     Prefetch('winner__users', queryset=users_with_profile_qs),
+                     Prefetch('loser__users', queryset=users_with_profile_qs)
+                 )
                  .order_by('-date'))
 
         if competition is not None:
@@ -501,8 +515,13 @@ class HistoricalScoreManager(models.Manager):
 
 class ScoreManager(models.Manager):
     def get_score_board(self, competition):
+        User = get_user_model()
+
         return (self.get_queryset().filter(competition=competition)
-                .order_by('-score').prefetch_related('team__users'))
+                .order_by('-score').prefetch_related(
+                    Prefetch('team__users',
+                             queryset=User.objects.select_related('profile')))
+               )
 
     def get_ranking_by_team(self, competition):
         score_board = self.get_score_board(competition)
