@@ -1,7 +1,12 @@
 from django.conf.urls import patterns, url, include
 from rest_framework_extensions.routers import ExtendedSimpleRouter
 
-from .views import CompetitionViewSet, TeamViewSet, TeamPerCompetitionViewSet, GameViewSet, GamePerCompetitionViewSet
+from .views import (
+    CompetitionViewSet,
+    TeamViewSet, TeamPerCompetitionViewSet,
+    GameViewSet, GamePerCompetitionViewSet,
+    ScoreViewSet, ScorePerCompetitionViewSet
+)
 
 router = ExtendedSimpleRouter()
 
@@ -10,9 +15,12 @@ competition_router.register(r'teams', TeamPerCompetitionViewSet,
                             base_name='competitions-teams', parents_query_lookups=['competition'])
 competition_router.register(r'games', GamePerCompetitionViewSet,
                             base_name='competitions-games', parents_query_lookups=['competitions'])
+competition_router.register(r'scores', ScorePerCompetitionViewSet,
+                            base_name='competitions-scores', parents_query_lookups=['competition'])
 
 router.register(r'teams', TeamViewSet)
 router.register(r'games', GameViewSet)
+router.register(r'scores', ScoreViewSet)
 
 urlpatterns = patterns(
     'api.views',

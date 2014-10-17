@@ -8,9 +8,9 @@ from rest_framework.response import Response
 from rest_framework.authtoken.models import Token
 from rest_framework_extensions.mixins import NestedViewSetMixin
 
-from game.models import Competition, Team, Game
+from game.models import Competition, Team, Game, Score
 
-from .serializers import CompetitionSerializer, TeamSerializer, GameSerializer
+from .serializers import CompetitionSerializer, TeamSerializer, GameSerializer, ScoreSerializer
 
 
 @psa('social:complete')
@@ -118,4 +118,16 @@ class GameViewSet(viewsets.ReadOnlyModelViewSet):
 
 
 class GamePerCompetitionViewSet(NestedViewSetMixin, GameViewSet):
+    pass
+
+
+class ScoreViewSet(viewsets.ReadOnlyModelViewSet):
+    """
+    API endpoint that allows scores to be viewed or edited.
+    """
+    model = Score
+    serializer_class = ScoreSerializer
+
+
+class ScorePerCompetitionViewSet(NestedViewSetMixin, ScoreViewSet):
     pass

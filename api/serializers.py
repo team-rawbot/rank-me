@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from game.models import Competition, Team, Game
+from game.models import Competition, Team, Game, Score
 
 
 class CompetitionSerializer(serializers.HyperlinkedModelSerializer):
@@ -27,4 +27,16 @@ class GameSerializer(serializers.Serializer):
     winner = serializers.WritableField(required=False, read_only=True)
     loser = serializers.WritableField(required=False, read_only=True)
     competitions = serializers.RelatedField(many=True, read_only=True)
+
+    class Meta:
+        model = Game
+
+
+class ScoreSerializer(serializers.HyperlinkedModelSerializer):
+    team = serializers.RelatedField()
+    competition = serializers.RelatedField()
+
+    class Meta:
+        model = Score
+        fields = ('id', 'team', 'competition', 'score', 'stdev')
 
