@@ -7,7 +7,7 @@ router = ExtendedSimpleRouter()
 
 competition_router = router.register(r'competitions', CompetitionViewSet)
 competition_router.register(r'teams', TeamPerCompetitionViewSet,
-                            base_name='competitions-teams', parents_query_lookups=['competition__teams'])
+                            base_name='competitions-teams', parents_query_lookups=['competition'])
 
 router.register(r'teams', TeamViewSet)
 router.register(r'games', GameViewSet)
