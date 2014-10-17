@@ -115,3 +115,7 @@ class GameViewSet(viewsets.ReadOnlyModelViewSet):
             code = status.HTTP_201_CREATED
 
         return Response(payload, status=code)
+
+
+class GamePerCompetitionViewSet(NestedViewSetMixin, GameViewSet):
+    pass
