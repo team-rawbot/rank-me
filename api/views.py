@@ -2,6 +2,7 @@ import json
 from django.contrib.auth import get_user_model
 from django.http import HttpResponse
 from django.utils.datastructures import MultiValueDictKeyError
+from rest_framework.generics import get_object_or_404
 from social.apps.django_app.utils import psa
 from rest_framework import viewsets, status
 from rest_framework.response import Response
@@ -10,7 +11,7 @@ from rest_framework_extensions.mixins import NestedViewSetMixin
 
 from game.models import Competition, Team, Game, Score
 
-from .serializers import CompetitionSerializer, TeamSerializer, GameSerializer, ScoreSerializer
+from .serializers import CompetitionSerializer, TeamSerializer, GameSerializer, ScoreSerializer, UserSerializer
 
 
 @psa('social:complete')
@@ -130,4 +131,27 @@ class ScoreViewSet(viewsets.ReadOnlyModelViewSet):
 
 
 class ScorePerCompetitionViewSet(NestedViewSetMixin, ScoreViewSet):
+    pass
+
+
+class UserViewSet(viewsets.ReadOnlyModelViewSet):
+    """
+    API users endpoint
+    """
+    model = get_user_model()
+    serializer_class = UserSerializer
+
+    def retrieve(self, request, pk=None, **kwargs):
+        queryset = get_user_model().objects.all()
+
+        current_user = request.user
+        if current_user.is_authenticated() and pk == 'current':
+            pk = current_user.id
+
+        user = get_object_or_404(queryset, pk=pk)
+        serializer = UserSerializer(user)
+        return Response(serializer.data)
+
+
+class CompetitionPerUserViewSet(NestedViewSetMixin, ScoreViewSet):
     pass

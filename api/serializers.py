@@ -1,3 +1,4 @@
+from django.contrib.auth import get_user_model
 from rest_framework import serializers
 
 from game.models import Competition, Team, Game, Score
@@ -40,3 +41,9 @@ class ScoreSerializer(serializers.HyperlinkedModelSerializer):
         model = Score
         fields = ('id', 'team', 'competition', 'score', 'stdev')
 
+
+class UserSerializer(serializers.HyperlinkedModelSerializer):
+
+    class Meta:
+        model = get_user_model()
+        fields = ('id', 'username', 'first_name', 'last_name')

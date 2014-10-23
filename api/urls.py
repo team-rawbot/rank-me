@@ -5,7 +5,8 @@ from .views import (
     CompetitionViewSet,
     TeamViewSet, TeamPerCompetitionViewSet,
     GameViewSet, GamePerCompetitionViewSet,
-    ScoreViewSet, ScorePerCompetitionViewSet
+    ScoreViewSet, ScorePerCompetitionViewSet,
+    UserViewSet, CompetitionPerUserViewSet
 )
 
 router = ExtendedSimpleRouter()
@@ -17,6 +18,10 @@ competition_router.register(r'games', GamePerCompetitionViewSet,
                             base_name='competitions-games', parents_query_lookups=['competitions'])
 competition_router.register(r'scores', ScorePerCompetitionViewSet,
                             base_name='competitions-scores', parents_query_lookups=['competition'])
+
+user_router = router.register(r'users', UserViewSet)
+user_router.register(r'competitions', CompetitionPerUserViewSet,
+                     base_name='users-competitions', parents_query_lookups=['users'])
 
 router.register(r'teams', TeamViewSet)
 router.register(r'games', GameViewSet)
