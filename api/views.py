@@ -15,7 +15,7 @@ from .serializers import CompetitionSerializer, TeamSerializer, GameSerializer, 
 
 @psa('social:complete')
 def register_by_access_token(request, backend):
-    backend = request.strategy.backend
+    backend = request.backend
     token = {
         'oauth_token': request.GET.get('oauth_token'),
         'oauth_token_secret': request.GET.get('oauth_token_secret'),
@@ -29,7 +29,7 @@ def register_by_access_token(request, backend):
     }
 
     data_json = json.dumps(data)
-    return HttpResponse(data_json, mimetype='application/json')
+    return HttpResponse(data_json, content_type='application/json')
 
 
 class CompetitionViewSet(viewsets.ReadOnlyModelViewSet):
