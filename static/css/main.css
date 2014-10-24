@@ -6835,12 +6835,8 @@ text.highlighted {
 }
 
 /* line 128, ../sass/_rankme.scss */
-.panel-body > *:first-child {
-  margin-top: 0;
-}
-
-/* line 133, ../sass/_rankme.scss */
-.quick-profile .user-avatar {
-  width: 64px;
-  margin-right: 0;
+.form-control.select2-container {
+  padding: 0;
+  border: none;
+  height: auto;
 }

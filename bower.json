@@ -5,6 +5,7 @@
     "requirejs": "*",
     "d3": "*",
     "underscore": "*",
+    "select2": "*",
     "bootstrap-sass-official": "~3.2.0+2"
   },
   "ignore": [

@@ -124,3 +124,9 @@ text.highlighted {
 .panel-body > *:last-child {
   margin-bottom: 0;
 }
+
+.form-control.select2-container {
+    padding: 0;
+    border: none;
+    height: auto;
+}

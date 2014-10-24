@@ -26,7 +26,7 @@ define(['jquery'], function($) {
             option.attr('selected', 'selected');
             option.trigger('change');
 
-            opposite(field).focus();
+            opposite(field).select2('focus');
             alreadySelected = true;
             event.preventDefault();
         }
@@ -38,12 +38,12 @@ define(['jquery'], function($) {
     }
 
     var init = function() {
-        // focus "add result" button on load
-        $('body.home #add-result-button').focus();
+        var select2Options = {
+            'openOnEnter': false
+        };
 
-        $(selects).on('change', function() {
-            removeUserFrom($(this).val(), opposite($(this).attr('id')));
-        });
+        $('#id_winner').select2(select2Options);
+        $('#id_loser').select2(select2Options);
 
         $('body.add-result').keydown(function(event) {
             var username = appDatas.username;
