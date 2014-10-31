@@ -1,11 +1,12 @@
 from six import StringIO
 
+from django.conf import settings
 from django.core.management import call_command
 
 from trueskill import Rating, rate_1vs1
 
 from rankme.utils import RankMeTestCase
-from ..models import Competition, Game
+from ..models import Game, Score, rating
 from .factories import UserFactory, CompetitionFactory
 
 

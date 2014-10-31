@@ -11,7 +11,7 @@ from django.db import models, transaction
 from django.db.models import Prefetch, Q
 from django.template.defaultfilters import slugify
 from django.utils import timezone
-from trueskill import Rating, rate_1vs1, quality_1vs1
+from game.rating import rating
 
 from .signals import game_played, team_ranking_changed
 
@@ -133,10 +133,7 @@ class Team(models.Model):
             if team == self:
                 continue
             score = team.get_score(competition)
-            quality = quality_1vs1(
-                Rating(own_score.score, own_score.stdev),
-                Rating(score.score, score.stdev)
-            )
+            quality = rating.quality(own_score, score)
             qualities[team] = {'score': score, 'quality': quality * 100}
 
         return OrderedDict(
@@ -343,10 +340,7 @@ class Game(models.Model):
             winner_score = winner.get_or_create_score(competition)
             loser_score = loser.get_or_create_score(competition)
 
-            winner_new_score, loser_new_score = rate_1vs1(
-                Rating(winner_score.score, winner_score.stdev),
-                Rating(loser_score.score, loser_score.stdev)
-            )
+            winner_new_score, loser_new_score = rating.rate(winner_score, loser_score)
 
             winner_score.score = winner_new_score.mu
             winner_score.stdev = winner_new_score.sigma
