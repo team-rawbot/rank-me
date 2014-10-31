@@ -15,7 +15,6 @@ define(["jquery", "underscore", "d3"], function($, _, d3) {
         var zoomCenter;
 
         function setDomain(event) {
-            x.domain([1, positions[0].values.length]);
 
             var bigger = d3.max(positions, function(p) { return d3.max(p.values, function(v) { return v[attribute]; })});
             var smaller = d3.min(positions, function(p) { return d3.min(p.values, function(v) { return v[attribute]; })});
@@ -65,7 +64,7 @@ define(["jquery", "underscore", "d3"], function($, _, d3) {
                 .attr('d', function(d) { return line(d.values); });
 
             t.selectAll('circle')
-                .attr("transform", function(d, idx) { return "translate(" + x(idx + 1) + "," + y(d[attribute]) + ")"; });
+                .attr("transform", function(d) { return "translate(" + x(d.game_id) + "," + y(d[attribute]) + ")"; });
 
             svg.select('.y.axis').call(yAxis);
         }
@@ -96,11 +95,35 @@ define(["jquery", "underscore", "d3"], function($, _, d3) {
 
         function doDraw(container) {
             var url = container.data('json') + offset;
-            d3.json(url, function(err, data) {
+            d3.json(url, function(err, originalData) {
                 if(err) {
                     alert(err);
                     return;
                 }
+
+                console.log(originalData)
+
+                var data = {};
+                var games = {};
+                originalData.games.forEach(function(game) {
+                    for(var i in game) {
+                        var d = game[i];
+                        var name = d.team;
+                        if(! data.hasOwnProperty(name)) {
+                            data[name] = [];
+                        }
+
+                        games[d.game_id] = 1;
+
+                        d.name = name;
+                        d.skill = d.score;
+                        d.played = i == 'winner' || i == 'loser';
+                        d.win = i == 'winner' ? true : false ;
+
+                        data[name].push(d);
+                    }
+                });
+                games = Object.keys(games)
 
                 var margin = { top: 20, right: 150, bottom: 10, left: 40 };
                 var width = container.width() - margin.left - margin.right;
@@ -109,14 +132,15 @@ define(["jquery", "underscore", "d3"], function($, _, d3) {
                 attribute = $(modeSelector + ':checked').val();
                 var color = d3.scale.category20();
 
-                x = d3.scale.linear()
-                    .range([0, width]);
+                x = d3.scale.ordinal()
+                    .domain(games)
+                    .rangePoints([0, width]);
                 y = d3.scale.linear()
                     .range([0, height]);
 
                 line = d3.svg.line()
                     .interpolate("linear")
-                    .x(function(d, idx) { return x(idx + 1); })
+                    .x(function(d) { return x(d.game_id); })
                     .y(function(d) { return y(d[attribute]); });
 
                 var zoom = d3.behavior.zoom()
@@ -134,15 +158,6 @@ define(["jquery", "underscore", "d3"], function($, _, d3) {
                     .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
                 color.domain(d3.keys(data));
-
-                for(var name in data) {
-                    if(data.hasOwnProperty(name)) {
-                        data[name].map(function(d) {
-                            d.name = name;
-                            return d;
-                        });
-                    }
-                }
 
                 positions = color.domain().map(function(name) {
                     return {
@@ -177,14 +192,12 @@ define(["jquery", "underscore", "d3"], function($, _, d3) {
                     .attr('r', function(d) { return d.played ? 5 : 0; })
                     .style('fill', function(d) { return d.win ? color(d.name) : 'white'; })
                     .style('stroke', function(d) { return color(d.name); })
-                    .attr("transform", function(d, idx) { return "translate(" + x(idx + 1) + "," + y(d[attribute]) + ")"; })
+                    .attr("transform", function(d) { return "translate(" + x(d.game_id) + "," + y(d[attribute]) + ")"; })
                     .call(highlighter);
-
-                var itemNumber = data[Object.keys(data)[0]].length;
 
                 position.append("text")
                     .datum(function(d) { return {name: d.name, value: d.values[d.values.length - 1]}; })
-                    .attr("transform", function(d) { return "translate(" + x(itemNumber) + "," + y(d.value[attribute]) + ")"; })
+                    .attr("transform", function(d) { return "translate(" + width + "," + y(d.value[attribute]) + ")"; })
                     .attr("x", 10)
                     .attr("dy", ".35em")
                     .style('fill', function(d) { return color(d.name); })
@@ -199,7 +212,7 @@ define(["jquery", "underscore", "d3"], function($, _, d3) {
 
                 svg.append("g")
                     .attr("class", "y axis")
-                    .attr("transform", function(d, idx) { return "translate(-5, 0)"; })
+                    .attr("transform", function() { return "translate(-5, 0)"; })
                     .call(yAxis);
 
             });

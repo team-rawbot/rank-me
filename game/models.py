@@ -1,6 +1,4 @@
-import operator
-import json
-import six
+import redis
 from collections import defaultdict, OrderedDict
 from itertools import groupby
 
@@ -291,8 +289,7 @@ class GameManager(models.Manager):
         return game
 
     def delete(self, game, competition):
-        history_winner = HistoricalScore.objects.get_last_for_team(game.winner, game, competition)
-        history_loser = HistoricalScore.objects.get_last_for_team(game.loser, game, competition)
+        history_winner, history_loser = HistoricalScore.delete_for_game_and_competition(game, competition)
 
         Score.objects.filter()
         winner = game.winner.get_or_create_score(competition)
@@ -350,25 +347,18 @@ class Game(models.Model):
             loser_score.stdev = loser_new_score.sigma
             loser_score.save()
 
-            HistoricalScore.objects.create(
+            new_rankings = Score.objects.get_ranking_by_team(competition)
+
+            HistoricalScore.save(
                 game=self,
-                score=winner_score.score,
-                stdev=winner_score.stdev,
-                team=winner,
-                competition=competition
+                competition=competition,
+                winner_score=winner_score,
+                loser_score=loser_score,
+                rankings=new_rankings,
             )
 
-            HistoricalScore.objects.create(
-                game=self,
-                score=loser_score.score,
-                stdev=loser_score.stdev,
-                team=loser,
-                competition=competition
-            )
 
             if notify:
-                new_rankings = Score.objects.get_ranking_by_team(competition)
-
                 for team in [winner, loser]:
                     if (team not in old_rankings or
                             old_rankings[team] != new_rankings[team]):
@@ -386,126 +376,6 @@ class Game(models.Model):
         Return the opponent team relative to the given team.
         """
         return self.winner if self.winner_id != team.id else self.loser
-
-
-class HistoricalScoreManager(models.Manager):
-    def get_latest(self, nb_games, competition):
-        return (self.get_queryset()
-                .select_related('game', 'game__winner', 'game__loser')
-                .filter(game__competitions=competition)
-                .order_by('-id')[:nb_games])
-
-    def get_latest_results_by_team(self, nb_games, competition,
-                                   start=0, return_json=False):
-        """
-        Get nb_games latest scores for each team
-
-        :param nb_games:int number of games
-        :param return_json:boolean
-        :return:dict Dict with key=team and value=list of score objects
-
-        {team_a: [{skill: xx, played: xx, game: game_id}, ...]}
-        """
-        nb_games += int(start) # add start to nb_games because slicing want the end position
-        games = (Game.objects.filter(competitions=competition)
-                 .order_by('-id')
-                 .prefetch_related('historical_scores')[start:nb_games])
-
-        teams = (Team.objects
-                 .filter(
-                     Q(games_won__competitions=competition) |
-                     Q(games_lost__competitions=competition)
-                 )
-                 .distinct()
-                 .select_related('winner', 'loser'))
-        scores_by_team = {}
-
-        for game in reversed(games):
-            all_skills_by_game = {}
-
-            for team in teams:
-                team_scores = scores_by_team.get(team, [])
-                result = {'game': game.id}
-
-                if team.id in [game.winner_id, game.loser_id]:
-                    team_historical_score = None
-                    # We don't use get() here so we don't hit the database
-                    # since historical scores are prefetched
-                    for historical_score in game.historical_scores.all():
-                        if (historical_score.team_id == team.id
-                                and historical_score.competition_id ==
-                                competition.id):
-                            team_historical_score = historical_score
-                            break
-
-                    assert team_historical_score is not None
-
-                    result['skill'] = team_historical_score.score
-
-                    result['win'] = team.id == game.winner_id
-                    result['played'] = True
-                else:
-                    result['played'] = False
-                    if len(team_scores) == 0:
-                        result['skill'] = self.get_last_score_for_team(
-                            team, game, competition
-                        )
-                    else:
-                        result['skill'] = team_scores[-1]['skill']
-
-                all_skills_by_game[team] = result['skill']
-
-                team_scores.append(result)
-                scores_by_team[team] = team_scores
-
-            positions_for_game = sorted(six.iteritems(all_skills_by_game), key=operator.itemgetter(1), reverse=True)
-            for idx, position in enumerate(positions_for_game, start=1):
-                scores_by_team[position[0]][-1]['position'] = idx
-
-        if return_json:
-            json_result = {}
-            for team, results in scores_by_team.items():
-                json_result[team.get_name()] = results
-
-            return json.dumps(json_result)
-
-        return scores_by_team
-
-    def get_last_score_for_team(self, team, game, competition):
-        """
-        Returns the latest skill before game :game for team :team
-
-        :param team:Team
-        :param game:Game
-        :return:float skill
-        """
-        return self.get_last_for_team(team, game, competition).score
-
-    def get_last_for_team(self, team, game, competition):
-        """
-        Return the latest historical score before game for a team in the competition
-
-        :param team:Team
-        :param game:Game
-        :param competition:Competition
-        :return:HistoricalScore
-        """
-        last_score = HistoricalScore.objects.filter(
-            game_id__lt=game.id,
-            team=team,
-            competition=competition
-        ).order_by('-id').first()
-
-        if last_score is None:
-            last_score = HistoricalScore(
-                game=game,
-                score=settings.GAME_INITIAL_MU,
-                stdev=settings.GAME_INITIAL_SIGMA,
-                team=team,
-                competition=competition
-            )
-
-        return last_score
 
 
 class ScoreManager(models.Manager):
@@ -547,20 +417,69 @@ class Score(models.Model):
                                              self.stdev)
 
 
-class HistoricalScore(models.Model):
-    game = models.ForeignKey(Game, related_name='historical_scores')
-    competition = models.ForeignKey('Competition')
-    team = models.ForeignKey(Team, related_name='historical_scores')
-    score = models.FloatField('Current team score')
-    stdev = models.FloatField('Current team standard deviation',
-                              default=settings.GAME_INITIAL_SIGMA)
+class HistoricalScore(object):
+    game_id = None
+    competition_id = None
+    team = None
+    score = None
+    stdev = None
+    position = None
 
-    objects = HistoricalScoreManager()
+    def __init__(self, game_id, competition_id, team, score, stdev, position):
+        self.game_id = game_id
+        self.competition_id = competition_id
+        self.team = team
+        self.score = score
+        self.stdev = stdev
+        self.position = position
 
-    class Meta:
-        unique_together = (
-            ('team', 'game', 'competition'),
+    def serialize(self):
+        from api.serializers import HistoricalScoreSerializer
+        from rest_framework.renderers import JSONRenderer
+        return JSONRenderer().render(HistoricalScoreSerializer(instance=self).data)
+
+    def persist(self):
+        print "SAVE !"
+        redis.StrictRedis().rpush("historical_%s_%s" % (self.competition_id, self.team), self.serialize())
+
+    @staticmethod
+    def clear():
+        redis.StrictRedis().flushall()
+
+    @staticmethod
+    def save(game, competition, winner_score, loser_score, rankings):
+        winner = HistoricalScore(
+            game.pk, competition.pk, winner_score.team.get_name(),
+            winner_score.score, winner_score.stdev, rankings[winner_score.team]
         )
+        winner.persist()
+
+        loser = HistoricalScore(
+            game.pk, competition.pk, loser_score.team.get_name(),
+            loser_score.score, loser_score.stdev, rankings[loser_score.team]
+        )
+        loser.persist()
+
+        extra = ""
+        for team in rankings:
+            if team != winner_score.team and team != loser_score.team:
+                extra += ', "%s": {"game_id": %s, "team": "%s", "position": %s, "score": %s}' % \
+                         (team.get_name(), game.pk, team.get_name(), rankings[team], 10)
+
+        redis.StrictRedis().rpush("games_%s" % competition.pk,
+            '{"winner": %s, "loser": %s %s}' % (winner.serialize(), loser.serialize(), extra)
+        )
+
+    @staticmethod
+    def delete_for_game_and_competition(team, competition):
+        return HistoricalScore(), HistoricalScore
+
+    @staticmethod
+    def get_latest_results_by_team(competition, start=0, number=50):
+        start = int(start)
+        number = int(number)
+        scores = redis.StrictRedis().lrange("games_%s" % competition.pk, -number - start, -1 - start)
+        return '{"games" : [%s]}' % ', '.join(scores)
 
 
 class CompetitionManager(models.Manager):

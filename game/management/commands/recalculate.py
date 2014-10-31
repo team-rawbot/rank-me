@@ -24,7 +24,7 @@ class Command(BaseCommand):
         games = Game.objects.prefetch_related('competitions').order_by('id')
 
         # remove all HistoricalScores
-        HistoricalScore.objects.all().delete()
+        HistoricalScore.clear()
 
         scores.update(score=score, stdev=stdev)
 

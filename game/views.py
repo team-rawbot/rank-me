@@ -146,9 +146,7 @@ def competition_edit(request, competition_slug):
 @authorized_user
 def competition_detail_score_chart(request, competition_slug, start=0):
     competition = get_object_or_404(Competition, slug=competition_slug)
-    score_chart_data = HistoricalScore.objects.get_latest_results_by_team(
-        50, competition, start, True
-    )
+    score_chart_data = HistoricalScore.get_latest_results_by_team(competition, start)
     return HttpResponse(score_chart_data, content_type='application/json')
 
 

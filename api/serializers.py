@@ -42,6 +42,15 @@ class ScoreSerializer(serializers.HyperlinkedModelSerializer):
         fields = ('id', 'team', 'competition', 'score', 'stdev')
 
 
+class HistoricalScoreSerializer(serializers.Serializer):
+    game_id = serializers.IntegerField()
+    team = serializers.IntegerField()
+
+    score = serializers.FloatField()
+    stdev = serializers.FloatField()
+    position = serializers.IntegerField()
+
+
 class UserSerializer(serializers.HyperlinkedModelSerializer):
 
     class Meta:
