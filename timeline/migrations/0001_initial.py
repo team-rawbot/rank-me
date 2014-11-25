@@ -6,11 +6,6 @@ import django_hstore.fields
 
 
 class Migration(migrations.Migration):
-
-    dependencies = [
-        ('game', '0006_auto_20141125_1152'),
-    ]
-
     operations = [
         migrations.CreateModel(
             name='Event',
