@@ -13,6 +13,7 @@ install:
 script:
     - python manage.py test
 before_script:
+    - psql -d template1 -c 'create extension hstore;' -U postgres
     - psql -c 'create database rankme;' -U postgres
 services:
   - redis-server
