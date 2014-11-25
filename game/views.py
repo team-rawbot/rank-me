@@ -10,8 +10,6 @@ from django.utils import timezone
 from django.utils.translation import ugettext_lazy as _
 from django.views.decorators.http import require_POST
 
-from activity_feed import ActivityFeed
-
 from .decorators import authorized_user, user_is_admin
 from .forms import GameForm, CompetitionForm
 from .models import Competition, Game, HistoricalScore, Score, Team
