@@ -31,8 +31,14 @@
                     {% for event in events %}
                     <tr>
                         <td>{{ event.competition }}</td>
-                        <td>{{event.details.winner}} won against {{event.details.loser}}</td>
-                        <td class="text-muted">{{ event.date }}</td> <!-- 3 hours ago -->
+                        <td>
+                            {% if event.event_type == "game" %}
+                                {% include 'timeline/_type_game.html' %}
+                            {% else %}
+                                template not defined
+                            {% endif %}
+                        </td>
+                        <td class="text-muted">{{ event.date | timesince }} ago</td>
                     </tr>
                     {% endfor %}
                 </tbody>
