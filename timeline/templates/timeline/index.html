@@ -25,13 +25,13 @@
             <div class="panel-heading">
                 <h3 class="panel-title">{% trans "Recent activity" %}</h3>
             </div>
-
+            
             <table class="table table-striped table-bordered">
                 <tbody>
                     {% for event in events %}
                     <tr>
                         <td>{{ event.competition }}</td>
-                        <td>{{ event.body }}</td>
+                        <td>{{event.details.winner}} won against {{event.details.loser}}</td>
                         <td class="text-muted">{{ event.date }}</td> <!-- 3 hours ago -->
                     </tr>
                     {% endfor %}
@@ -46,12 +46,12 @@
             </div>
             <ul class="list-group">
                 {% for competition in competitions %}
-                    <li class="list-group-item">
-                        <a href="{% url "competition_detail" competition_slug=competition.slug %}">
-                            <span class="pull-right text-muted">{rank}</span>
-                            {{ competition }}
-                        </a>
-                    </li>
+                <li class="list-group-item">
+                    <a href="{% url "competition_detail" competition_slug=competition.slug %}">
+                        <span class="pull-right text-muted">{rank}</span>
+                        {{ competition }}
+                    </a>
+                </li>
                 {% endfor %}
             </ul>
         </div>

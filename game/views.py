@@ -16,28 +16,6 @@ from .decorators import authorized_user, user_is_admin
 from .forms import GameForm, CompetitionForm
 from .models import Competition, Game, HistoricalScore, Score, Team
 
-
-def index(request):
-    if not request.user.is_authenticated():
-        # Public homepage
-        return render(request, 'user/login.html')
-
-    # Private homepage
-    activity_feed = ActivityFeed()
-
-    raw_events = activity_feed.feed('foo', 1)
-    events = []
-
-    for event in raw_events:
-        events.append(ast.literal_eval(event))
-
-    context = {
-        'competitions': Competition.objects.get_visible_for_user(request.user),
-        'events': events
-    }
-    return render(request, 'homepage/index.html', context)
-
-
 @login_required
 def competition_list_all(request):
     upcoming_competitions = Competition.objects.filter(
