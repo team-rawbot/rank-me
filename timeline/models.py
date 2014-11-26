@@ -46,13 +46,7 @@ def publish_team_ranking_changed(sender, team, old_ranking, new_ranking,
 
 class EventManager(hstore.HStoreManager):
     def get_all_for_user(self, user):
-        
-        # TODO we could do better!
-        competitions = []
-        for competition in user.competitions.all():
-            competitions.append(competition.id)
-
-        return self.filter(competition__in=competitions)
+        return self.filter(competition__in=user.competitions.all())
 
 
 class Event(models.Model):
