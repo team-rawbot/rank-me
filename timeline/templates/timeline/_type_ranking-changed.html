@@ -1,0 +1,7 @@
+{% include 'timeline/_team.html' with team=event.get_details.player %}
+
+{% if event.get_details.old_ranking %}
+    enters the ranking and is {{event.get_details.new_ranking}}
+{% else %}
+    goes from {{event.get_details.old_ranking}} to {{event.get_details.new_ranking}}
+{% endif %}

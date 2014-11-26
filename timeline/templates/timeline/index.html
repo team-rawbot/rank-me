@@ -34,6 +34,8 @@
                         <td>
                             {% if event.event_type == "game" %}
                                 {% include 'timeline/_type_game.html' %}
+                            {% elif event.event_type == "ranking-changed" %}
+                                {% include 'timeline/_type_ranking-changed.html' %}
                             {% else %}
                                 template not defined
                             {% endif %}

@@ -1,5 +1,5 @@
 from django.dispatch import receiver
-from game.signals import game_played
+from game.signals import game_played, team_ranking_changed
 
 from django.db import models
 from django_hstore import hstore
@@ -24,6 +24,26 @@ def publish_game_played(sender, **kwargs):
     )
     event.save()
 
+
+@receiver(team_ranking_changed)
+def publish_team_ranking_changed(sender, team, old_ranking, new_ranking,
+                                 competition, **kwargs):
+    player = {
+        "id": team.id,
+        "name": team.get_name(),
+        "avatar": team.users.first().get_profile().avatar,
+    }
+    
+    event = Event(event_type="ranking-changed", competition=competition,
+        details = {
+            "player": player,
+            "old_ranking": old_ranking,
+            "new_ranking": new_ranking
+        }
+    )
+    event.save()
+
+
 class Event(models.Model):
     # TODO ENUM
     event_type = models.CharField(max_length=50)
@@ -33,11 +53,15 @@ class Event(models.Model):
 
     objects = hstore.HStoreManager()
 
-    def get_winner(self):
-        return json.loads(self.details["winner"])
-
-    def get_loser(self):
-        return json.loads(self.details["loser"])
+    def get_details(self):
+        details = {}
+        try:
+            for key in self.details:
+                details[key] = json.loads(self.details[key])
+        except:
+            details[key] = self.details[key]
+            
+        return details
 
     class Meta:
         ordering = ["-date"]
