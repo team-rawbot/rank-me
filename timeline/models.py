@@ -6,6 +6,7 @@ from django.utils.translation import ugettext as _
 from django_hstore import hstore
 
 from game.signals import game_played, team_ranking_changed
+from rankme.utils import memoize
 
 
 @receiver(game_played)
@@ -62,6 +63,10 @@ class Event(models.Model):
 
     objects = EventManager()
 
+    class Meta:
+        ordering = ["-date"]
+
+    @memoize
     def get_details(self):
         details = {}
         try:
@@ -71,6 +76,3 @@ class Event(models.Model):
             details[key] = self.details[key]
 
         return details
-
-    class Meta:
-        ordering = ["-date"]
