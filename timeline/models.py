@@ -6,6 +6,7 @@ from django_hstore import hstore
 
 import json
 
+
 @receiver(game_played)
 def publish_game_played(sender, **kwargs):
     winner = {
@@ -19,8 +20,7 @@ def publish_game_played(sender, **kwargs):
         "avatar": sender.loser.users.first().get_profile().avatar
     }
     event = Event(event_type="game", competition=sender.competitions.first(),
-        details={"winner": winner, "loser": loser}
-    )
+                  details={"winner": winner, "loser": loser})
     event.save()
 
 
@@ -32,14 +32,13 @@ def publish_team_ranking_changed(sender, team, old_ranking, new_ranking,
         "name": team.get_name(),
         "avatar": team.users.first().get_profile().avatar,
     }
-    
+
     event = Event(event_type="ranking-changed", competition=competition,
-        details = {
-            "player": player,
-            "old_ranking": old_ranking,
-            "new_ranking": new_ranking
-        }
-    )
+                  details={
+                      "player": player,
+                      "old_ranking": old_ranking,
+                      "new_ranking": new_ranking
+                  })
     event.save()
 
 
