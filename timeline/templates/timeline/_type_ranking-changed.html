@@ -1,7 +1,8 @@
+{% load i18n %}
 {% include 'timeline/_team.html' with team=event.get_details.player %}
 
 {% if event.get_details.old_ranking %}
-    enters the ranking and is {{event.get_details.new_ranking}}
+    {% blocktrans with old_ranking=event.get_details.old_ranking new_ranking=event.get_details.new_ranking %}goes from #{{ old_ranking }} to #{{ new_ranking }}{% endblocktrans %}
 {% else %}
-    goes from {{event.get_details.old_ranking}} to {{event.get_details.new_ranking}}
+    {% blocktrans with ranking=event.get_details.new_ranking %}enters the ranking and is #{{ ranking }}{% endblocktrans %}
 {% endif %}
