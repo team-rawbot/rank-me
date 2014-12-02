@@ -1,6 +1,8 @@
 Installation
 ============
 
+![Build Status](https://travis-ci.org/team-rawbot/rank-me.svg?branch=master)](https://travis-ci.org/team-rawbot/rank-me)
+
 Using Vagrant
 -------------
 
