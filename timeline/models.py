@@ -10,21 +10,17 @@ from game.signals import game_played, team_ranking_changed
 
 @receiver(game_played)
 def publish_game_played(sender, **kwargs):
-    winner = {
-        "id": sender.winner.id,
-        "name": sender.winner.get_name(),
-        "avatar": sender.winner.users.first().get_profile().avatar,
-    }
-    loser = {
-        "id": sender.loser.id,
-        "name": sender.loser.get_name(),
-        "avatar": sender.loser.users.first().get_profile().avatar
-    }
-    event = Event(
-        event_type=Event.TYPE_GAME_PLAYED,
-        competition=sender.competitions.first(),
-        details={"winner": winner, "loser": loser}
-    )
+    players = []
+    for player in (sender.winner, sender.loser):
+        players.append({
+            "id": player.id,
+            "name": player.get_name(),
+            "avatar": player.users.first().get_profile().avatar,
+        })
+
+    event = Event(event_type=Event.TYPE_GAME_PLAYED,
+                  competition=sender.competitions.first(),
+                  details={"winner": players[0], "loser": players[1]})
     event.save()
 
 
