@@ -3,7 +3,6 @@ from game.signals import game_played, team_ranking_changed
 
 from django.db import models
 from django_hstore import hstore
-from game.models import Competition
 
 import json
 
@@ -54,7 +53,7 @@ class Event(models.Model):
     event_type = models.CharField(max_length=50)
     details = hstore.DictionaryField()
     date = models.DateTimeField(auto_now_add=True)
-    competition = models.ForeignKey(Competition)
+    competition = models.ForeignKey('game.Competition')
 
     objects = EventManager()
 
@@ -65,7 +64,7 @@ class Event(models.Model):
                 details[key] = json.loads(self.details[key])
         except:
             details[key] = self.details[key]
-            
+
         return details
 
     class Meta:
