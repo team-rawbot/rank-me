@@ -14,7 +14,10 @@ from django.template.defaultfilters import slugify
 from django.utils import timezone
 from trueskill import Rating, rate_1vs1, quality_1vs1
 
-from .signals import game_played, team_ranking_changed
+from .signals import (
+    competition_created, game_played, team_ranking_changed,
+    user_joined_competition
+)
 
 
 class TeamManager(models.Manager):
@@ -559,7 +562,9 @@ class HistoricalScore(models.Model):
 
 class CompetitionManager(models.Manager):
     def get_visible_for_user(self, user):
-        return self.filter(Q(players=user.id) | Q(creator_id=user.id)).distinct()
+        return self.filter(
+            Q(players=user.id) | Q(creator_id=user.id)
+        ).distinct()
 
 
 class Competition(models.Model):
@@ -571,7 +576,8 @@ class Competition(models.Model):
     games = models.ManyToManyField(Game, related_name='competitions')
     slug = models.SlugField()
     players = models.ManyToManyField(settings.AUTH_USER_MODEL,
-                                     related_name='competitions')
+                                     related_name='competitions',
+                                     blank=True)
     creator = models.ForeignKey(settings.AUTH_USER_MODEL,
                                 related_name='my_competitions')
 
@@ -587,7 +593,14 @@ class Competition(models.Model):
         if not self.slug:
             self.slug = slugify(self.name)
 
+        new_competition = self.id is None
+
         super(Competition, self).save(*args, **kwargs)
+
+        # Make sure we send the signal after calling the parent save method, so
+        # that the competition now has an id
+        if new_competition:
+            competition_created.send(sender=self)
 
     def user_has_read_access(self, user):
         return self.user_has_write_access()
@@ -617,6 +630,11 @@ class Competition(models.Model):
         Return True if the competition has started and is not over yet.
         """
         return self.is_started() and not self.is_over()
+
+    def add_user_access(self, user):
+        if user not in self.players.all() and user.id != self.creator_id:
+            self.players.add(user)
+            user_joined_competition.send(sender=self, user=user)
 
 
 class InactiveCompetitionError(Exception):
