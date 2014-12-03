@@ -30,7 +30,11 @@
                 <tbody>
                     {% for event in events %}
                     <tr>
-                        <td>{{ event.competition }}</td>
+                        <td>
+                            {% if event.competition %}
+                                {{ event.competition }}
+                            {% endif %}
+                        </td>
                         <td>
                             {% with template_name=event.event_type|add:".html" %}
                                 {% include "timeline/events/_"|add:template_name %}
