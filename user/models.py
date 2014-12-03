@@ -12,7 +12,7 @@ class UserProfile(models.Model):
     twitter = models.CharField(max_length=255, blank=True)
     slack = models.CharField(max_length=255, blank=True)
 
-    def full_name(self):
+    def get_full_name(self):
         full_name = "%s %s" % (self.user.first_name, self.user.last_name)
 
         if not full_name.strip():
@@ -23,8 +23,7 @@ class UserProfile(models.Model):
         return display_name.title()
 
     def __unicode__(self):
-        return self.full_name();
-
+        return self.get_full_name()
 
 
 @receiver(post_init, sender=User)

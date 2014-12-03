@@ -9,7 +9,7 @@ from .models import Competition, Game, Team
 
 class UserChoiceField(forms.ModelChoiceField):
     def label_from_instance(self, obj):
-        return obj.get_profile().full_name()
+        return obj.get_profile().get_full_name()
 
 
 class GameForm(forms.Form):

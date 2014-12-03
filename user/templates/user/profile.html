@@ -7,7 +7,7 @@
         <a href="{% url 'edit_profile' %}" class="btn btn-primary pull-right">{% trans "Edit your profile" %}</a>
         <h1>
             {% include 'game/_player_avatar.html' %}
-            {{ profile.full_name }}
+            {{ profile.get_full_name }}
             <small>{{ profile.twitter }}</small>
         </h1>
     </header>
