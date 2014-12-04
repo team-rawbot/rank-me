@@ -16,4 +16,3 @@ requests==2.4.1
 six==1.8.0
 slacker==0.3.9
 trueskill==0.4.3
-activity-feed==2.6.4
