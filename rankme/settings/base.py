@@ -122,12 +122,14 @@ INSTALLED_APPS = (
     'user',
     'slack',
     'api',
+    'timeline',
     'django.contrib.admin',
     'django.contrib.admindocs',
     'social.apps.django_app.default',
     'bootstrapform',
     'rest_framework',
     'rest_framework.authtoken',
+    'django_hstore',
     'rest_framework_extensions',
 )
 

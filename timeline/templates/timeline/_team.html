@@ -1,0 +1,7 @@
+<a href="{% url 'team_general_detail' team.id %}">
+    {% if team.avatar %}
+    <img class="img-circle user-avatar" src="{{ team.avatar }}"/>
+    {% endif %}
+
+    {{ team.name }}
+</a>
