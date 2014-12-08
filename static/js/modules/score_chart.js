@@ -95,7 +95,7 @@ define(["jquery", "underscore", "d3"], function($, _, d3) {
         }
 
         function doDraw(container) {
-            var url = container.data('json') + '/' + offset;
+            var url = container.data('json') + offset;
             d3.json(url, function(err, data) {
                 if(err) {
                     alert(err);

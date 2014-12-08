@@ -6,3 +6,4 @@ static/css/main.css
 rankme.db
 .sass-cache
 .vagrant
+.venv
