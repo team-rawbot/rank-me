@@ -63,6 +63,21 @@
                 {% endfor %}
             </ul>
         </div>
+
+        <div class="panel panel-default">
+          <div class="panel-heading">
+            <h3 class="panel-title">{% trans "Your clubs" %}</h3>
+          </div>
+          <ul class="list-group">
+            {% for club in clubs %}
+            <li class="list-group-item">
+              <a href="{% url "club_detail" club_slug=club.slug %}">
+                {{ club }}
+              </a>
+            </li>
+            {% endfor %}
+          </ul>
+        </div>
     </div>
 </div>
 {% endblock %}
