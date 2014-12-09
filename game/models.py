@@ -1,18 +1,24 @@
 import operator
 import json
 import six
+import time
+
 from collections import defaultdict, OrderedDict
 from itertools import groupby
 
+from django.contrib.auth import get_user_model
 from django.conf import settings
 from django.core.exceptions import ValidationError
-from django.db import models
-from django.db.models import Q
+from django.db import models, transaction
+from django.db.models import Prefetch, Q
 from django.template.defaultfilters import slugify
 from django.utils import timezone
 from trueskill import Rating, rate_1vs1, quality_1vs1
 
-from .signals import game_played, team_ranking_changed
+from .signals import (
+    competition_created, game_played, team_ranking_changed,
+    user_joined_competition
+)
 
 
 class TeamManager(models.Manager):
@@ -68,11 +74,17 @@ class Team(models.Model):
         """
         Fetch the list of games played by the team, filtered by competition.
         """
+        User = get_user_model()
+        users_with_profile_qs = User.objects.select_related('profile')
+
         games = Game.objects.filter(
             Q(winner_id=self.id) | Q(loser_id=self.id)
         ).filter(competitions=competition).order_by('-date').select_related(
             'winner', 'loser'
-        ).prefetch_related('winner__users', 'loser__users')
+        ).prefetch_related(
+            Prefetch('winner__users', queryset=users_with_profile_qs),
+            Prefetch('loser__users', queryset=users_with_profile_qs),
+        )
 
         return games
 
@@ -242,9 +254,16 @@ class Team(models.Model):
 
 class GameManager(models.Manager):
     def get_latest(self, competition=None):
+        User = get_user_model()
+        users_with_profile_qs = User.objects.select_related('profile')
+
         games = (self.get_queryset()
-                 .select_related('winner', 'loser')
-                 .prefetch_related('winner__users', 'loser__users')
+                 .select_related('winner', 'loser', 'winner__users__profile',
+                 'loser__users__profile')
+                 .prefetch_related(
+                     Prefetch('winner__users', queryset=users_with_profile_qs),
+                     Prefetch('loser__users', queryset=users_with_profile_qs)
+                 )
                  .order_by('-date'))
 
         if competition is not None:
@@ -254,6 +273,7 @@ class GameManager(models.Manager):
 
         return games
 
+    @transaction.atomic
     def announce(self, winner, loser, competition):
         """
         Announce the results of a new game.
@@ -266,6 +286,12 @@ class GameManager(models.Manager):
         """
         if not competition.is_active():
             raise InactiveCompetitionError()
+
+        players = {
+            'winner': winner,
+            'loser': loser
+        }
+
 
         winner, created = Team.objects.get_or_create_from_players(winner)
         loser, created = Team.objects.get_or_create_from_players(loser)
@@ -501,8 +527,13 @@ class HistoricalScoreManager(models.Manager):
 
 class ScoreManager(models.Manager):
     def get_score_board(self, competition):
+        User = get_user_model()
+
         return (self.get_queryset().filter(competition=competition)
-                .order_by('-score').prefetch_related('team__users'))
+                .order_by('-score').prefetch_related(
+                    Prefetch('team__users',
+                             queryset=User.objects.select_related('profile')))
+               )
 
     def get_ranking_by_team(self, competition):
         score_board = self.get_score_board(competition)
@@ -551,19 +582,22 @@ class HistoricalScore(models.Model):
 
 class CompetitionManager(models.Manager):
     def get_visible_for_user(self, user):
-        return self.filter(Q(players=user.id) | Q(creator_id=user.id)).distinct()
+        return self.filter(
+            Q(players=user.id) | Q(creator_id=user.id)
+        ).distinct()
 
 
 class Competition(models.Model):
-    name = models.CharField(max_length=255)
+    name = models.CharField(max_length=255, unique=True)
     description = models.TextField(blank=True)
     start_date = models.DateTimeField(default=timezone.now)
     end_date = models.DateTimeField(null=True, blank=True)
     teams = models.ManyToManyField(Team, through=Score)
     games = models.ManyToManyField(Game, related_name='competitions')
-    slug = models.SlugField()
+    slug = models.SlugField(unique=True)
     players = models.ManyToManyField(settings.AUTH_USER_MODEL,
-                                     related_name='competitions')
+                                     related_name='competitions',
+                                     blank=True)
     creator = models.ForeignKey(settings.AUTH_USER_MODEL,
                                 related_name='my_competitions')
 
@@ -579,7 +613,14 @@ class Competition(models.Model):
         if not self.slug:
             self.slug = slugify(self.name)
 
+        new_competition = self.id is None
+
         super(Competition, self).save(*args, **kwargs)
+
+        # Make sure we send the signal after calling the parent save method, so
+        # that the competition now has an id
+        if new_competition:
+            competition_created.send(sender=self)
 
     def user_has_read_access(self, user):
         return self.user_has_write_access()
@@ -609,6 +650,11 @@ class Competition(models.Model):
         Return True if the competition has started and is not over yet.
         """
         return self.is_started() and not self.is_over()
+
+    def add_user_access(self, user):
+        if user not in self.players.all() and user.id != self.creator_id:
+            self.players.add(user)
+            user_joined_competition.send(sender=self, user=user)
 
 
 class InactiveCompetitionError(Exception):

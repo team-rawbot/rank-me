@@ -2,19 +2,21 @@ import json
 from django.contrib.auth import get_user_model
 from django.http import HttpResponse
 from django.utils.datastructures import MultiValueDictKeyError
+from rest_framework.generics import get_object_or_404
 from social.apps.django_app.utils import psa
 from rest_framework import viewsets, status
 from rest_framework.response import Response
 from rest_framework.authtoken.models import Token
+from rest_framework_extensions.mixins import NestedViewSetMixin
 
-from game.models import Competition, Team, Game
+from game.models import Competition, Team, Game, Score
 
-from .serializers import CompetitionSerializer, TeamSerializer, GameSerializer
+from .serializers import CompetitionSerializer, TeamSerializer, GameSerializer, ScoreSerializer, UserSerializer
 
 
 @psa('social:complete')
 def register_by_access_token(request, backend):
-    backend = request.strategy.backend
+    backend = request.backend
     token = {
         'oauth_token': request.GET.get('oauth_token'),
         'oauth_token_secret': request.GET.get('oauth_token_secret'),
@@ -28,30 +30,34 @@ def register_by_access_token(request, backend):
     }
 
     data_json = json.dumps(data)
-    return HttpResponse(data_json, mimetype='application/json')
+    return HttpResponse(data_json, content_type='application/json')
 
 
 class CompetitionViewSet(viewsets.ReadOnlyModelViewSet):
     """
     API endpoint that allows competitions to be viewed or edited.
     """
-    queryset = Competition.objects.all()
+    model = Competition
     serializer_class = CompetitionSerializer
 
 
 class TeamViewSet(viewsets.ReadOnlyModelViewSet):
     """
-    API endpoint that allows competitions to be viewed or edited.
+    API endpoint that allows teams to be viewed or edited.
     """
-    queryset = Team.objects.all()
+    model = Team
     serializer_class = TeamSerializer
 
 
-class GameViewSet(viewsets.GenericViewSet):
+class TeamPerCompetitionViewSet(NestedViewSetMixin, TeamViewSet):
+    pass
+
+
+class GameViewSet(viewsets.ReadOnlyModelViewSet):
     """
     API endpoint that allows Games to be viewed or edited.
     """
-    queryset = Game.objects.all()
+    model = Game
     serializer_class = GameSerializer
 
     def create(self, request, *args, **kwargs):
@@ -110,3 +116,42 @@ class GameViewSet(viewsets.GenericViewSet):
             code = status.HTTP_201_CREATED
 
         return Response(payload, status=code)
+
+
+class GamePerCompetitionViewSet(NestedViewSetMixin, GameViewSet):
+    pass
+
+
+class ScoreViewSet(viewsets.ReadOnlyModelViewSet):
+    """
+    API endpoint that allows scores to be viewed or edited.
+    """
+    model = Score
+    serializer_class = ScoreSerializer
+
+
+class ScorePerCompetitionViewSet(NestedViewSetMixin, ScoreViewSet):
+    pass
+
+
+class UserViewSet(viewsets.ReadOnlyModelViewSet):
+    """
+    API users endpoint
+    """
+    model = get_user_model()
+    serializer_class = UserSerializer
+
+    def retrieve(self, request, pk=None, **kwargs):
+        queryset = get_user_model().objects.all()
+
+        current_user = request.user
+        if current_user.is_authenticated() and pk == 'current':
+            pk = current_user.id
+
+        user = get_object_or_404(queryset, pk=pk)
+        serializer = UserSerializer(user)
+        return Response(serializer.data)
+
+
+class CompetitionPerUserViewSet(NestedViewSetMixin, ScoreViewSet):
+    pass

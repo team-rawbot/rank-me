@@ -1,7 +1,7 @@
+from django.contrib.auth import get_user_model
 from rest_framework import serializers
 
-from game.models import Competition, Team, Game
-from django.contrib.auth import get_user_model
+from game.models import Competition, Team, Game, Score
 
 
 class CompetitionSerializer(serializers.HyperlinkedModelSerializer):
@@ -21,11 +21,29 @@ class TeamSerializer(serializers.HyperlinkedModelSerializer):
 
 
 class GameSerializer(serializers.Serializer):
-    winner_id = serializers.WritableField(required=False)
-    loser_id = serializers.WritableField(required=False)
-    competition_id = serializers.WritableField(required=False)
+    winner_id = serializers.WritableField(required=False, write_only=True)
+    loser_id = serializers.WritableField(required=False, write_only=True)
+    competition_id = serializers.WritableField(required=False, write_only=True)
 
-    winner = serializers.WritableField(required=False)
-    loser = serializers.WritableField(required=False)
-    competition = serializers.WritableField(required=False)
+    winner = serializers.WritableField(required=False, read_only=True)
+    loser = serializers.WritableField(required=False, read_only=True)
+    competitions = serializers.RelatedField(many=True, read_only=True)
 
+    class Meta:
+        model = Game
+
+
+class ScoreSerializer(serializers.HyperlinkedModelSerializer):
+    team = serializers.RelatedField()
+    competition = serializers.RelatedField()
+
+    class Meta:
+        model = Score
+        fields = ('id', 'team', 'competition', 'score', 'stdev')
+
+
+class UserSerializer(serializers.HyperlinkedModelSerializer):
+
+    class Meta:
+        model = get_user_model()
+        fields = ('id', 'username', 'first_name', 'last_name')

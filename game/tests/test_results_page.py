@@ -4,7 +4,7 @@ from django.contrib.auth import get_user_model
 from django.core.urlresolvers import reverse
 from game.models import Competition, Game
 
-from rankme.utils import RankMeTestCase
+from rankme.tests import RankMeTestCase
 
 from .factories import UserFactory, CompetitionFactory
 

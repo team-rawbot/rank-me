@@ -1,1 +1,1 @@
-sqlite:////tmp/rankme.db
+postgresql://vagrant:vagrant@localhost/rankme

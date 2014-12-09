@@ -42,12 +42,14 @@
                     <li class="dropdown">
                         <a class="dropdown-toggle" data-toggle="dropdown" href="#">
                             <span class="glyphicon glyphicon-user icon-spaced-right"></span>
-                            <span id="nav-user-name">{{ user.username }}</span>
+                            <span id="nav-user-name">{{ user.get_profile.get_full_name }}</span>
                             <!-- {% include 'game/_player_avatar.html' with user=user %} -->
                             <b class="caret"></b>
                         </a>
                         <ul class="dropdown-menu dropdown-menu-right" role="menu">
                             <li><a href="{% url 'profile' %}">{% trans "Profile" %}</a></li>
+                            <li><a href="{% url 'edit_profile' %}">{% trans "Account settings" %}</a></li>
+                            <li class="divider"></li>
                             <li><a href="{% url 'auth_logout' %}">{% trans "Log out" %}</a></li>
                         </ul>
                     </li>
@@ -71,7 +73,7 @@
         var appDatas = {
             "user_id": "{{ user.id }}",
             "username": "{{ user.username }}",
-            "fullname": "{{ user.get_profile.full_name }}"
+            "fullname": "{{ user.get_profile.get_full_name }}"
         };
     </script>
 

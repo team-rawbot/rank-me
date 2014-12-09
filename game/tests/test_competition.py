@@ -5,7 +5,7 @@ from django.conf import settings
 from django.core.urlresolvers import reverse
 from django.utils import timezone
 
-from rankme.utils import RankMeTestCase
+from rankme.tests import RankMeTestCase
 
 from ..models import Competition
 from .factories import UserFactory, CompetitionFactory

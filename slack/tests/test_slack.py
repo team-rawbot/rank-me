@@ -2,7 +2,7 @@ import slack
 
 from game.models import Competition, Game
 from game.tests.factories import UserFactory, CompetitionFactory
-from rankme.utils import RankMeTestCase
+from rankme.tests import RankMeTestCase
 
 class SlackTest(RankMeTestCase):
     def test_message_sending(self):

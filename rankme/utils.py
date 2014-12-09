@@ -1,12 +1,14 @@
-from django.test import TestCase
+def memoize(function):
+    """
+    Copied from http://stackoverflow.com/questions/815110/is-there-a-decorator-to-simply-cache-function-return-values
+    """
+    memo = {}
 
-import mock
-
-
-class RankMeTestCase(TestCase):
-    def setUp(self):
-        self.patcher = mock.patch('slack.Slacker')
-        self.mock_slacker = self.patcher.start()
-
-    def tearDown(self):
-        self.patcher.stop()
+    def wrapper(*args):
+        if args in memo:
+            return memo[args]
+        else:
+            rv = function(*args)
+        memo[args] = rv
+        return rv
+    return wrapper

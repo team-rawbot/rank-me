@@ -4,7 +4,7 @@ urlpatterns = patterns(
     'game.views',
     url(r'^$', 'competition_detail', name='competition_detail'),
     url(r'^edit/$', 'competition_edit', name='competition_edit'),
-    url(r'^scores$', 'competition_detail_score_chart', name='competition_detail_score_chart'),
+    url(r'^scores/$', 'competition_detail_score_chart', name='competition_detail_score_chart'),
     url(r'^scores/(?P<start>\d+)$', 'competition_detail_score_chart', name='competition_detail_score_chart_with_start'),
     url(r'^game/new/$', 'game_add', name='game_add'),
     url(r'^game/remove/$', 'game_remove', name='game_remove'),

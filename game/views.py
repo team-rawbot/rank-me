@@ -1,4 +1,5 @@
-# -*- coding: UTF-8 -*-
+import ast
+
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.core.urlresolvers import reverse
@@ -12,14 +13,6 @@ from django.views.decorators.http import require_POST
 from .decorators import authorized_user, user_is_admin, user_can_edit_club
 from .forms import GameForm, ClubForm, CompetitionForm
 from .models import Club, Competition, Game, HistoricalScore, Score, Team
-
-
-def index(request):
-    if request.user.is_authenticated():
-        return redirect(reverse('competition_list_all'))
-    else:
-        return render(request, 'user/login.html')
-
 
 @login_required
 def competition_list_all(request):
@@ -156,10 +149,8 @@ def competition_detail_score_chart(request, competition_slug, start=0):
 @login_required
 def competition_join(request, competition_slug):
     competition = get_object_or_404(Competition, slug=competition_slug)
-
-    if not competition.user_has_write_access(request.user):
-        competition.players.add(request.user)
-        messages.add_message(request, messages.SUCCESS, 'Welcome in competition!')
+    competition.add_user_access(request.user)
+    messages.add_message(request, messages.SUCCESS, 'Welcome in competition!')
 
     return redirect(reverse('competition_detail', kwargs={
         'competition_slug': competition.slug

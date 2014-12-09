@@ -9,13 +9,13 @@ from .models import Competition, Club, Team
 
 class UserChoiceField(forms.ModelChoiceField):
     def label_from_instance(self, obj):
-        return obj.get_profile().full_name()
+        return obj.get_profile().get_full_name()
 
 
 class GameForm(forms.Form):
     # values overridden in __init__ !
-    winner = forms.ModelChoiceField(queryset=Team.objects.none())
-    loser = forms.ModelChoiceField(queryset=Team.objects.none())
+    winner = UserChoiceField(queryset=Team.objects.none(), empty_label='')
+    loser = UserChoiceField(queryset=Team.objects.none(), empty_label='')
 
     def __init__(self, *args, **kwargs):
         self.competition = kwargs.pop('competition')

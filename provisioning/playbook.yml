@@ -51,6 +51,11 @@
         - python-psycopg2
         - python-dev
         - libpq-dev
+        - postgresql-contrib
+    sudo: yes
+  - name: ensure hstore extension is installed
+    shell: psql -d template1 -c 'create extension hstore;'
+    sudo_user: postgres
     sudo: yes
   - name: ensure vagrant user has access to postgresql
     postgresql_user: name={{ normal_user }} state=present role_attr_flags=SUPERUSER
@@ -62,6 +67,10 @@
     sudo: yes
   - name: ensure database exists
     postgresql_db: name=rankme owner={{ normal_user }} state=present
+    sudo_user: postgres
+    sudo: yes
+  - name: ensure hstore extension is installed on the rankme db
+    shell: psql -d rankme -c 'create extension hstore;'
     sudo_user: postgres
     sudo: yes
 
