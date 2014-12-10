@@ -3,7 +3,8 @@ from game.models import Competition, Game, Score, Team
 
 
 class CompetitionAdmin(admin.ModelAdmin):
-    fields = ['name', 'description', 'start_date', 'end_date', 'slug']
+    fields = ['name', 'description', 'start_date', 'end_date', 'slug',
+              'players', 'creator']
 
 
 class ScoreAdmin(admin.ModelAdmin):
