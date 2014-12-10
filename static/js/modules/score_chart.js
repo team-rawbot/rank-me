@@ -98,7 +98,7 @@ define(["jquery", "underscore", "d3"], function($, _, d3) {
             var url = container.data('json') + offset;
             d3.json(url, function(err, data) {
                 if(err) {
-                    alert(err);
+                    console.error(err);
                     return;
                 }
 
