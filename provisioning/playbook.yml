@@ -87,8 +87,10 @@
 
   - name: create venv
     pip: name=setuptools>=0.7 virtualenv=~/env/
-  - name: install requirements in venv
+  - name: install dev requirements in venv
     pip: requirements=/vagrant/requirements/dev.txt virtualenv=~/env/
+  - name: install test requirements in venv
+    pip: requirements=/vagrant/requirements/test.txt virtualenv=~/env/
   - name: install psycopg2 in venv
     pip: name=psycopg2 virtualenv=~/env/
   - name: Execute the migrations
