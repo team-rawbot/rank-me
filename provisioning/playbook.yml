@@ -30,7 +30,7 @@
     command: bundle install --gemfile=/vagrant/Gemfile
     sudo: yes
   - name: ensure npm is installed
-    shell: curl https://www.npmjs.org/install.sh | sudo sh creates=/usr/bin/npm
+    shell: curl https://www.npmjs.com/install.sh | sudo sh creates=/usr/bin/npm
   - name: ensure grunt & bower are installed
     npm: name={{ item }} state=present global=yes
     with_items:
