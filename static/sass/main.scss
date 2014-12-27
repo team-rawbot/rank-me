@@ -9,49 +9,9 @@
  *
  */
 
+@import "compass";
 
-/**
- * CUSTOM BOOTSTRAP SETTINGS
- */
-
-$brand-primary: #e18a70;
-$brand-success: #89c571;
-$brand-danger: #d76b7a;
-$brand-warning: #e1c170;
-$brand-info: #659dca;
-
-$brand-lighter: #f9ede7;
-
-$link-color: $brand-info;
-
-$well-bg: lighten($brand-primary,33%);
-$well-border: lighten($brand-primary,25%);
-
-$hr-border: $brand-lighter;
-$list-group-border: $brand-lighter;
-
-$panel-default-heading-bg: $brand-lighter;
-$panel-default-border: $well-border;
-$panel-inner-border: $panel-default-border;
-
-$table-bg-accent: $well-bg;
-$table-border-color: $well-border;
-
-$navbar-default-bg: $brand-primary;
-$navbar-default-color: white;
-$navbar-default-link-color: rgba(255,255,255,.8);
-$navbar-default-link-hover-color: white;
-$navbar-default-link-active-color: white;
-$navbar-default-brand-color: rgba(255,255,255,.8);
-$navbar-default-brand-hover-color: white;
-$navbar-default-toggle-icon-bar-bg: white;
-
-$btn-primary-bg: $brand-info;
-$btn-default-border: $well-border;
-
-$font-size-base: 16px;
-$font-family-sans-serif: "Source Sans Pro", sans-serif;
-$icon-font-path: "../vendors/bootstrap-sass-official/assets/fonts/bootstrap/";
+@import "settings/settings";
 
 
 /**
@@ -114,4 +74,13 @@ $icon-font-path: "../vendors/bootstrap-sass-official/assets/fonts/bootstrap/";
  * RANK-ME SPECIFIC STYLE
  */
 
-@import "rankme";
+@import "base/type";
+@import "base/layout";
+@import "base/graphs";
+
+@import "objects/btn";
+@import "objects/game";
+@import "objects/icon";
+@import "objects/panel";
+@import "objects/table";
+@import "objects/user";

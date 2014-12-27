@@ -1,0 +1,24 @@
+/**
+ * Base
+ * LAYOUT
+ */
+
+body {
+  padding: 70px 0 0 0;
+}
+
+.wrapper {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+}
+  .wrapper--default {
+    max-width: 1280px;
+  }
+  .wrapper--small {
+    max-width: 400px;
+  }
+
+.messages {
+  margin-top: 20px;
+}

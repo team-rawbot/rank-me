@@ -9,7 +9,7 @@
  *
  */
 /**
- * CUSTOM BOOTSTRAP SETTINGS
+ * SETTINGS
  */
 /**
  * BOOTSTRAP COMPONENTS
@@ -1421,10 +1421,10 @@ html {
 
 /* line 27, ../vendors/bootstrap-sass-official/assets/stylesheets/bootstrap/_scaffolding.scss */
 body {
-  font-family: "Source Sans Pro", sans-serif;
-  font-size: 16px;
+  font-family: "Open Sans", sans-serif;
+  font-size: 14px;
   line-height: 1.42857;
-  color: #333333;
+  color: #333;
   background-color: #fff;
 }
 
@@ -1501,8 +1501,8 @@ img {
 
 /* line 113, ../vendors/bootstrap-sass-official/assets/stylesheets/bootstrap/_scaffolding.scss */
 hr {
-  margin-top: 22px;
-  margin-bottom: 22px;
+  margin-top: 20px;
+  margin-bottom: 20px;
   border: 0;
   border-top: 1px solid #f9ede7;
 }
@@ -1554,15 +1554,15 @@ h6 .small,
 .h6 .small {
   font-weight: normal;
   line-height: 1;
-  color: #777777;
+  color: #777;
 }
 
 /* line 24, ../vendors/bootstrap-sass-official/assets/stylesheets/bootstrap/_type.scss */
 h1, .h1,
 h2, .h2,
 h3, .h3 {
-  margin-top: 22px;
-  margin-bottom: 11px;
+  margin-top: 20px;
+  margin-bottom: 10px;
 }
 /* line 30, ../vendors/bootstrap-sass-official/assets/stylesheets/bootstrap/_type.scss */
 h1 small,
@@ -1581,8 +1581,8 @@ h3 .small, .h3 small,
 h4, .h4,
 h5, .h5,
 h6, .h6 {
-  margin-top: 11px;
-  margin-bottom: 11px;
+  margin-top: 10px;
+  margin-bottom: 10px;
 }
 /* line 41, ../vendors/bootstrap-sass-official/assets/stylesheets/bootstrap/_type.scss */
 h4 small,
@@ -1599,57 +1599,57 @@ h6 .small, .h6 small,
 
 /* line 47, ../vendors/bootstrap-sass-official/assets/stylesheets/bootstrap/_type.scss */
 h1, .h1 {
-  font-size: 41px;
+  font-size: 36px;
 }
 
 /* line 48, ../vendors/bootstrap-sass-official/assets/stylesheets/bootstrap/_type.scss */
 h2, .h2 {
-  font-size: 34px;
+  font-size: 30px;
 }
 
 /* line 49, ../vendors/bootstrap-sass-official/assets/stylesheets/bootstrap/_type.scss */
 h3, .h3 {
-  font-size: 28px;
+  font-size: 24px;
 }
 
 /* line 50, ../vendors/bootstrap-sass-official/assets/stylesheets/bootstrap/_type.scss */
 h4, .h4 {
-  font-size: 20px;
+  font-size: 18px;
 }
 
 /* line 51, ../vendors/bootstrap-sass-official/assets/stylesheets/bootstrap/_type.scss */
 h5, .h5 {
-  font-size: 16px;
+  font-size: 14px;
 }
 
 /* line 52, ../vendors/bootstrap-sass-official/assets/stylesheets/bootstrap/_type.scss */
 h6, .h6 {
-  font-size: 14px;
+  font-size: 12px;
 }
 
 /* line 58, ../vendors/bootstrap-sass-official/assets/stylesheets/bootstrap/_type.scss */
 p {
-  margin: 0 0 11px;
+  margin: 0 0 10px;
 }
 
 /* line 62, ../vendors/bootstrap-sass-official/assets/stylesheets/bootstrap/_type.scss */
 .lead {
-  margin-bottom: 22px;
-  font-size: 18px;
+  margin-bottom: 20px;
+  font-size: 16px;
   font-weight: 300;
   line-height: 1.4;
 }
 @media (min-width: 768px) {
   /* line 62, ../vendors/bootstrap-sass-official/assets/stylesheets/bootstrap/_type.scss */
   .lead {
-    font-size: 24px;
+    font-size: 21px;
   }
 }
 
 /* line 78, ../vendors/bootstrap-sass-official/assets/stylesheets/bootstrap/_type.scss */
 small,
 .small {
-  font-size: 87%;
+  font-size: 85%;
 }
 
 /* line 84, ../vendors/bootstrap-sass-official/assets/stylesheets/bootstrap/_type.scss */
@@ -1706,7 +1706,7 @@ mark,
 
 /* line 107, ../vendors/bootstrap-sass-official/assets/stylesheets/bootstrap/_type.scss */
 .text-muted {
-  color: #777777;
+  color: #777;
 }
 
 /* line 5, ../vendors/bootstrap-sass-official/assets/stylesheets/bootstrap/mixins/_text-emphasis.scss */
@@ -1816,16 +1816,16 @@ a.bg-danger:hover {
 
 /* line 143, ../vendors/bootstrap-sass-official/assets/stylesheets/bootstrap/_type.scss */
 .page-header {
-  padding-bottom: 10px;
-  margin: 44px 0 22px;
-  border-bottom: 1px solid #eeeeee;
+  padding-bottom: 9px;
+  margin: 40px 0 20px;
+  border-bottom: 1px solid #eee;
 }
 
 /* line 154, ../vendors/bootstrap-sass-official/assets/stylesheets/bootstrap/_type.scss */
 ul,
 ol {
   margin-top: 0;
-  margin-bottom: 11px;
+  margin-bottom: 10px;
 }
 /* line 158, ../vendors/bootstrap-sass-official/assets/stylesheets/bootstrap/_type.scss */
 ul ul,
@@ -1855,7 +1855,7 @@ ol ol {
 /* line 185, ../vendors/bootstrap-sass-official/assets/stylesheets/bootstrap/_type.scss */
 dl {
   margin-top: 0;
-  margin-bottom: 22px;
+  margin-bottom: 20px;
 }
 
 /* line 189, ../vendors/bootstrap-sass-official/assets/stylesheets/bootstrap/_type.scss */
@@ -1904,7 +1904,7 @@ dd {
 abbr[title],
 abbr[data-original-title] {
   cursor: help;
-  border-bottom: 1px dotted #777777;
+  border-bottom: 1px dotted #ccc;
 }
 
 /* line 235, ../vendors/bootstrap-sass-official/assets/stylesheets/bootstrap/_type.scss */
@@ -1915,10 +1915,10 @@ abbr[data-original-title] {
 
 /* line 241, ../vendors/bootstrap-sass-official/assets/stylesheets/bootstrap/_type.scss */
 blockquote {
-  padding: 11px 22px;
-  margin: 0 0 22px;
-  font-size: 20px;
-  border-left: 5px solid #eeeeee;
+  padding: 10px 20px;
+  margin: 0 0 20px;
+  font-size: 17.5px;
+  border-left: 5px solid #eee;
 }
 /* line 250, ../vendors/bootstrap-sass-official/assets/stylesheets/bootstrap/_type.scss */
 blockquote p:last-child,
@@ -1933,7 +1933,7 @@ blockquote .small {
   display: block;
   font-size: 80%;
   line-height: 1.42857;
-  color: #777777;
+  color: #777;
 }
 /* line 265, ../vendors/bootstrap-sass-official/assets/stylesheets/bootstrap/_type.scss */
 blockquote footer:before,
@@ -1947,7 +1947,7 @@ blockquote .small:before {
 blockquote.pull-right {
   padding-right: 15px;
   padding-left: 0;
-  border-right: 5px solid #eeeeee;
+  border-right: 5px solid #eee;
   border-left: 0;
   text-align: right;
 }
@@ -1978,7 +1978,7 @@ blockquote:after {
 
 /* line 300, ../vendors/bootstrap-sass-official/assets/stylesheets/bootstrap/_type.scss */
 address {
-  margin-bottom: 22px;
+  margin-bottom: 20px;
   font-style: normal;
   line-height: 1.42857;
 }
@@ -2019,13 +2019,13 @@ kbd kbd {
 /* line 40, ../vendors/bootstrap-sass-official/assets/stylesheets/bootstrap/_code.scss */
 pre {
   display: block;
-  padding: 10.5px;
-  margin: 0 0 11px;
-  font-size: 15px;
+  padding: 9.5px;
+  margin: 0 0 10px;
+  font-size: 13px;
   line-height: 1.42857;
   word-break: break-all;
   word-wrap: break-word;
-  color: #333333;
+  color: #333;
   background-color: #f5f5f5;
   border: 1px solid #ccc;
   border-radius: 4px;
@@ -3178,7 +3178,7 @@ th {
 .table {
   width: 100%;
   max-width: 100%;
-  margin-bottom: 22px;
+  margin-bottom: 20px;
 }
 /* line 25, ../vendors/bootstrap-sass-official/assets/stylesheets/bootstrap/_tables.scss */
 .table > thead > tr > th,
@@ -3375,7 +3375,7 @@ table th[class*="col-"] {
   /* line 171, ../vendors/bootstrap-sass-official/assets/stylesheets/bootstrap/_tables.scss */
   .table-responsive {
     width: 100%;
-    margin-bottom: 16.5px;
+    margin-bottom: 15px;
     overflow-y: hidden;
     overflow-x: auto;
     -ms-overflow-style: -ms-autohiding-scrollbar;
@@ -3439,10 +3439,10 @@ legend {
   display: block;
   width: 100%;
   padding: 0;
-  margin-bottom: 22px;
-  font-size: 24px;
+  margin-bottom: 20px;
+  font-size: 21px;
   line-height: inherit;
-  color: #333333;
+  color: #333;
   border: 0;
   border-bottom: 1px solid #e5e5e5;
 }
@@ -3500,20 +3500,20 @@ input[type="checkbox"]:focus {
 output {
   display: block;
   padding-top: 7px;
-  font-size: 16px;
+  font-size: 14px;
   line-height: 1.42857;
-  color: #555555;
+  color: #777;
 }
 
 /* line 115, ../vendors/bootstrap-sass-official/assets/stylesheets/bootstrap/_forms.scss */
 .form-control {
   display: block;
   width: 100%;
-  height: 36px;
+  height: 34px;
   padding: 6px 12px;
-  font-size: 16px;
+  font-size: 14px;
   line-height: 1.42857;
-  color: #555555;
+  color: #777;
   background-color: #fff;
   background-image: none;
   border: 1px solid #ccc;
@@ -3533,21 +3533,21 @@ output {
 }
 /* line 102, ../vendors/bootstrap-sass-official/assets/stylesheets/bootstrap/mixins/_vendor-prefixes.scss */
 .form-control::-moz-placeholder {
-  color: #777777;
+  color: #ccc;
   opacity: 1;
 }
 /* line 104, ../vendors/bootstrap-sass-official/assets/stylesheets/bootstrap/mixins/_vendor-prefixes.scss */
 .form-control:-ms-input-placeholder {
-  color: #777777;
+  color: #ccc;
 }
 /* line 105, ../vendors/bootstrap-sass-official/assets/stylesheets/bootstrap/mixins/_vendor-prefixes.scss */
 .form-control::-webkit-input-placeholder {
-  color: #777777;
+  color: #ccc;
 }
 /* line 141, ../vendors/bootstrap-sass-official/assets/stylesheets/bootstrap/_forms.scss */
 .form-control[disabled], .form-control[readonly], fieldset[disabled] .form-control {
   cursor: not-allowed;
-  background-color: #eeeeee;
+  background-color: #eee;
   opacity: 1;
 }
 
@@ -3566,7 +3566,7 @@ input[type="date"],
 input[type="time"],
 input[type="datetime-local"],
 input[type="month"] {
-  line-height: 36px;
+  line-height: 34px;
   line-height: 1.42857 \0;
 }
 /* line 186, ../vendors/bootstrap-sass-official/assets/stylesheets/bootstrap/_forms.scss */
@@ -3577,7 +3577,7 @@ input[type="datetime-local"].input-sm,
 .form-horizontal .form-group-sm input[type="datetime-local"].form-control,
 input[type="month"].input-sm,
 .form-horizontal .form-group-sm input[type="month"].form-control {
-  line-height: 33px;
+  line-height: 30px;
 }
 /* line 189, ../vendors/bootstrap-sass-official/assets/stylesheets/bootstrap/_forms.scss */
 input[type="date"].input-lg, .form-horizontal .form-group-lg input[type="date"].form-control,
@@ -3587,7 +3587,7 @@ input[type="datetime-local"].input-lg,
 .form-horizontal .form-group-lg input[type="datetime-local"].form-control,
 input[type="month"].input-lg,
 .form-horizontal .form-group-lg input[type="month"].form-control {
-  line-height: 49px;
+  line-height: 46px;
 }
 
 /* line 200, ../vendors/bootstrap-sass-official/assets/stylesheets/bootstrap/_forms.scss */
@@ -3600,7 +3600,7 @@ input[type="month"].input-lg,
 .checkbox {
   position: relative;
   display: block;
-  min-height: 22px;
+  min-height: 20px;
   margin-top: 10px;
   margin-bottom: 10px;
 }
@@ -3683,17 +3683,17 @@ input[type="checkbox"] {
 
 /* line 67, ../vendors/bootstrap-sass-official/assets/stylesheets/bootstrap/mixins/_forms.scss */
 .input-sm, .form-horizontal .form-group-sm .form-control {
-  height: 33px;
+  height: 30px;
   padding: 5px 10px;
-  font-size: 14px;
+  font-size: 12px;
   line-height: 1.5;
   border-radius: 3px;
 }
 
 /* line 75, ../vendors/bootstrap-sass-official/assets/stylesheets/bootstrap/mixins/_forms.scss */
 select.input-sm, .form-horizontal .form-group-sm select.form-control {
-  height: 33px;
-  line-height: 33px;
+  height: 30px;
+  line-height: 30px;
 }
 
 /* line 80, ../vendors/bootstrap-sass-official/assets/stylesheets/bootstrap/mixins/_forms.scss */
@@ -3705,17 +3705,17 @@ select[multiple].input-sm,
 
 /* line 67, ../vendors/bootstrap-sass-official/assets/stylesheets/bootstrap/mixins/_forms.scss */
 .input-lg, .form-horizontal .form-group-lg .form-control {
-  height: 49px;
+  height: 46px;
   padding: 10px 16px;
-  font-size: 20px;
+  font-size: 18px;
   line-height: 1.33;
   border-radius: 6px;
 }
 
 /* line 75, ../vendors/bootstrap-sass-official/assets/stylesheets/bootstrap/mixins/_forms.scss */
 select.input-lg, .form-horizontal .form-group-lg select.form-control {
-  height: 49px;
-  line-height: 49px;
+  height: 46px;
+  line-height: 46px;
 }
 
 /* line 80, ../vendors/bootstrap-sass-official/assets/stylesheets/bootstrap/mixins/_forms.scss */
@@ -3731,34 +3731,34 @@ select[multiple].input-lg,
 }
 /* line 325, ../vendors/bootstrap-sass-official/assets/stylesheets/bootstrap/_forms.scss */
 .has-feedback .form-control {
-  padding-right: 45px;
+  padding-right: 42.5px;
 }
 
 /* line 330, ../vendors/bootstrap-sass-official/assets/stylesheets/bootstrap/_forms.scss */
 .form-control-feedback {
   position: absolute;
-  top: 27px;
+  top: 25px;
   right: 0;
   z-index: 2;
   display: block;
-  width: 36px;
-  height: 36px;
-  line-height: 36px;
+  width: 34px;
+  height: 34px;
+  line-height: 34px;
   text-align: center;
 }
 
 /* line 341, ../vendors/bootstrap-sass-official/assets/stylesheets/bootstrap/_forms.scss */
 .input-lg + .form-control-feedback, .form-horizontal .form-group-lg .form-control + .form-control-feedback {
-  width: 49px;
-  height: 49px;
-  line-height: 49px;
+  width: 46px;
+  height: 46px;
+  line-height: 46px;
 }
 
 /* line 346, ../vendors/bootstrap-sass-official/assets/stylesheets/bootstrap/_forms.scss */
 .input-sm + .form-control-feedback, .form-horizontal .form-group-sm .form-control + .form-control-feedback {
-  width: 33px;
-  height: 33px;
-  line-height: 33px;
+  width: 30px;
+  height: 30px;
+  line-height: 30px;
 }
 
 /* line 8, ../vendors/bootstrap-sass-official/assets/stylesheets/bootstrap/mixins/_forms.scss */
@@ -3945,7 +3945,7 @@ select[multiple].input-lg,
 /* line 485, ../vendors/bootstrap-sass-official/assets/stylesheets/bootstrap/_forms.scss */
 .form-horizontal .radio,
 .form-horizontal .checkbox {
-  min-height: 29px;
+  min-height: 27px;
 }
 /* line 491, ../vendors/bootstrap-sass-official/assets/stylesheets/bootstrap/_forms.scss */
 .form-horizontal .form-group {
@@ -3999,7 +3999,7 @@ select[multiple].input-lg,
   border: 1px solid transparent;
   white-space: nowrap;
   padding: 6px 12px;
-  font-size: 16px;
+  font-size: 14px;
   line-height: 1.42857;
   border-radius: 4px;
   -webkit-user-select: none;
@@ -4222,14 +4222,14 @@ select[multiple].input-lg,
 }
 /* line 112, ../vendors/bootstrap-sass-official/assets/stylesheets/bootstrap/_buttons.scss */
 .btn-link[disabled]:hover, .btn-link[disabled]:focus, fieldset[disabled] .btn-link:hover, fieldset[disabled] .btn-link:focus {
-  color: #777777;
+  color: #ccc;
   text-decoration: none;
 }
 
 /* line 124, ../vendors/bootstrap-sass-official/assets/stylesheets/bootstrap/_buttons.scss */
 .btn-lg, .btn-group-lg > .btn {
   padding: 10px 16px;
-  font-size: 20px;
+  font-size: 18px;
   line-height: 1.33;
   border-radius: 6px;
 }
@@ -4237,7 +4237,7 @@ select[multiple].input-lg,
 /* line 128, ../vendors/bootstrap-sass-official/assets/stylesheets/bootstrap/_buttons.scss */
 .btn-sm, .btn-group-sm > .btn {
   padding: 5px 10px;
-  font-size: 14px;
+  font-size: 12px;
   line-height: 1.5;
   border-radius: 3px;
 }
@@ -4245,7 +4245,7 @@ select[multiple].input-lg,
 /* line 132, ../vendors/bootstrap-sass-official/assets/stylesheets/bootstrap/_buttons.scss */
 .btn-xs, .btn-group-xs > .btn {
   padding: 1px 5px;
-  font-size: 14px;
+  font-size: 12px;
   line-height: 1.5;
   border-radius: 3px;
 }
@@ -4343,7 +4343,7 @@ tbody.collapse.in {
   padding: 5px 0;
   margin: 2px 0 0;
   list-style: none;
-  font-size: 16px;
+  font-size: 14px;
   text-align: left;
   background-color: #fff;
   border: 1px solid #ccc;
@@ -4361,7 +4361,7 @@ tbody.collapse.in {
 /* line 58, ../vendors/bootstrap-sass-official/assets/stylesheets/bootstrap/_dropdowns.scss */
 .dropdown-menu .divider {
   height: 1px;
-  margin: 10px 0;
+  margin: 9px 0;
   overflow: hidden;
   background-color: #e5e5e5;
 }
@@ -4372,7 +4372,7 @@ tbody.collapse.in {
   clear: both;
   font-weight: normal;
   line-height: 1.42857;
-  color: #333333;
+  color: #333;
   white-space: nowrap;
 }
 
@@ -4393,7 +4393,7 @@ tbody.collapse.in {
 
 /* line 101, ../vendors/bootstrap-sass-official/assets/stylesheets/bootstrap/_dropdowns.scss */
 .dropdown-menu > .disabled > a, .dropdown-menu > .disabled > a:hover, .dropdown-menu > .disabled > a:focus {
-  color: #777777;
+  color: #ccc;
 }
 
 /* line 109, ../vendors/bootstrap-sass-official/assets/stylesheets/bootstrap/_dropdowns.scss */
@@ -4430,9 +4430,9 @@ tbody.collapse.in {
 .dropdown-header {
   display: block;
   padding: 3px 20px;
-  font-size: 14px;
+  font-size: 12px;
   line-height: 1.42857;
-  color: #777777;
+  color: #ccc;
   white-space: nowrap;
 }
 
@@ -4756,28 +4756,28 @@ tbody.collapse.in {
 /* line 23, ../vendors/bootstrap-sass-official/assets/stylesheets/bootstrap/_navs.scss */
 .nav > li > a:hover, .nav > li > a:focus {
   text-decoration: none;
-  background-color: #eeeeee;
+  background-color: #eee;
 }
 /* line 31, ../vendors/bootstrap-sass-official/assets/stylesheets/bootstrap/_navs.scss */
 .nav > li.disabled > a {
-  color: #777777;
+  color: #ccc;
 }
 /* line 34, ../vendors/bootstrap-sass-official/assets/stylesheets/bootstrap/_navs.scss */
 .nav > li.disabled > a:hover, .nav > li.disabled > a:focus {
-  color: #777777;
+  color: #ccc;
   text-decoration: none;
   background-color: transparent;
   cursor: not-allowed;
 }
 /* line 46, ../vendors/bootstrap-sass-official/assets/stylesheets/bootstrap/_navs.scss */
 .nav .open > a, .nav .open > a:hover, .nav .open > a:focus {
-  background-color: #eeeeee;
+  background-color: #eee;
   border-color: #659dca;
 }
 /* line 59, ../vendors/bootstrap-sass-official/assets/stylesheets/bootstrap/_navs.scss */
 .nav .nav-divider {
   height: 1px;
-  margin: 10px 0;
+  margin: 9px 0;
   overflow: hidden;
   background-color: #e5e5e5;
 }
@@ -4804,11 +4804,11 @@ tbody.collapse.in {
 }
 /* line 89, ../vendors/bootstrap-sass-official/assets/stylesheets/bootstrap/_navs.scss */
 .nav-tabs > li > a:hover {
-  border-color: #eeeeee #eeeeee #ddd;
+  border-color: #eee #eee #ddd;
 }
 /* line 96, ../vendors/bootstrap-sass-official/assets/stylesheets/bootstrap/_navs.scss */
 .nav-tabs > li.active > a, .nav-tabs > li.active > a:hover, .nav-tabs > li.active > a:focus {
-  color: #555555;
+  color: #777;
   background-color: #fff;
   border: 1px solid #ddd;
   border-bottom-color: transparent;
@@ -4925,8 +4925,8 @@ tbody.collapse.in {
 /* line 11, ../vendors/bootstrap-sass-official/assets/stylesheets/bootstrap/_navbar.scss */
 .navbar {
   position: relative;
-  min-height: 50px;
-  margin-bottom: 22px;
+  min-height: 70px;
+  margin-bottom: 20px;
   border: 1px solid transparent;
 }
 /* line 14, ../vendors/bootstrap-sass-official/assets/stylesheets/bootstrap/mixins/_clearfix.scss */
@@ -5086,10 +5086,10 @@ tbody.collapse.in {
 /* line 164, ../vendors/bootstrap-sass-official/assets/stylesheets/bootstrap/_navbar.scss */
 .navbar-brand {
   float: left;
-  padding: 14px 15px;
-  font-size: 20px;
-  line-height: 22px;
-  height: 50px;
+  padding: 25px 15px;
+  font-size: 18px;
+  line-height: 20px;
+  height: 70px;
 }
 /* line 171, ../vendors/bootstrap-sass-official/assets/stylesheets/bootstrap/_navbar.scss */
 .navbar-brand:hover, .navbar-brand:focus {
@@ -5108,8 +5108,8 @@ tbody.collapse.in {
   float: right;
   margin-right: 15px;
   padding: 9px 10px;
-  margin-top: 8px;
-  margin-bottom: 8px;
+  margin-top: 18px;
+  margin-bottom: 18px;
   background-color: transparent;
   background-image: none;
   border: 1px solid transparent;
@@ -5139,13 +5139,13 @@ tbody.collapse.in {
 
 /* line 229, ../vendors/bootstrap-sass-official/assets/stylesheets/bootstrap/_navbar.scss */
 .navbar-nav {
-  margin: 7px -15px;
+  margin: 12.5px -15px;
 }
 /* line 232, ../vendors/bootstrap-sass-official/assets/stylesheets/bootstrap/_navbar.scss */
 .navbar-nav > li > a {
   padding-top: 10px;
   padding-bottom: 10px;
-  line-height: 22px;
+  line-height: 20px;
 }
 @media (max-width: 767px) {
   /* line 240, ../vendors/bootstrap-sass-official/assets/stylesheets/bootstrap/_navbar.scss */
@@ -5165,7 +5165,7 @@ tbody.collapse.in {
   }
   /* line 252, ../vendors/bootstrap-sass-official/assets/stylesheets/bootstrap/_navbar.scss */
   .navbar-nav .open .dropdown-menu > li > a {
-    line-height: 22px;
+    line-height: 20px;
   }
   /* line 254, ../vendors/bootstrap-sass-official/assets/stylesheets/bootstrap/_navbar.scss */
   .navbar-nav .open .dropdown-menu > li > a:hover, .navbar-nav .open .dropdown-menu > li > a:focus {
@@ -5184,8 +5184,8 @@ tbody.collapse.in {
   }
   /* line 269, ../vendors/bootstrap-sass-official/assets/stylesheets/bootstrap/_navbar.scss */
   .navbar-nav > li > a {
-    padding-top: 14px;
-    padding-bottom: 14px;
+    padding-top: 25px;
+    padding-bottom: 25px;
   }
   /* line 275, ../vendors/bootstrap-sass-official/assets/stylesheets/bootstrap/_navbar.scss */
   .navbar-nav.navbar-right:last-child {
@@ -5213,8 +5213,8 @@ tbody.collapse.in {
   border-bottom: 1px solid transparent;
   -webkit-box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.1), 0 1px 0 rgba(255, 255, 255, 0.1);
   box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.1), 0 1px 0 rgba(255, 255, 255, 0.1);
-  margin-top: 7px;
-  margin-bottom: 7px;
+  margin-top: 18px;
+  margin-bottom: 18px;
 }
 @media (max-width: 767px) {
   /* line 315, ../vendors/bootstrap-sass-official/assets/stylesheets/bootstrap/_navbar.scss */
@@ -5255,24 +5255,24 @@ tbody.collapse.in {
 
 /* line 359, ../vendors/bootstrap-sass-official/assets/stylesheets/bootstrap/_navbar.scss */
 .navbar-btn {
-  margin-top: 7px;
-  margin-bottom: 7px;
+  margin-top: 18px;
+  margin-bottom: 18px;
 }
 /* line 362, ../vendors/bootstrap-sass-official/assets/stylesheets/bootstrap/_navbar.scss */
 .navbar-btn.btn-sm, .btn-group-sm > .navbar-btn.btn {
-  margin-top: 8.5px;
-  margin-bottom: 8.5px;
+  margin-top: 20px;
+  margin-bottom: 20px;
 }
 /* line 365, ../vendors/bootstrap-sass-official/assets/stylesheets/bootstrap/_navbar.scss */
 .navbar-btn.btn-xs, .btn-group-xs > .navbar-btn.btn {
-  margin-top: 14px;
-  margin-bottom: 14px;
+  margin-top: 24px;
+  margin-bottom: 24px;
 }
 
 /* line 375, ../vendors/bootstrap-sass-official/assets/stylesheets/bootstrap/_navbar.scss */
 .navbar-text {
-  margin-top: 14px;
-  margin-bottom: 14px;
+  margin-top: 25px;
+  margin-bottom: 25px;
 }
 @media (min-width: 768px) {
   /* line 375, ../vendors/bootstrap-sass-official/assets/stylesheets/bootstrap/_navbar.scss */
@@ -5395,7 +5395,7 @@ tbody.collapse.in {
 }
 /* line 532, ../vendors/bootstrap-sass-official/assets/stylesheets/bootstrap/_navbar.scss */
 .navbar-inverse .navbar-brand {
-  color: #777777;
+  color: #ccc;
 }
 /* line 534, ../vendors/bootstrap-sass-official/assets/stylesheets/bootstrap/_navbar.scss */
 .navbar-inverse .navbar-brand:hover, .navbar-inverse .navbar-brand:focus {
@@ -5404,11 +5404,11 @@ tbody.collapse.in {
 }
 /* line 541, ../vendors/bootstrap-sass-official/assets/stylesheets/bootstrap/_navbar.scss */
 .navbar-inverse .navbar-text {
-  color: #777777;
+  color: #ccc;
 }
 /* line 546, ../vendors/bootstrap-sass-official/assets/stylesheets/bootstrap/_navbar.scss */
 .navbar-inverse .navbar-nav > li > a {
-  color: #777777;
+  color: #ccc;
 }
 /* line 549, ../vendors/bootstrap-sass-official/assets/stylesheets/bootstrap/_navbar.scss */
 .navbar-inverse .navbar-nav > li > a:hover, .navbar-inverse .navbar-nav > li > a:focus {
@@ -5458,7 +5458,7 @@ tbody.collapse.in {
   }
   /* line 610, ../vendors/bootstrap-sass-official/assets/stylesheets/bootstrap/_navbar.scss */
   .navbar-inverse .navbar-nav .open .dropdown-menu > li > a {
-    color: #777777;
+    color: #ccc;
   }
   /* line 612, ../vendors/bootstrap-sass-official/assets/stylesheets/bootstrap/_navbar.scss */
   .navbar-inverse .navbar-nav .open .dropdown-menu > li > a:hover, .navbar-inverse .navbar-nav .open .dropdown-menu > li > a:focus {
@@ -5478,7 +5478,7 @@ tbody.collapse.in {
 }
 /* line 638, ../vendors/bootstrap-sass-official/assets/stylesheets/bootstrap/_navbar.scss */
 .navbar-inverse .navbar-link {
-  color: #777777;
+  color: #ccc;
 }
 /* line 640, ../vendors/bootstrap-sass-official/assets/stylesheets/bootstrap/_navbar.scss */
 .navbar-inverse .navbar-link:hover {
@@ -5486,7 +5486,7 @@ tbody.collapse.in {
 }
 /* line 645, ../vendors/bootstrap-sass-official/assets/stylesheets/bootstrap/_navbar.scss */
 .navbar-inverse .btn-link {
-  color: #777777;
+  color: #ccc;
 }
 /* line 647, ../vendors/bootstrap-sass-official/assets/stylesheets/bootstrap/_navbar.scss */
 .navbar-inverse .btn-link:hover, .navbar-inverse .btn-link:focus {
@@ -5501,7 +5501,7 @@ tbody.collapse.in {
 .thumbnail {
   display: block;
   padding: 4px;
-  margin-bottom: 22px;
+  margin-bottom: 20px;
   line-height: 1.42857;
   background-color: #fff;
   border: 1px solid #ddd;
@@ -5523,7 +5523,7 @@ tbody.collapse.in {
 /* line 27, ../vendors/bootstrap-sass-official/assets/stylesheets/bootstrap/_thumbnails.scss */
 .thumbnail .caption {
   padding: 9px;
-  color: #333333;
+  color: #333;
 }
 
 /* line 34, ../vendors/bootstrap-sass-official/assets/stylesheets/bootstrap/_thumbnails.scss */
@@ -5536,7 +5536,7 @@ a.thumbnail.active {
 /* line 9, ../vendors/bootstrap-sass-official/assets/stylesheets/bootstrap/_alerts.scss */
 .alert {
   padding: 15px;
-  margin-bottom: 22px;
+  margin-bottom: 20px;
   border: 1px solid transparent;
   border-radius: 4px;
 }
@@ -5728,8 +5728,8 @@ a.list-group-item:hover, a.list-group-item:focus {
 
 /* line 72, ../vendors/bootstrap-sass-official/assets/stylesheets/bootstrap/_list-group.scss */
 .list-group-item.disabled, .list-group-item.disabled:hover, .list-group-item.disabled:focus {
-  background-color: #eeeeee;
-  color: #777777;
+  background-color: #eee;
+  color: #ccc;
 }
 /* line 79, ../vendors/bootstrap-sass-official/assets/stylesheets/bootstrap/_list-group.scss */
 .list-group-item.disabled .list-group-item-heading, .list-group-item.disabled:hover .list-group-item-heading, .list-group-item.disabled:focus .list-group-item-heading {
@@ -5737,7 +5737,7 @@ a.list-group-item:hover, a.list-group-item:focus {
 }
 /* line 82, ../vendors/bootstrap-sass-official/assets/stylesheets/bootstrap/_list-group.scss */
 .list-group-item.disabled .list-group-item-text, .list-group-item.disabled:hover .list-group-item-text, .list-group-item.disabled:focus .list-group-item-text {
-  color: #777777;
+  color: #ccc;
 }
 /* line 88, ../vendors/bootstrap-sass-official/assets/stylesheets/bootstrap/_list-group.scss */
 .list-group-item.active, .list-group-item.active:hover, .list-group-item.active:focus {
@@ -5879,7 +5879,7 @@ a.list-group-item-danger.active, a.list-group-item-danger.active:hover, a.list-g
 
 /* line 7, ../vendors/bootstrap-sass-official/assets/stylesheets/bootstrap/_panels.scss */
 .panel {
-  margin-bottom: 22px;
+  margin-bottom: 20px;
   background-color: #fff;
   border: 1px solid transparent;
   border-radius: 4px;
@@ -5917,7 +5917,7 @@ a.list-group-item-danger.active, a.list-group-item-danger.active:hover, a.list-g
 .panel-title {
   margin-top: 0;
   margin-bottom: 0;
-  font-size: 18px;
+  font-size: 16px;
   color: inherit;
 }
 /* line 39, ../vendors/bootstrap-sass-official/assets/stylesheets/bootstrap/_panels.scss */
@@ -6103,7 +6103,7 @@ a.list-group-item-danger.active, a.list-group-item-danger.active:hover, a.list-g
 
 /* line 198, ../vendors/bootstrap-sass-official/assets/stylesheets/bootstrap/_panels.scss */
 .panel-group {
-  margin-bottom: 22px;
+  margin-bottom: 20px;
 }
 /* line 202, ../vendors/bootstrap-sass-official/assets/stylesheets/bootstrap/_panels.scss */
 .panel-group .panel {
@@ -6137,7 +6137,7 @@ a.list-group-item-danger.active, a.list-group-item-danger.active:hover, a.list-g
 }
 /* line 6, ../vendors/bootstrap-sass-official/assets/stylesheets/bootstrap/mixins/_panels.scss */
 .panel-default > .panel-heading {
-  color: #333333;
+  color: #333;
   background-color: #f9ede7;
   border-color: #f7e0d9;
 }
@@ -6148,7 +6148,7 @@ a.list-group-item-danger.active, a.list-group-item-danger.active:hover, a.list-g
 /* line 14, ../vendors/bootstrap-sass-official/assets/stylesheets/bootstrap/mixins/_panels.scss */
 .panel-default > .panel-heading .badge {
   color: #f9ede7;
-  background-color: #333333;
+  background-color: #333;
 }
 /* line 20, ../vendors/bootstrap-sass-official/assets/stylesheets/bootstrap/mixins/_panels.scss */
 .panel-default > .panel-footer + .panel-collapse > .panel-body {
@@ -6307,7 +6307,7 @@ a.list-group-item-danger.active, a.list-group-item-danger.active:hover, a.list-g
 /* line 6, ../vendors/bootstrap-sass-official/assets/stylesheets/bootstrap/_close.scss */
 .close {
   float: right;
-  font-size: 24px;
+  font-size: 21px;
   font-weight: bold;
   line-height: 1;
   color: #000;
@@ -6687,51 +6687,90 @@ button.close {
  * RANK-ME SPECIFIC STYLE
  */
 /**
- * Rank-Me basic styling
+ * Base
+ * TYPE
  */
-/* line 5, ../sass/_rankme.scss */
+/* line 6, ../sass/base/_type.scss */
 body {
-  padding: 60px 40px;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
-/* line 9, ../sass/_rankme.scss */
+/* line 11, ../sass/base/_type.scss */
+.navbar-brand {
+  font-weight: bold;
+}
+
+/**
+ * Base
+ * LAYOUT
+ */
+/* line 6, ../sass/base/_layout.scss */
+body {
+  padding: 70px 0 0 0;
+}
+
+/* line 10, ../sass/base/_layout.scss */
 .wrapper {
   display: block;
   margin-left: auto;
   margin-right: auto;
 }
 
-/* line 14, ../sass/_rankme.scss */
+/* line 15, ../sass/base/_layout.scss */
 .wrapper--default {
   max-width: 1280px;
 }
 
-/* line 17, ../sass/_rankme.scss */
+/* line 18, ../sass/base/_layout.scss */
 .wrapper--small {
   max-width: 400px;
 }
 
-/* line 21, ../sass/_rankme.scss */
+/* line 22, ../sass/base/_layout.scss */
 .messages {
   margin-top: 20px;
 }
 
-/* line 25, ../sass/_rankme.scss */
-.user-avatar {
-  width: 32px;
-  margin-right: 0.5em;
-}
-/* line 29, ../sass/_rankme.scss */
-.page-header .user-avatar {
-  width: 48px;
-}
-
-/* line 34, ../sass/_rankme.scss */
-.table > tbody > tr > td {
-  vertical-align: middle;
+/**
+ * Base
+ * GRAPHS
+ */
+/* line 6, ../sass/base/_graphs.scss */
+path {
+  fill: none;
+  stroke-width: 2px;
 }
 
-/* line 38, ../sass/_rankme.scss */
+/* line 11, ../sass/base/_graphs.scss */
+.axis path,
+.axis line {
+  fill: none;
+  stroke: #000;
+  shape-rendering: crispEdges;
+}
+
+/* line 18, ../sass/base/_graphs.scss */
+.axis path {
+  display: none;
+}
+
+/* line 22, ../sass/base/_graphs.scss */
+circle.highlighted,
+path.highlighted {
+  stroke-width: 3px;
+}
+
+/* line 27, ../sass/base/_graphs.scss */
+text.highlighted {
+  font-style: italic;
+}
+
+/**
+ * Object
+ * BTN
+ */
+/* line 6, ../sass/objects/_btn.scss */
 .btn-default:hover,
 .btn-default:focus,
 .btn-default:active,
@@ -6740,107 +6779,96 @@ body {
   background-color: #f9ede7;
 }
 
-/* line 46, ../sass/_rankme.scss */
-.rank-num {
-  text-align: right;
-}
-/* line 49, ../sass/_rankme.scss */
-tr:first-child .rank-num {
-  font-size: 24px;
-  font-weight: bold;
-}
-/* line 53, ../sass/_rankme.scss */
-tr:nth-child(2) .rank-num {
-  font-size: 20px;
-  font-weight: bold;
-}
-/* line 57, ../sass/_rankme.scss */
-tr:nth-child(3) .rank-num {
-  font-size: 16px;
-  font-weight: bold;
-}
-
-/* line 63, ../sass/_rankme.scss */
+/**
+ * Object
+ * GAME
+ */
+/* line 6, ../sass/objects/_game.scss */
 .game-win {
   color: #89c571;
 }
-/* line 66, ../sass/_rankme.scss */
+/* line 9, ../sass/objects/_game.scss */
 .game-win a {
   color: inherit;
   text-decoration: underline;
 }
 
-/* line 71, ../sass/_rankme.scss */
+/* line 15, ../sass/objects/_game.scss */
 .game-defeat {
   color: #d76b7a;
 }
-/* line 74, ../sass/_rankme.scss */
+/* line 18, ../sass/objects/_game.scss */
 .game-defeat a {
   color: inherit;
   text-decoration: underline;
 }
 
-/* line 80, ../sass/_rankme.scss */
+/**
+ * Object
+ * ICON
+ */
+/* line 6, ../sass/objects/_icon.scss */
 .icon-spaced-right {
   margin-right: 0.5em;
 }
 
-@media (max-width: 991px) {
-  /* line 85, ../sass/_rankme.scss */
-  body {
-    padding-left: 15px;
-    padding-right: 15px;
-  }
-}
-@media (max-width: 767px) {
-  /* line 92, ../sass/_rankme.scss */
-  body {
-    padding: 20px 0;
-    font-size: 14px;
-  }
-}
-/* line 99, ../sass/_rankme.scss */
-path {
-  fill: none;
-  stroke-width: 2px;
-}
-
-/* line 104, ../sass/_rankme.scss */
-.axis path,
-.axis line {
-  fill: none;
-  stroke: #000;
-  shape-rendering: crispEdges;
-}
-
-/* line 111, ../sass/_rankme.scss */
-.axis path {
-  display: none;
-}
-
-/* line 115, ../sass/_rankme.scss */
-circle.highlighted,
-path.highlighted {
-  stroke-width: 3px;
-}
-
-/* line 120, ../sass/_rankme.scss */
-text.highlighted {
-  font-style: italic;
-}
-
-/* line 124, ../sass/_rankme.scss */
+/**
+ * Object
+ * PANEL
+ */
+/* line 7, ../sass/objects/_panel.scss */
 .panel-body > *:last-child {
   margin-bottom: 0;
 }
-
-/* line 128, ../sass/_rankme.scss */
+/* line 11, ../sass/objects/_panel.scss */
 .panel-body > *:first-child {
   margin-top: 0;
 }
 
-/* line 133, ../sass/_rankme.scss */
+/**
+ * Object
+ * TABLE
+ */
+/* line 6, ../sass/objects/_table.scss */
+.table > tbody > tr > td {
+  vertical-align: middle;
+}
+
+/**
+ * Object
+ * USER
+ */
+/* line 6, ../sass/objects/_user.scss */
+.user-avatar {
+  width: 32px;
+  margin-right: 0.5em;
+}
+/* line 10, ../sass/objects/_user.scss */
+.page-header .user-avatar {
+  width: 48px;
+}
+/* line 14, ../sass/objects/_user.scss */
 .quick-profile .user-avatar {
   width: 64px;
   margin-right: 0;
+}
+
+/* line 20, ../sass/objects/_user.scss */
+.rank-num {
+  text-align: right;
+}
+/* line 23, ../sass/objects/_user.scss */
+tr:first-child .rank-num {
+  font-size: 24px;
+  font-weight: bold;
+}
+/* line 28, ../sass/objects/_user.scss */
+tr:nth-child(2) .rank-num {
+  font-size: 20px;
+  font-weight: bold;
+}
+/* line 33, ../sass/objects/_user.scss */
+tr:nth-child(3) .rank-num {
+  font-size: 16px;
+  font-weight: bold;
 }

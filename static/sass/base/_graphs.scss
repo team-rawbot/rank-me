@@ -1,0 +1,29 @@
+/**
+ * Base
+ * GRAPHS
+ */
+
+path {
+  fill: none;
+  stroke-width: 2px;
+}
+
+.axis path,
+.axis line {
+  fill: none;
+  stroke: #000;
+  shape-rendering: crispEdges;
+}
+
+.axis path {
+  display: none;
+}
+
+circle.highlighted,
+path.highlighted {
+  stroke-width: 3px;
+}
+
+text.highlighted {
+  font-style: italic;
+}

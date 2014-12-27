@@ -1,0 +1,37 @@
+/**
+ * Object
+ * USER
+ */
+
+.user-avatar {
+  width: 32px;
+  margin-right: 0.5em;
+
+  .page-header & {
+    width: 48px;
+  }
+
+  .quick-profile & {
+    width: 64px;
+    margin-right: 0;
+  }
+}
+
+.rank-num {
+  text-align: right;
+
+  tr:first-child & {
+    font-size: 24px;
+    font-weight: bold;
+  }
+
+  tr:nth-child(2) & {
+    font-size: 20px;
+    font-weight: bold;
+  }
+
+  tr:nth-child(3) & {
+    font-size: 16px;
+    font-weight: bold;
+  }
+}
