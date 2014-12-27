@@ -4,67 +4,42 @@
 
 {% block body_class %}home{% endblock %}
 
-{% block content %}
-<div class="row">
-    <div class="col-md-3">
-        <div class="panel panel-default">
-            <div class="quick-profile panel-body">
-                <div class="media">
-                    <div class="pull-left">{% include 'game/_player_avatar.html' with class="media-object" %}</div>
-                    <div class="media-body">
-                        <h4 class="quick-profile__title">{{ user.get_profile.get_full_name }}<br /><small>{{ user }}</small></h4>
-                    </div>
-                </div>
-                <hr>
-                <a href="{% url 'edit_profile' %}">Edit your profile</a>
-            </div>
-        </div>
-    </div>
+{% block sidebar %}
+    {{ block.super }}
 
-    <div class="col-md-6">
-        <ul class="timeline list list-unstyled">
-            {% for event in events %}
-            <li class="timeline-event">
-                <div class="text-muted event-date">{{ event.date | ago }}</div>
-                <div class="event-hook">
-                    {% if event.get_details.winner.avatar %}
-                        <div class="event-img-wrap">
-                            <img class="event-img img-circle user-avatar" src="{{ event.get_details.winner.avatar }}"/>
-                        </div>
-                    {% else %}
-                        <div class="event-icon"></div>
-                    {% endif %}
-                </div>
-                <div class="event-body">
-                    {% if event.competition %}
-                        <p class="event-competition text-muted">{{ event.competition }}</p>
-                    {% endif %}
-
-                    {% with template_name=event.event_type|add:".html" %}
-                        {% include "timeline/events/_"|add:template_name %}
-                    {% endwith %}
-                </div>
+    <div class="box">
+        <h4 class="box__title">{% trans "Your competitions" %}</h4>
+        <ul class="list-group">
+            {% for competition in competitions %}
+            <li class="list-group-item">
+                <a href="{% url "competition_detail" competition_slug=competition.slug %}">
+                    <span class="pull-right text-muted">{rank}</span>
+                    {{ competition }}
+                </a>
             </li>
+            {% empty %}
+                <p><a href="{% url "competition_list_all" %}">{% trans "Browse competitions to join" %}</a></p>
             {% endfor %}
         </ul>
     </div>
+{% endblock %}
 
-    <div class="col-md-3">
-        <div class="panel panel-default">
-            <div class="panel-heading">
-                <h3 class="panel-title">{% trans "Your competitions" %}</h3>
-            </div>
-            <ul class="list-group">
-                {% for competition in competitions %}
-                <li class="list-group-item">
-                    <a href="{% url "competition_detail" competition_slug=competition.slug %}">
-                        <span class="pull-right text-muted">{rank}</span>
-                        {{ competition }}
-                    </a>
-                </li>
-                {% endfor %}
-            </ul>
-        </div>
-    </div>
-</div>
+
+{% block content %}
+<header class="page-header">
+    <h1>{% trans "Recent activity" %}</h1>
+</header>
+
+<ul class="timeline list list-unstyled">
+    {% for event in events %}
+        {% ifchanged event.date|ago %}
+            <li class="timeline-date"><h4>{{ event.date | ago }}</h4></li>
+        {% endifchanged %}
+        <li class="timeline-event">
+            {% with template_name=event.event_type|add:".html" %}
+                {% include "timeline/events/_"|add:template_name %}
+            {% endwith %}
+        </li>
+    {% endfor %}
+</ul>
 {% endblock %}

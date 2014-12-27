@@ -11,30 +11,30 @@
 
     <div class="row">
         <div class="col-md-4">
-            <h2>{% trans "Past competitions" %}</h2>
+            <h3>{% trans "Past competitions" %}</h3>
             {% if past_competitions %}
-                <ul>
-                    {% include "competition/_list.html" with competitions=past_competitions %}
+                <ul class="list-group">
+                    {% include "competition/_list.html" with competitions=past_competitions class="list-group-item" %}
                 </ul>
             {% else %}
                 <p class="alert alert-info">{% trans "No past competition to display." %}</p>
             {% endif %}
         </div>
         <div class="col-md-4">
-            <h2>{% trans "Ongoing competitions" %}</h2>
+            <h3>{% trans "Ongoing competitions" %}</h3>
             {% if ongoing_competitions %}
-                <ul>
-                    {% include "competition/_list.html" with competitions=ongoing_competitions %}
+                <ul class="list-group">
+                    {% include "competition/_list.html" with competitions=ongoing_competitions class="list-group-item" %}
                 </ul>
             {% else %}
                 <p class="alert alert-info">{% trans "No ongoing competition to display." %}</p>
             {% endif %}
         </div>
         <div class="col-md-4">
-            <h2>{% trans "Upcoming competitions" %}</h2>
+            <h3>{% trans "Upcoming competitions" %}</h3>
             {% if upcoming_competitions %}
-                <ul>
-                    {% include "competition/_list.html" with competitions=upcoming_competitions %}
+                <ul class="list-group">
+                    {% include "competition/_list.html" with competitions=upcoming_competitions class="list-group-item" %}
                 </ul>
             {% else %}
                 <p class="alert alert-info">{% trans "No upcoming competition to display." %}</p>

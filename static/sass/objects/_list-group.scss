@@ -1,0 +1,25 @@
+/**
+ * Object
+ * LIST GROUP
+ */
+
+.list-group-item {
+  padding-left: 0;
+  padding-right: 0;
+
+  border: none;
+  background-color: transparent;
+
+  + .list-group-item {
+    border-top: 1px solid $brand-light;
+
+    .box--highlighted & {
+      border-top-color: lighten($brand-primary,18%);
+    }
+  }
+
+  &:first-child,
+  &:last-child {
+    border-radius: 0;
+  }
+}

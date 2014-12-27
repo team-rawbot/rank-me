@@ -1,4 +1,4 @@
-{% load i18n static %}
+{% load i18n static ago %}
 
 <td>
     <span class="hidden-xs">
@@ -16,4 +16,4 @@
     </span>
     {{ game.loser }}
 </td>
-<td>{{ game.date }}</td>
+<td>{{ game.date | ago }}</td>

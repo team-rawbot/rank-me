@@ -4,12 +4,10 @@
 {% block body_class %}add-result{% endblock %}
 
 {% block content %}
-<div class="wrapper--small wrapper">
-    <header class="page-header">
-        <h1>{% trans "Hi there!" %}</h1>
-        <p>{% trans "Create competitions and track your scores." %}</p>
-    </header>
+<header class="page-header">
+    <h1>{% trans "Hi there!" %}</h1>
+    <p>{% trans "Create competitions and track your scores." %}</p>
+</header>
 
-    <p><a href="{% url 'social:social.apps.django_app.views.auth' backend='twitter' %}" class="btn btn-lg btn-block btn-primary" title="{% trans "Sign in with Twitter" %}">{% trans "Sign in with Twitter" %}</a></p>
-</div>
+<p><a href="{% url 'social:social.apps.django_app.views.auth' backend='twitter' %}" class="btn btn-lg btn-primary" title="{% trans "Sign in with Twitter" %}">{% trans "Sign in with Twitter" %}</a></p>
 {% endblock %}

@@ -3,22 +3,67 @@
  * LAYOUT
  */
 
+html,
+body {
+  height: 100%;
+}
+
 body {
   padding: 70px 0 0 0;
+  overflow: hidden;
 }
 
-.wrapper {
-  display: block;
-  margin-left: auto;
-  margin-right: auto;
+// Main layout
+
+.container-fluid {
+  padding-left: $spacing-unit;
+  padding-right: $spacing-unit;
 }
-  .wrapper--default {
-    max-width: 1280px;
-  }
-  .wrapper--small {
-    max-width: 400px;
+
+.app {
+  height: 100%;
+  @include display-flex;
+  @include flex-direction(column);
+}
+
+.app-layout {
+  @include display-flex;
+  @include flex-direction(row);
+  @include align-items(stretch);
+  @include flex-grow(1);
+}
+
+.sidebar {
+  width: 280px;
+  overflow-y: auto;
+
+  background: $brand-lighter;
+
+  &:empty {
+    display: none;
   }
 
-.messages {
-  margin-top: 20px;
+  a {
+    color: $brand-dark;
+  }
+}
+
+.app-content {
+  @include flex-grow(1);
+  overflow-y: auto;
+}
+
+.page-header {
+  margin-top: 0;
+
+  #{headings()} {
+    margin-top: 0;
+  }
+}
+
+
+// Sidebar
+
+.quick-profile {
+  margin-bottom: $half-spacing-unit;
 }

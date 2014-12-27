@@ -4,6 +4,37 @@
 
 {% block body_class %}home{% endblock %}
 
+{% block sidebar %}
+<div class="scores">
+    <div class="score-board box box--soft">
+        <h4 class="box__title box--soft__title">{% trans "Scores" %}</h4>
+
+        {% if score_board %}
+            <table class="table">
+                {% for score in score_board %}
+                    <tr class="score-item">
+                        <td class="rank-num">{{ forloop.counter }}</td>
+                        <td>
+                            <a href="{% url 'team_detail' team_id=score.team_id competition_slug=competition.slug  %}">
+                                {% for player in score.team.users.all %}
+                                    {% include 'game/_player_avatar.html' with user=player %}
+                                {% endfor %}
+                                {{ score.team }}
+                            </a>
+                        </td>
+                        <td class="text-muted">{{ score.score|floatformat:"2" }}</td>
+                    </tr>
+                {% endfor %}
+            </table>
+        {% else %}
+            <div class="panel-body">
+                {% trans "No scores registered yet." %}
+            </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}
+
 {% block content %}
     <div class="page-header">
         {% if user_can_edit_competition %}
@@ -36,104 +67,67 @@
         {% endif %}
     </div>
 
-    <div class="row">
-        <div class="col-md-3">
-            <div class="scores">
-                <div class="score-board panel panel-default">
-                    <div class="panel-heading">
-                        <h3 class="panel-title">{% trans "Scores" %}</h3>
-                    </div>
+    <div class="box box--soft">
+        <div class="box__heading">
+            <div class="btn-group">
+                <button class="move-chart btn btn-default btn-sm" data-movement="10"><span class="glyphicon glyphicon-chevron-left"></span></button>
+                <button class="reset-chart btn btn-default btn-sm">Last 50</button>
+                <button class="move-chart btn btn-default btn-sm" data-movement="-10"><span class="glyphicon glyphicon-chevron-right"></span></button>
+            </div>
 
-                    {% if score_board %}
-                        <table class="table">
-                            {% for score in score_board %}
-                                <tr class="score-item">
-                                    <td class="rank-num">{{ forloop.counter }}</td>
-                                    <td>
-                                        <a href="{% url 'team_detail' team_id=score.team_id competition_slug=competition.slug  %}">
-                                            {% for player in score.team.users.all %}
-                                                {% include 'game/_player_avatar.html' with user=player %}
-                                            {% endfor %}
-                                            {{ score.team }}
-                                        </a>
-                                    </td>
-                                    <td class="text-muted">{{ score.score|floatformat:"2" }}</td>
-                                </tr>
-                            {% endfor %}
-                        </table>
-                    {% else %}
-                        <div class="panel-body">
-                            {% trans "No scores registered yet." %}
-                        </div>
-                    {% endif %}
-                </div>
+            <div class="pull-right">
+                <label for="score-chart-mode-position" class="radio-inline">
+                    <input id="score-chart-mode-position" name="score-chart-mode" type="radio" value="position" checked="checked">
+                    {% trans "Position" %}
+                </label>
+
+                <label for="score-chart-mode-skill" class="radio-inline">
+                    <input id="score-chart-mode-skill" name="score-chart-mode" type="radio" value="skill">
+                    {% trans "Skill" %}
+                </label>
             </div>
         </div>
 
-        <div class="col-md-9">
-            <div class="panel panel-default">
-                <div class="panel-heading">
-                    <div class="btn-group">
-                        <button class="move-chart btn btn-default btn-sm" data-movement="10"><span class="glyphicon glyphicon-chevron-left"></span></button>
-                        <button class="reset-chart btn btn-default btn-sm">Last 50</button>
-                        <button class="move-chart btn btn-default btn-sm" data-movement="-10"><span class="glyphicon glyphicon-chevron-right"></span></button>
-                    </div>
+        <div id="score-chart-container" class="well" data-json="{% url 'competition_detail_score_chart' competition.slug %}"></div>
+    </div>
 
-                    <div class="pull-right">
-                        <label for="score-chart-mode-position" class="radio-inline">
-                            <input id="score-chart-mode-position" name="score-chart-mode" type="radio" value="position" checked="checked">
-                            {% trans "Position" %}
-                        </label>
-
-                        <label for="score-chart-mode-skill" class="radio-inline">
-                            <input id="score-chart-mode-skill" name="score-chart-mode" type="radio" value="skill">
-                            {% trans "Skill" %}
-                        </label>
-                    </div>
-                </div>
-
-                <div id="score-chart-container" class="panel-body" data-json="{% url 'competition_detail_score_chart' competition.slug %}"></div>
-            </div>
-
-            <div class="latest-results panel panel-default">
-                <div class="panel-heading">
-                    <h3 class="panel-title">{% trans "Last 20 games" %}</h3>
-                </div>
-                {% if latest_results %}
-                    <table class="games table table-striped">
-                        <thead>
-                            <th>{% trans "Winner" %}</th>
-                            <th>{% trans "Loser" %}</th>
-                            <th>{% trans "Date" %}</th>
-                            <th>{% trans "Action" %}</th>
-                        </thead>
-                        <tbody>
-                            {% for game in latest_results %}
-                                <tr class="game-item">
-                                    {% include 'game/_score_detail.html' %}
-                                    <td>
-                                        {%if forloop.first %}
-                                        <form action="{% url 'game_remove' competition_slug=competition.slug %}" method="POST">
-                                            {% csrf_token %}
-                                            <input type="hidden" name="game_id" value="{{ game.id }}">
-                                            <button type="submit" class="btn btn-danger {% if not competition.is_active %}disabled{% endif %}">
-                                                <span class="glyphicon glyphicon-trash icon-spaced-right"></span>
-                                                {% trans "Remove" %}
-                                            </button>
-                                        </form>
-                                        {% endif %}
-                                    </td>
-                                </tr>
-                            {% endfor %}
-                        </tbody>
-                    </table>
-                {% else %}
-                    <div class="panel-body">
-                        {% trans "No result yet." %}
-                    </div>
-                {% endif %}
-            </div>
+    <div class="latest-results box box--soft">
+        <div class="box__heading">
+            <h4 class="box__title">{% trans "Last 20 games" %}</h4>
         </div>
+        {% if latest_results %}
+            <table class="games table table-striped">
+                <thead>
+                    <th>{% trans "Winner" %}</th>
+                    <th>{% trans "Loser" %}</th>
+                    <th>{% trans "Date" %}</th>
+                    <th>{% trans "Action" %}</th>
+                </thead>
+                <tbody>
+                    {% for game in latest_results %}
+                        <tr class="game-item">
+                            {% include 'game/_score_detail.html' %}
+                            <td>
+                                {%if forloop.first %}
+                                <form action="{% url 'game_remove' competition_slug=competition.slug %}" method="POST">
+                                    {% csrf_token %}
+                                    <input type="hidden" name="game_id" value="{{ game.id }}">
+                                    <button type="submit" class="btn btn-danger {% if not competition.is_active %}disabled{% endif %}">
+                                        <span class="glyphicon glyphicon-trash icon-spaced-right"></span>
+                                        {% trans "Remove" %}
+                                    </button>
+                                </form>
+                                {% endif %}
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        {% else %}
+            <div class="panel-body">
+                {% trans "No result yet." %}
+            </div>
+        {% endif %}
     </div>
 {% endblock %}
 
