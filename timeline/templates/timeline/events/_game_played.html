@@ -1,5 +1,7 @@
 {% load i18n %}
 
-{% include 'timeline/_team.html' with team=event.get_details.winner %}
-{% trans "won against" %}
-{% include 'timeline/_team.html' with team=event.get_details.loser %}
+<p>
+    <strong>{% include 'timeline/_team.html' with team=event.get_details.winner %}</strong>
+    {% trans "won against" %}
+    {% include 'timeline/_team.html' with team=event.get_details.loser %}
+</p>

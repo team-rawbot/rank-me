@@ -1,0 +1,93 @@
+/**
+ * Object
+ * TIMELINE
+ */
+
+.timeline {
+  position: relative;
+
+  &::before {
+    content: '';
+    display: block;
+    width: 1px;
+    height: 100%;
+
+    position: absolute;
+    top: 0;
+    left: calc(20% + 47px);
+    bottom: 0;
+    z-index: -1;
+
+    background-color: $gray-light;
+  }
+}
+
+  .timeline-event {
+    @include display-flex;
+    @include flex-direction(row);
+    @include align-items(center);
+
+    + .timeline-event {
+      margin-top: $double-spacing-unit;
+    }
+  }
+
+  .event-date {
+    width: 20%;
+    margin-right: $spacing-unit;
+
+    text-align: right;
+  }
+
+  .event-hook {
+    width: 50px;
+    margin-right: $spacing-unit;
+  }
+
+  .event-img-wrap {
+    display: block;
+    position: relative;
+
+    &::after {
+      content: '';
+      display: block;
+      margin: 5px;
+
+      position: absolute;
+      top: 0;
+      right: 0;
+      bottom: 0;
+      left: 0;
+      z-index: 1;
+
+      border-radius: 50%;
+      @include box-shadow(0 0 0 1px rgba(0,0,0,.1) inset);
+    }
+  }
+    .event-img {
+      width: 100%;
+
+      border: 5px solid white;
+    }
+
+  .event-icon {
+    width: 16px;
+    height: 16px;
+    margin: 16px 40px 16px 16px;
+
+    border: 5px solid white;
+    background-color: $brand-primary;
+    border-radius: 50%;
+  }
+
+  .event-body {
+    > *:last-child {
+      margin-bottom: 0;
+    }
+  }
+
+  .event-competition {
+    font-size: 13px;
+
+    margin-bottom: 5px;
+  }

@@ -6872,3 +6872,100 @@ tr:nth-child(3) .rank-num {
   font-size: 16px;
   font-weight: bold;
 }
+
+/**
+ * Object
+ * TIMELINE
+ */
+/* line 6, ../sass/objects/_timeline.scss */
+.timeline {
+  position: relative;
+}
+/* line 9, ../sass/objects/_timeline.scss */
+.timeline::before {
+  content: '';
+  display: block;
+  width: 1px;
+  height: 100%;
+  position: absolute;
+  top: 0;
+  left: calc(20% + 47px);
+  bottom: 0;
+  z-index: -1;
+  background-color: #ccc;
+}
+
+/* line 25, ../sass/objects/_timeline.scss */
+.timeline-event {
+  display: -webkit-flex;
+  display: flex;
+  -webkit-flex-direction: row;
+  flex-direction: row;
+  -webkit-align-items: center;
+  align-items: center;
+}
+/* line 30, ../sass/objects/_timeline.scss */
+.timeline-event + .timeline-event {
+  margin-top: 48px;
+}
+
+/* line 35, ../sass/objects/_timeline.scss */
+.event-date {
+  width: 20%;
+  margin-right: 24px;
+  text-align: right;
+}
+
+/* line 42, ../sass/objects/_timeline.scss */
+.event-hook {
+  width: 50px;
+  margin-right: 24px;
+}
+
+/* line 47, ../sass/objects/_timeline.scss */
+.event-img-wrap {
+  display: block;
+  position: relative;
+}
+/* line 51, ../sass/objects/_timeline.scss */
+.event-img-wrap::after {
+  content: '';
+  display: block;
+  margin: 5px;
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  z-index: 1;
+  border-radius: 50%;
+  -webkit-box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.1) inset;
+  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.1) inset;
+}
+
+/* line 67, ../sass/objects/_timeline.scss */
+.event-img {
+  width: 100%;
+  border: 5px solid white;
+}
+
+/* line 73, ../sass/objects/_timeline.scss */
+.event-icon {
+  width: 16px;
+  height: 16px;
+  margin: 16px 40px 16px 16px;
+  border: 5px solid white;
+  background-color: #e18a70;
+  border-radius: 50%;
+}
+
+/* line 84, ../sass/objects/_timeline.scss */
+.event-body > *:last-child {
+  margin-bottom: 0;
+}
+
+/* line 89, ../sass/objects/_timeline.scss */
+.event-competition {
+  font-size: 13px;
+  margin-bottom: 5px;
+}

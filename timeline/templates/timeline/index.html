@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 
-{% load static i18n %}
+{% load static i18n ago %}
 
 {% block body_class %}home{% endblock %}
 
@@ -20,33 +20,35 @@
             </div>
         </div>
     </div>
-    <div class="col-md-6">
-        <div class="panel panel-default">
-            <div class="panel-heading">
-                <h3 class="panel-title">{% trans "Recent activity" %}</h3>
-            </div>
 
-            <table class="table table-striped table-bordered">
-                <tbody>
-                    {% for event in events %}
-                    <tr>
-                        <td>
-                            {% if event.competition %}
-                                {{ event.competition }}
-                            {% endif %}
-                        </td>
-                        <td>
-                            {% with template_name=event.event_type|add:".html" %}
-                                {% include "timeline/events/_"|add:template_name %}
-                            {% endwith %}
-                        </td>
-                        <td class="text-muted">{{ event.date | timesince }} ago</td>
-                    </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
-        </div>
+    <div class="col-md-6">
+        <ul class="timeline list list-unstyled">
+            {% for event in events %}
+            <li class="timeline-event">
+                <div class="text-muted event-date">{{ event.date | ago }}</div>
+                <div class="event-hook">
+                    {% if event.get_details.winner.avatar %}
+                        <div class="event-img-wrap">
+                            <img class="event-img img-circle user-avatar" src="{{ event.get_details.winner.avatar }}"/>
+                        </div>
+                    {% else %}
+                        <div class="event-icon"></div>
+                    {% endif %}
+                </div>
+                <div class="event-body">
+                    {% if event.competition %}
+                        <p class="event-competition text-muted">{{ event.competition }}</p>
+                    {% endif %}
+
+                    {% with template_name=event.event_type|add:".html" %}
+                        {% include "timeline/events/_"|add:template_name %}
+                    {% endwith %}
+                </div>
+            </li>
+            {% endfor %}
+        </ul>
     </div>
+
     <div class="col-md-3">
         <div class="panel panel-default">
             <div class="panel-heading">
