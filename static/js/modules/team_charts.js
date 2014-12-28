@@ -68,10 +68,10 @@ define(["jquery", "underscore", "d3"], function ($, _, d3) {
                 })
               .enter()
                 .append("rect")
-                .attr("height", function(d) { return y.rangeBand() / d.width; })
+                .attr("height", function(d) { return Math.floor(y.rangeBand() / d.width); })
                 .attr('y', function(d) { switch(d.name) {
-                        case 'total': return y.rangeBand() * (3/4) + 4;
-                        case 'fairness': return y.rangeBand() / 2 + 4;
+                        case 'total': return Math.floor(y.rangeBand() * (3/4) + 4);
+                        case 'fairness': return Math.floor(y.rangeBand() / 2 + 4);
                         default: return 0;
                     }
                 })
@@ -211,7 +211,7 @@ define(["jquery", "underscore", "d3"], function ($, _, d3) {
 
             played.append("rect")
                 .attr("width", x.rangeBand())
-                .attr('height', function(d) { return height - y(d.playedGames); })
+                .attr('height', function(d) { return Math.floor(height - y(d.playedGames)); })
                 .attr('y', function(d) { return y(d.playedGames); })
               .append('title')
                 .text(function (d) { return d.playedGames + ' games'; });
