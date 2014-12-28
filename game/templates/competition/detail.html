@@ -88,7 +88,9 @@
             </div>
         </div>
 
-        <div id="score-chart-container" class="well" data-json="{% url 'competition_detail_score_chart' competition.slug %}"></div>
+        <div id="score-chart-container" class="well" data-json="{% url 'competition_detail_score_chart' competition.slug %}">
+            {% include '_spinner.html' %}
+        </div>
     </div>
 
     <div class="latest-results box box--soft">
