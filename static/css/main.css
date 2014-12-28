@@ -6772,18 +6772,19 @@ body {
   -webkit-flex-grow: 1;
   flex-grow: 1;
   overflow-y: auto;
+  padding: 24px;
 }
 
-/* line 56, ../sass/base/_layout.scss */
+/* line 57, ../sass/base/_layout.scss */
 .page-header {
   margin-top: 0;
 }
-/* line 59, ../sass/base/_layout.scss */
+/* line 60, ../sass/base/_layout.scss */
 .page-header h1, .page-header h2, .page-header h3, .page-header h4, .page-header h5, .page-header h6 {
   margin-top: 0;
 }
 
-/* line 67, ../sass/base/_layout.scss */
+/* line 68, ../sass/base/_layout.scss */
 .quick-profile {
   margin-bottom: 12px;
 }
@@ -7141,20 +7142,23 @@ tr:nth-child(3) .rank-num {
  */
 /* line 6, ../sass/objects/_list-group.scss */
 .list-group-item {
-  padding-left: 0;
-  padding-right: 0;
   border: none;
   background-color: transparent;
 }
-/* line 13, ../sass/objects/_list-group.scss */
+/* line 10, ../sass/objects/_list-group.scss */
 .list-group-item + .list-group-item {
   border-top: 1px solid #f4ddd2;
 }
-/* line 16, ../sass/objects/_list-group.scss */
+/* line 13, ../sass/objects/_list-group.scss */
 .box--highlighted .list-group-item + .list-group-item {
   border-top-color: #f1c8bc;
 }
-/* line 21, ../sass/objects/_list-group.scss */
+/* line 18, ../sass/objects/_list-group.scss */
+.box .list-group-item {
+  padding-left: 0;
+  padding-right: 0;
+}
+/* line 23, ../sass/objects/_list-group.scss */
 .list-group-item:first-child, .list-group-item:last-child {
   border-radius: 0;
 }

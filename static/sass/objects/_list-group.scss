@@ -4,9 +4,6 @@
  */
 
 .list-group-item {
-  padding-left: 0;
-  padding-right: 0;
-
   border: none;
   background-color: transparent;
 
@@ -16,6 +13,11 @@
     .box--highlighted & {
       border-top-color: lighten($brand-primary,18%);
     }
+  }
+
+  .box & {
+    padding-left: 0;
+    padding-right: 0;
   }
 
   &:first-child,

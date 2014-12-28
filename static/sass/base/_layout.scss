@@ -51,6 +51,7 @@ body {
 .app-content {
   @include flex-grow(1);
   overflow-y: auto;
+  padding: $spacing-unit;
 }
 
 .page-header {
