@@ -6757,17 +6757,18 @@ body {
   width: 280px;
   overflow-y: auto;
   background: #f9ede7;
+  border-right: 1px solid #f4ddd2;
 }
-/* line 42, ../sass/base/_layout.scss */
+/* line 43, ../sass/base/_layout.scss */
 .sidebar:empty {
   display: none;
 }
-/* line 46, ../sass/base/_layout.scss */
+/* line 47, ../sass/base/_layout.scss */
 .sidebar a {
   color: #d86846;
 }
 
-/* line 51, ../sass/base/_layout.scss */
+/* line 52, ../sass/base/_layout.scss */
 .app-content {
   -webkit-flex-grow: 1;
   flex-grow: 1;
@@ -6775,16 +6776,23 @@ body {
   padding: 24px;
 }
 
-/* line 57, ../sass/base/_layout.scss */
+/* line 58, ../sass/base/_layout.scss */
 .page-header {
+  margin: -24px -24px 24px -24px;
+  padding: 24px;
+  border-bottom: 1px solid #f4ddd2;
+}
+/* line 65, ../sass/base/_layout.scss */
+.page-header > :first-child,
+.page-header h1, .page-header h2, .page-header h3, .page-header h4, .page-header h5, .page-header h6:first-of-type {
   margin-top: 0;
 }
-/* line 60, ../sass/base/_layout.scss */
-.page-header h1, .page-header h2, .page-header h3, .page-header h4, .page-header h5, .page-header h6 {
-  margin-top: 0;
+/* line 69, ../sass/base/_layout.scss */
+.page-header > :last-child {
+  margin-bottom: 0;
 }
 
-/* line 68, ../sass/base/_layout.scss */
+/* line 77, ../sass/base/_layout.scss */
 .quick-profile {
   margin-bottom: 12px;
 }

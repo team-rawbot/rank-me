@@ -38,6 +38,7 @@ body {
   overflow-y: auto;
 
   background: $brand-lighter;
+  border-right: 1px solid $brand-light;
 
   &:empty {
     display: none;
@@ -55,10 +56,18 @@ body {
 }
 
 .page-header {
-  margin-top: 0;
+  margin: -#{$spacing-unit} -#{$spacing-unit} #{$spacing-unit} -#{$spacing-unit};
+  padding: $spacing-unit;
 
-  #{headings()} {
+  // background-color: $brand-lighter;
+  border-bottom: 1px solid $brand-light;
+
+  > :first-child,
+  #{headings()}:first-of-type {
     margin-top: 0;
+  }
+  > :last-child {
+    margin-bottom: 0;
   }
 }
 
