@@ -9,12 +9,12 @@
   &::before {
     content: '';
     display: block;
-    width: 1px;
+    width: 2px;
     height: 100%;
 
     position: absolute;
     top: 0;
-    left: calc(20% + 47px);
+    left: 27px;
     bottom: 0;
     z-index: -1;
 
@@ -28,20 +28,62 @@
     @include align-items(center);
 
     + .timeline-event {
-      margin-top: $double-spacing-unit;
+      margin-top: $spacing-unit;
     }
   }
 
-  .event-date {
-    width: 20%;
-    margin-right: $spacing-unit;
+  .timeline-date {
+    margin: $spacing-unit 0;
+    padding-top: $spacing-unit;
+    padding-left: 68px;
 
-    text-align: right;
+    position: relative;
+
+    &::before {
+      content: '';
+      display: block;
+      width: 12px;
+      height: 12px;
+      margin-top: -6px;
+
+      position: absolute;
+      top: calc(50% + #{$half-spacing-unit});
+      left: 22px;
+
+      border: 2px solid $gray-light;
+      background-color: white;
+      border-radius: 50%;
+    }
+
+    &::after {
+      content: '';
+      display: block;
+      width: 50%;
+      height: 2px;
+      margin-top: -1px;
+
+      position: absolute;
+      top: calc(50% + #{$half-spacing-unit});
+      left: 32px;
+
+      @include background-image(linear-gradient(left, $gray-light, transparentize($gray-light, 1)));
+    }
+
+    h4 {
+      display: inline-block;
+      margin: 0 -8px;
+      padding: 0 8px;
+
+      position: relative;
+      z-index: 1;
+
+      background-color: white;
+    }
   }
 
   .event-hook {
-    width: 50px;
-    margin-right: $spacing-unit;
+    width: 56px;
+    margin-right: $half-spacing-unit;
   }
 
   .event-img-wrap {
@@ -51,7 +93,7 @@
     &::after {
       content: '';
       display: block;
-      margin: 5px;
+      margin: 8px;
 
       position: absolute;
       top: 0;
@@ -67,18 +109,37 @@
     .event-img {
       width: 100%;
 
-      border: 5px solid white;
+      border: 8px solid white;
     }
 
   .event-icon {
-    width: 16px;
-    height: 16px;
-    margin: 16px 40px 16px 16px;
+    width: 40px;
+    height: 40px;
+    margin-left: 8px;
+    margin-right: $spacing-unit;
 
-    border: 5px solid white;
-    background-color: $brand-primary;
+    font-size: 12px;
+    text-align: center;
+    line-height: 24px;
+    color: white;
+
+    border: 8px solid white;
+    background-color: $gray-light;
     border-radius: 50%;
+    @include box-shadow(0 0 0 1px rgba(0,0,0,.1) inset);
   }
+    .event-icon--joined {
+      background-color: $brand-info;
+    }
+    .event-icon.glyphicon-chevron-up {
+      background-color: $brand-success;
+    }
+    .event-icon.glyphicon-chevron-down {
+      background-color: $brand-danger;
+    }
+    .event-icon--competition {
+      background-color: $brand-primary;
+    }
 
   .event-body {
     > *:last-child {

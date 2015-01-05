@@ -5,15 +5,13 @@
 {% block body_class %}add-result{% endblock %}
 
 {% block content %}
-<div class="wrapper--small wrapper">
-    <header class="page-header">
-        <h1>{{ competition }}</h1>
-    </header>
+<header class="page-header">
+    <h1>{{ competition }}</h1>
+</header>
 
-    <form id="add-result" action="" method="post">
-        {% csrf_token %}
-        {{ form|bootstrap }}
-        <p><input type="submit" value="{% trans "Add result" %}" class="btn btn-primary" /></p>
-    </form>
-</div>
+<form id="add-result" action="" method="post">
+    {% csrf_token %}
+    {{ form|bootstrap }}
+    <p><input type="submit" value="{% trans "Add result" %}" class="btn btn-primary" /></p>
+</form>
 {% endblock %}

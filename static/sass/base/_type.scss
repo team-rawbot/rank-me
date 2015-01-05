@@ -9,5 +9,12 @@ body {
 }
 
 .navbar-brand {
+  font-size: 28px;
   font-weight: bold;
+}
+
+a.text-muted:hover,
+a.text-muted:active {
+  color: $gray-dark;
+  text-decoration: none;
 }
