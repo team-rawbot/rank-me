@@ -1,9 +1,9 @@
 *.pyc
-node_modules/*
-envdir/*
-!envdir/.gitkeep
-static/css/main.css
-rankme.db
-.sass-cache
-.vagrant
-.venv
+/node_modules/*
+/envdir/*
+!/envdir/.gitkeep
+/static/css/main.css
+/rankme.db
+/.sass-cache
+/.vagrant
+/.venv
