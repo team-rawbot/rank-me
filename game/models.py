@@ -1,7 +1,6 @@
 import operator
 import json
 import six
-import time
 
 from collections import defaultdict, OrderedDict
 from itertools import groupby
@@ -126,7 +125,8 @@ class Team(models.Model):
 
     def get_fairness(self, competition):
         """
-        Compute the probability of draw against all opponents (ie. how fair is the game).
+        Compute the probability of draw against all opponents
+        (ie. how fair is the game).
         Returns an OrderedDict of teams by score
         """
         qualities = {}
@@ -151,7 +151,6 @@ class Team(models.Model):
                 reverse=True
             )
         )
-
 
     def get_recent_stats(self, competition, count=10):
         """
@@ -262,8 +261,7 @@ class GameManager(models.Manager):
                  'loser__users__profile')
                  .prefetch_related(
                      Prefetch('winner__users', queryset=users_with_profile_qs),
-                     Prefetch('loser__users', queryset=users_with_profile_qs)
-                 )
+                     Prefetch('loser__users', queryset=users_with_profile_qs))
                  .order_by('-date'))
 
         if competition is not None:
@@ -287,12 +285,6 @@ class GameManager(models.Manager):
         if not competition.is_active():
             raise InactiveCompetitionError()
 
-        players = {
-            'winner': winner,
-            'loser': loser
-        }
-
-
         winner, created = Team.objects.get_or_create_from_players(winner)
         loser, created = Team.objects.get_or_create_from_players(loser)
 
@@ -305,8 +297,15 @@ class GameManager(models.Manager):
         return game
 
     def delete(self, game, competition):
-        history_winner = HistoricalScore.objects.get_last_for_team(game.winner, game, competition)
-        history_loser = HistoricalScore.objects.get_last_for_team(game.loser, game, competition)
+        history_winner = HistoricalScore.objects.get_last_for_team(
+            game.winner,
+            game, competition
+        )
+        history_loser = HistoricalScore.objects.get_last_for_team(
+            game.loser,
+            game,
+            competition
+        )
 
         Score.objects.filter()
         winner = game.winner.get_or_create_score(competition)
@@ -423,7 +422,9 @@ class HistoricalScoreManager(models.Manager):
 
         {team_a: [{skill: xx, played: xx, game: game_id}, ...]}
         """
-        nb_games += int(start) # add start to nb_games because slicing want the end position
+
+        # add start to nb_games because slicing want the end position
+        nb_games += int(start)
         games = (Game.objects.filter(competitions=competition)
                  .order_by('-id')
                  .prefetch_related('historical_scores')[start:nb_games])
@@ -475,7 +476,11 @@ class HistoricalScoreManager(models.Manager):
                 team_scores.append(result)
                 scores_by_team[team] = team_scores
 
-            positions_for_game = sorted(six.iteritems(all_skills_by_game), key=operator.itemgetter(1), reverse=True)
+            positions_for_game = sorted(
+                six.iteritems(all_skills_by_game),
+                key=operator.itemgetter(1),
+                reverse=True
+            )
             for idx, position in enumerate(positions_for_game, start=1):
                 scores_by_team[position[0]][-1]['position'] = idx
 
@@ -500,7 +505,8 @@ class HistoricalScoreManager(models.Manager):
 
     def get_last_for_team(self, team, game, competition):
         """
-        Return the latest historical score before game for a team in the competition
+        Return the latest historical score before game for a team in the
+        competition.
 
         :param team:Team
         :param game:Game
@@ -532,8 +538,7 @@ class ScoreManager(models.Manager):
         return (self.get_queryset().filter(competition=competition)
                 .order_by('-score').prefetch_related(
                     Prefetch('team__users',
-                             queryset=User.objects.select_related('profile')))
-               )
+                             queryset=User.objects.select_related('profile'))))
 
     def get_ranking_by_team(self, competition):
         score_board = self.get_score_board(competition)

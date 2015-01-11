@@ -18,7 +18,7 @@ DATABASES = {
     'default': dj_database_url.parse(get_env_variable('DATABASE_URL'))
 }
 
-BASE_PATH = get_project_root_path()
+BASE_DIR = get_project_root_path()
 
 # Local time zone for this installation. Choices can be found here:
 # http://en.wikipedia.org/wiki/List_of_tz_zones_by_name
@@ -65,7 +65,7 @@ STATIC_URL = get_env_variable('STATIC_URL', '/static/')
 
 # Additional locations of static files
 STATICFILES_DIRS = (
-    os.path.join(BASE_PATH, 'static'),
+    os.path.join(BASE_DIR, 'static'),
     # Put strings here, like "/home/html/static" or "C:/www/django/static".
     # Always use forward slashes, even on Windows.
     # Don't forget to use absolute paths, not relative paths.
@@ -106,7 +106,7 @@ ROOT_URLCONF = 'rankme.urls'
 WSGI_APPLICATION = 'rankme.wsgi.application'
 
 TEMPLATE_DIRS = (
-    os.path.join(BASE_PATH, 'templates'),
+    os.path.join(BASE_DIR, 'templates'),
     # Put strings here, like "/home/html/django_templates" or "C:/www/django/templates".
     # Always use forward slashes, even on Windows.
     # Don't forget to use absolute paths, not relative paths.
