@@ -40,7 +40,7 @@ def index(request):
     context = {
         'user': request.user,
         'profile': request.user.get_profile(),
-        'competition_datas': competition_datas[0],
+        'competition_datas': competition_datas,
     }
 
     return render(request, 'user/profile.html', context)
