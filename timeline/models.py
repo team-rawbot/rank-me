@@ -106,10 +106,11 @@ class Event(models.Model):
     @memoize
     def get_details(self):
         details = {}
-        try:
-            for key in self.details:
-                details[key] = json.loads(self.details[key])
-        except:
-            details[key] = self.details[key]
+
+        for key, value in self.details.iteritems():
+            try:
+                details[key] = json.loads(value)
+            except:
+                details[key] = value
 
         return details
