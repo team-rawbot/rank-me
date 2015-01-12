@@ -10,6 +10,7 @@ from django.conf import settings
 from django.core.exceptions import ValidationError
 from django.db import models, transaction
 from django.db.models import Prefetch, Q
+from django.db.models.query import QuerySet
 from django.template.defaultfilters import slugify
 from django.utils import timezone
 from trueskill import Rating, rate_1vs1, quality_1vs1
@@ -585,11 +586,42 @@ class HistoricalScore(models.Model):
         )
 
 
-class CompetitionManager(models.Manager):
+class CompetitionMixin(object):
+    def ongoing(self):
+        return self.filter(
+            Q(start_date__lte=timezone.now()) & (
+                Q(end_date__gt=timezone.now()) | Q(end_date__isnull=True)
+            ))
+
+    def past(self):
+        return self.filter(
+            end_date__lte=timezone.now()
+        )
+
+    def upcoming(self):
+        return self.filter(
+            start_date__gt=timezone.now()
+        )
+
     def get_visible_for_user(self, user):
         return self.filter(
             Q(players=user.id) | Q(creator_id=user.id)
         ).distinct()
+
+
+class CompetitionQuerySet(QuerySet, CompetitionMixin):
+    pass
+
+
+class CompetitionManager(models.Manager):
+    def get_queryset(self):
+        return CompetitionQuerySet(self.model, using=self._db)
+
+    def __getattr__(self, attr, *args):
+        try:
+            return getattr(self.__class__, attr, *args)
+        except AttributeError:
+            return getattr(self.get_query_set(), attr, *args)
 
 
 class Competition(models.Model):
