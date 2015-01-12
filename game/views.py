@@ -1,12 +1,9 @@
-import ast
-
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.core.urlresolvers import reverse
 from django.db.models.query_utils import Q
 from django.http.response import HttpResponse
 from django.shortcuts import get_object_or_404, render, redirect
-from django.utils import timezone
 from django.utils.translation import ugettext_lazy as _
 from django.views.decorators.http import require_POST
 
@@ -14,23 +11,13 @@ from .decorators import authorized_user, user_is_admin
 from .forms import GameForm, CompetitionForm
 from .models import Competition, Game, HistoricalScore, Score, Team
 
+
 @login_required
 def competition_list_all(request):
-    upcoming_competitions = Competition.objects.filter(
-        start_date__gt=timezone.now()
-    )
-    ongoing_competitions = Competition.objects.filter(
-        Q(start_date__lte=timezone.now()) & (Q(end_date__gt=timezone.now()) |
-            Q(end_date__isnull=True))
-    )
-    past_competitions = Competition.objects.filter(
-        end_date__lte=timezone.now()
-    )
-
     return render(request, 'competition/list_all.html', {
-        'upcoming_competitions': upcoming_competitions,
-        'ongoing_competitions': ongoing_competitions,
-        'past_competitions': past_competitions
+        'upcoming_competitions': Competition.objects.upcoming(),
+        'ongoing_competitions': Competition.objects.ongoing(),
+        'past_competitions': Competition.objects.past()
     })
 
 

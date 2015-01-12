@@ -10,17 +10,15 @@
     <div class="box">
         <h4 class="box__title">{% trans "Your competitions" %}</h4>
         <ul class="list-group">
-            {% for competition in competitions %}
-            <li class="list-group-item">
-                <a href="{% url "competition_detail" competition_slug=competition.slug %}">
-                    <span class="pull-right text-muted">{rank}</span>
-                    {{ competition }}
-                </a>
-            </li>
-            {% empty %}
-                <p><a href="{% url "competition_list_all" %}">{% trans "Browse competitions to join" %}</a></p>
-            {% endfor %}
+            {% include "timeline/_competitions.html" with competitions=ongoing_competitions %}
         </ul>
+
+        {% if past_competitions %}
+            <h5 class="box__title">{% trans "Archives" %}</h5>
+            <ul class="list-group">
+                {% include "timeline/_competitions.html" with competitions=past_competitions %}
+            </ul>
+        {% endif %}
     </div>
 {% endblock %}
 
