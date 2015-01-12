@@ -14,10 +14,14 @@
         </ul>
 
         {% if past_competitions %}
-            <h5 class="box__title">{% trans "Archives" %}</h5>
-            <ul class="list-group">
-                {% include "timeline/_competitions.html" with competitions=past_competitions %}
-            </ul>
+            <div class="toggler">
+                <h5 class="box__title">{% trans "Archives" %}
+                    <small class="pull-right"><a href="#" class="toggler__handle" data-toggler="{% trans "Hide" %}">{% trans "Show" %}</a></small>
+                </h5>
+                <ul class="list-group toggler__container">
+                    {% include "timeline/_competitions.html" with competitions=past_competitions %}
+                </ul>
+            </div>
         {% endif %}
     </div>
 {% endblock %}
