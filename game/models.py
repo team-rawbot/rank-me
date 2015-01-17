@@ -16,7 +16,7 @@ from trueskill import Rating, rate_1vs1, quality_1vs1
 
 from .signals import (
     competition_created, game_played, team_ranking_changed,
-    user_joined_competition
+    user_joined_competition, user_left_competition
 )
 
 
@@ -661,6 +661,17 @@ class Competition(models.Model):
             self.players.add(user)
             user_joined_competition.send(sender=self, user=user)
 
+    def remove_user_access(self, user):
+        if user.id == self.creator_id:
+            raise CannotLeaveCompetitionError()
+
+        self.players.remove(user)
+        user_left_competition.send(sender=self, user=user)
+
 
 class InactiveCompetitionError(Exception):
+    pass
+
+
+class CannotLeaveCompetitionError(Exception):
     pass

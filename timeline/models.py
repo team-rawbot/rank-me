@@ -8,7 +8,7 @@ from django_hstore import hstore
 
 from game.signals import (
     competition_created, game_played, team_ranking_changed,
-    user_joined_competition
+    user_joined_competition, user_left_competition
 )
 from rankme.utils import memoize
 
@@ -29,6 +29,20 @@ def publish_competition_created(sender, **kwargs):
 @receiver(user_joined_competition)
 def publish_user_joined_competition(sender, user, **kwargs):
     event = Event(event_type=Event.TYPE_USER_JOINED_COMPETITION,
+                  competition=sender,
+                  details={
+                      'user': {
+                          'id': user.id,
+                          'name': user.get_profile().get_full_name(),
+                          'avatar': user.get_profile().avatar
+                      }
+                  })
+    event.save()
+
+
+@receiver(user_left_competition)
+def publish_user_left_competition(sender, user, **kwargs):
+    event = Event(event_type=Event.TYPE_USER_LEFT_COMPETITION,
                   competition=sender,
                   details={
                       'user': {
@@ -86,11 +100,13 @@ class Event(models.Model):
     TYPE_GAME_PLAYED = 'game_played'
     TYPE_COMPETITION_CREATED = 'competition_created'
     TYPE_USER_JOINED_COMPETITION = 'user_joined_competition'
+    TYPE_USER_LEFT_COMPETITION = 'user_left_competition'
     TYPES = (
         (TYPE_GAME_PLAYED, _('Game played')),
         (TYPE_RANKING_CHANGED, _('Ranking changed')),
         (TYPE_COMPETITION_CREATED, _('Competition created')),
         (TYPE_USER_JOINED_COMPETITION, _('User joined competition')),
+        (TYPE_USER_LEFT_COMPETITION, _('User left competition')),
     )
 
     event_type = models.CharField(max_length=50, choices=TYPES)

@@ -32,6 +32,13 @@
             </div>
         {% endif %}
     </div>
+
+    <div class="box box--soft">
+        <form action="{% url "competition_leave"  competition_slug=competition.slug %}" method="post">
+            {% csrf_token %}
+            <button class="btn btn-danger">{% trans "Leave competition" %}</button>
+        </form>
+    </div>
 </div>
 {% endblock %}
 
