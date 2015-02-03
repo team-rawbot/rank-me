@@ -9,6 +9,9 @@
   - name: ensure sudoers file allows to run all commands without password
     lineinfile: dest=/etc/sudoers line="%sudo ALL=(ALL) NOPASSWD:ALL" regexp="^%sudo ALL=NOPASSWD:ALL$"
     sudo: yes
+  - name: fix adding apt repo using newer versions of Ansible
+    apt: pkg=python-pycurl state=latest
+    sudo: yes
   - name: ensure wheezy-backports repo is enabled
     apt_repository: state=present repo="deb http://cdn.debian.net/debian wheezy-backports main"
     sudo: yes
