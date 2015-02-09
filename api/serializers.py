@@ -1,48 +1,29 @@
 from django.contrib.auth import get_user_model
 from rest_framework import serializers
 
-from game.models import Competition, Team, Game, Score
+from game.models import Competition, Team
 
 
-class CompetitionSerializer(serializers.HyperlinkedModelSerializer):
+class CompetitionSerializer(serializers.ModelSerializer):
     class Meta:
         model = Competition
         fields = ('id', 'name', 'description', 'slug')
 
 
-class TeamSerializer(serializers.HyperlinkedModelSerializer):
-    users = serializers.RelatedField(many=True)
-    name = serializers.Field(source='get_name')
-    competitions = serializers.Field(source='get_competitions')
+class TeamSerializer(serializers.ModelSerializer):
+    name = serializers.ReadOnlyField(source='get_name')
 
     class Meta:
         model = Team
-        fields = ('id', 'name', 'competitions', 'users')
+        fields = ('id', 'name', 'users', 'competitions')
 
 
-class GameSerializer(serializers.Serializer):
-    winner_id = serializers.WritableField(required=False, write_only=True)
-    loser_id = serializers.WritableField(required=False, write_only=True)
-    competition_id = serializers.WritableField(required=False, write_only=True)
+class UserSerializer(serializers.ModelSerializer):
+    def create(self, validated_data):
+        pass
 
-    winner = serializers.WritableField(required=False, read_only=True)
-    loser = serializers.WritableField(required=False, read_only=True)
-    competitions = serializers.RelatedField(many=True, read_only=True)
-
-    class Meta:
-        model = Game
-
-
-class ScoreSerializer(serializers.HyperlinkedModelSerializer):
-    team = serializers.RelatedField()
-    competition = serializers.RelatedField()
-
-    class Meta:
-        model = Score
-        fields = ('id', 'team', 'competition', 'score', 'stdev')
-
-
-class UserSerializer(serializers.HyperlinkedModelSerializer):
+    def update(self, instance, validated_data):
+        pass
 
     class Meta:
         model = get_user_model()

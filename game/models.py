@@ -597,7 +597,7 @@ class Competition(models.Model):
     description = models.TextField(blank=True)
     start_date = models.DateTimeField(default=timezone.now)
     end_date = models.DateTimeField(null=True, blank=True)
-    teams = models.ManyToManyField(Team, through=Score)
+    teams = models.ManyToManyField(Team, through=Score, related_name='competitions')
     games = models.ManyToManyField(Game, related_name='competitions')
     slug = models.SlugField(unique=True)
     players = models.ManyToManyField(settings.AUTH_USER_MODEL,
