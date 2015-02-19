@@ -550,7 +550,7 @@ class ScoreManager(models.Manager):
 
 
 class Score(models.Model):
-    competition = models.ForeignKey('Competition')
+    competition = models.ForeignKey('Competition', related_name='scores')
     team = models.ForeignKey(Team, related_name='scores')
     score = models.FloatField('skills', default=settings.GAME_INITIAL_MU)
     stdev = models.FloatField('standard deviation',
@@ -565,8 +565,11 @@ class Score(models.Model):
 
     def __unicode__(self):
         return '[%s] %s: mu = %s, s = %s' % (self.competition.name,
-                                             self.team.get_name(), self.score,
+                                             self.get_team_name, self.score,
                                              self.stdev)
+
+    def get_team_name(self):
+        return self.team.get_name()
 
 
 class HistoricalScore(models.Model):

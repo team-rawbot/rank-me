@@ -1,13 +1,24 @@
 from django.contrib.auth import get_user_model
 from rest_framework import serializers
 
-from game.models import Competition, Team, Game
+from game.models import Competition, Team, Game, Score
+
+
+class ScoreSerializer(serializers.ModelSerializer):
+    team_name = serializers.ReadOnlyField(source='get_team_name')
+    team_id = serializers.ReadOnlyField()
+
+    class Meta:
+        model = Score
+        fields = ('id', 'team_id', 'team_name', 'score', 'stdev')
 
 
 class CompetitionSerializer(serializers.ModelSerializer):
+    scores = ScoreSerializer(many=True, read_only=True)
+
     class Meta:
         model = Competition
-        fields = ('id', 'name', 'description', 'slug')
+        fields = ('id', 'name', 'description', 'slug', 'scores')
 
 
 class TeamSerializer(serializers.ModelSerializer):
