@@ -130,7 +130,6 @@ INSTALLED_APPS = (
     'rest_framework',
     'rest_framework.authtoken',
     'django_hstore',
-    'rest_framework_extensions',
 )
 
 # A sample logging configuration. The only tangible logging
