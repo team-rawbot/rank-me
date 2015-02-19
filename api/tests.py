@@ -2,7 +2,6 @@ from django.core.urlresolvers import reverse
 from rest_framework import status
 from rest_framework.test import APITestCase
 
-from game.models import Competition
 from game.tests.factories import UserFactory, CompetitionFactory
 
 

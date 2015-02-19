@@ -1,12 +1,12 @@
 from django.conf.urls import url, include
 from rest_framework import routers
-from api.views import CompetitionViewSet, TeamViewSet, UserViewSet
-
+from api.views import CompetitionViewSet, TeamViewSet, UserViewSet, GameViewSet
 
 router = routers.DefaultRouter()
 router.register(r'competitions', CompetitionViewSet)
 router.register(r'teams', TeamViewSet)
 router.register(r'users', UserViewSet)
+router.register(r'games', GameViewSet)
 
 urlpatterns = [
     url(r'^api/', include([

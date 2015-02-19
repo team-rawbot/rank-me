@@ -7,10 +7,9 @@ from rest_framework import viewsets
 from rest_framework.response import Response
 from rest_framework.authtoken.models import Token
 
-from game.models import Competition, Team
+from game.models import Competition, Team, Game
 
-from .serializers import CompetitionSerializer, \
-    TeamSerializer, UserSerializer
+from .serializers import CompetitionSerializer, TeamSerializer, UserSerializer, GameSerializer
 
 
 @psa('social:complete')
@@ -32,17 +31,17 @@ def register_by_access_token(request, backend):
     return HttpResponse(data_json, content_type='application/json')
 
 
-class CompetitionViewSet(viewsets.ModelViewSet):
+class CompetitionViewSet(viewsets.ReadOnlyModelViewSet):
     """
-    API endpoint that allows competitions to be viewed or edited.
+    API Competition endpoint
     """
     queryset = Competition.objects.all()
     serializer_class = CompetitionSerializer
 
 
-class TeamViewSet(viewsets.ModelViewSet):
+class TeamViewSet(viewsets.ReadOnlyModelViewSet):
     """
-    API endpoint that allows teams to be viewed or edited.
+    API Team endpoint
     """
     queryset = Team.objects.all()
     serializer_class = TeamSerializer
@@ -50,7 +49,7 @@ class TeamViewSet(viewsets.ModelViewSet):
 
 class UserViewSet(viewsets.ReadOnlyModelViewSet):
     """
-    API users endpoint
+    API Users endpoint
     """
     queryset = get_user_model().objects.all()
     serializer_class = UserSerializer
@@ -65,3 +64,12 @@ class UserViewSet(viewsets.ReadOnlyModelViewSet):
         user = get_object_or_404(queryset, pk=pk)
         serializer = UserSerializer(user)
         return Response(serializer.data)
+
+
+class GameViewSet(viewsets.ModelViewSet):
+    """
+    API Games endpoint
+    """
+    queryset = Game.objects.all()
+    serializer_class = GameSerializer
+

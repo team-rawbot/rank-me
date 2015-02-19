@@ -1,7 +1,7 @@
 from django.contrib.auth import get_user_model
 from rest_framework import serializers
 
-from game.models import Competition, Team
+from game.models import Competition, Team, Game
 
 
 class CompetitionSerializer(serializers.ModelSerializer):
@@ -28,3 +28,9 @@ class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = get_user_model()
         fields = ('id', 'username', 'first_name', 'last_name')
+
+
+class GameSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Game
+        fields = ('id', 'winner', 'loser')
