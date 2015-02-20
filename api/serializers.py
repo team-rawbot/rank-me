@@ -6,11 +6,12 @@ from game.models import Competition, Team, Game, Score
 
 class ScoreSerializer(serializers.ModelSerializer):
     team_name = serializers.ReadOnlyField(source='get_team_name')
+    team_avatar = serializers.ReadOnlyField(source='get_team_avatar')
     team_id = serializers.ReadOnlyField()
 
     class Meta:
         model = Score
-        fields = ('id', 'team_id', 'team_name', 'score', 'stdev')
+        fields = ('id', 'team_id', 'team_name', 'team_avatar', 'score', 'stdev')
 
 
 class CompetitionSerializer(serializers.ModelSerializer):

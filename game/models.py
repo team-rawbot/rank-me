@@ -66,6 +66,9 @@ class Team(models.Model):
     def get_name(self):
         return u" / ".join([user.first_name.title() for user in self.users.all()])
 
+    def get_avatar(self):
+        return self.users.first().get_profile().avatar
+
     def get_competitions(self):
         return Competition.objects.filter(score__team=self)
 
@@ -570,6 +573,9 @@ class Score(models.Model):
 
     def get_team_name(self):
         return self.team.get_name()
+
+    def get_team_avatar(self):
+        return self.team.get_avatar()
 
 
 class HistoricalScore(models.Model):
