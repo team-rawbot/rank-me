@@ -568,7 +568,7 @@ class Score(models.Model):
 
     def __unicode__(self):
         return '[%s] %s: mu = %s, s = %s' % (self.competition.name,
-                                             self.get_team_name, self.score,
+                                             self.get_team_name(), self.score,
                                              self.stdev)
 
     def get_team_name(self):

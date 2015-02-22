@@ -1,6 +1,6 @@
 from django.conf.urls import url, include
 from rest_framework import routers
-from api.views import CompetitionViewSet, TeamViewSet, UserViewSet, GameViewSet, ScoreViewSet
+from .views import CompetitionViewSet, TeamViewSet, UserViewSet, GameViewSet, ScoreViewSet
 
 router = routers.DefaultRouter()
 router.register(r'competitions', CompetitionViewSet)
