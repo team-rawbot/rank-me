@@ -66,6 +66,9 @@ class Team(models.Model):
     def get_name(self):
         return u" / ".join([user.first_name.title() for user in self.users.all()])
 
+    def get_avatar(self):
+        return self.users.first().get_profile().avatar
+
     def get_competitions(self):
         return Competition.objects.filter(score__team=self)
 
@@ -550,7 +553,7 @@ class ScoreManager(models.Manager):
 
 
 class Score(models.Model):
-    competition = models.ForeignKey('Competition')
+    competition = models.ForeignKey('Competition', related_name='scores')
     team = models.ForeignKey(Team, related_name='scores')
     score = models.FloatField('skills', default=settings.GAME_INITIAL_MU)
     stdev = models.FloatField('standard deviation',
@@ -565,8 +568,14 @@ class Score(models.Model):
 
     def __unicode__(self):
         return '[%s] %s: mu = %s, s = %s' % (self.competition.name,
-                                             self.team.get_name(), self.score,
+                                             self.get_team_name(), self.score,
                                              self.stdev)
+
+    def get_team_name(self):
+        return self.team.get_name()
+
+    def get_team_avatar(self):
+        return self.team.get_avatar()
 
 
 class HistoricalScore(models.Model):
@@ -597,7 +606,7 @@ class Competition(models.Model):
     description = models.TextField(blank=True)
     start_date = models.DateTimeField(default=timezone.now)
     end_date = models.DateTimeField(null=True, blank=True)
-    teams = models.ManyToManyField(Team, through=Score)
+    teams = models.ManyToManyField(Team, through=Score, related_name='competitions')
     games = models.ManyToManyField(Game, related_name='competitions')
     slug = models.SlugField(unique=True)
     players = models.ManyToManyField(settings.AUTH_USER_MODEL,
