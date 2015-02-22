@@ -39,7 +39,7 @@ class UserSerializer(serializers.ModelSerializer):
 class GameSerializer(serializers.Serializer):
     winner_id = serializers.PrimaryKeyRelatedField(queryset=Team.objects.all())
     loser_id = serializers.PrimaryKeyRelatedField(queryset=Team.objects.all())
-    competition_id = serializers.IntegerField(required=True)
+    competition_id = serializers.PrimaryKeyRelatedField(queryset=Competition.objects.all())
 
     def to_representation(self, obj):
         return {
@@ -52,7 +52,7 @@ class GameSerializer(serializers.Serializer):
     def create(self, validated_data):
         winner = validated_data['winner_id']
         loser = validated_data['loser_id']
-        competition = Competition.objects.get(pk=validated_data['competition_id'])
+        competition = validated_data['competition_id']
 
         return Game.objects.announce(winner.users.all()[0], loser.users.all()[0], competition)
 
