@@ -56,3 +56,6 @@ class GameSerializer(serializers.Serializer):
 
         return Game.objects.announce(winner.users.all()[0], loser.users.all()[0], competition)
 
+    # Must implement all abstract methods but we don't want to implement the update method
+    def update(self, instance, validated_data):
+        pass
