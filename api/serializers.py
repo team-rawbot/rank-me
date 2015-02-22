@@ -31,12 +31,6 @@ class TeamSerializer(serializers.ModelSerializer):
 
 
 class UserSerializer(serializers.ModelSerializer):
-    def create(self, validated_data):
-        pass
-
-    def update(self, instance, validated_data):
-        pass
-
     class Meta:
         model = get_user_model()
         fields = ('id', 'username', 'first_name', 'last_name')
@@ -62,5 +56,3 @@ class GameSerializer(serializers.Serializer):
 
         return Game.objects.announce(winner.users.all()[0], loser.users.all()[0], competition)
 
-    def update(self, instance, validated_data):
-        pass
