@@ -10,7 +10,6 @@ body {
 
 body {
   padding: 70px 0 0 0;
-  overflow: hidden;
 }
 
 // Main layout
@@ -35,7 +34,6 @@ body {
 
 .sidebar {
   width: 280px;
-  overflow-y: auto;
 
   background: $brand-lighter;
   border-right: 1px solid $brand-light;
@@ -51,7 +49,6 @@ body {
 
 .app-content {
   @include flex-grow(1);
-  overflow-y: auto;
   padding: $spacing-unit;
 }
 
