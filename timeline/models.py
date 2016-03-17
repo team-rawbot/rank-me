@@ -1,10 +1,10 @@
 import json
 
+from django.contrib.postgres.fields import JSONField
 from django.db import models
 from django.db.models import Q
 from django.dispatch import receiver
 from django.utils.translation import ugettext as _
-from django_hstore import hstore
 
 from game.signals import (
     competition_created, game_played, team_ranking_changed,
@@ -88,7 +88,7 @@ def publish_team_ranking_changed(sender, team, old_ranking, new_ranking,
     event.save()
 
 
-class EventManager(hstore.HStoreManager):
+class EventManager(models.Manager):
     def get_all_for_user(self, user):
         return self.filter(
             Q(competition__in=user.competitions.all()) | Q(competition=None)
@@ -110,7 +110,7 @@ class Event(models.Model):
     )
 
     event_type = models.CharField(max_length=50, choices=TYPES)
-    details = hstore.DictionaryField()
+    details = JSONField()
     date = models.DateTimeField(auto_now_add=True)
     competition = models.ForeignKey('game.Competition', null=True)
 

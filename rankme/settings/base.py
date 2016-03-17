@@ -129,7 +129,6 @@ INSTALLED_APPS = (
     'bootstrapform',
     'rest_framework',
     'rest_framework.authtoken',
-    'django_hstore',
 )
 
 # A sample logging configuration. The only tangible logging
