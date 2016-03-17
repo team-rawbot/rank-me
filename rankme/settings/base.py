@@ -2,11 +2,12 @@
 import os
 import dj_database_url
 
+from django.contrib.messages import constants as messages
+
 from .. import get_project_root_path
 from . import get_env_variable
 
 DEBUG = bool(get_env_variable('DEBUG', False))
-TEMPLATE_DEBUG = DEBUG
 
 ADMINS = (('', email) for email in get_env_variable('ADMINS', '').splitlines())
 
@@ -82,14 +83,6 @@ STATICFILES_FINDERS = (
 # Make this unique, and don't share it with anybody.
 SECRET_KEY = get_env_variable('SECRET_KEY', '')
 
-# List of callables that know how to import templates from various sources.
-TEMPLATE_LOADERS = (
-    ('django.template.loaders.cached.Loader', (
-        'django.template.loaders.filesystem.Loader',
-        'django.template.loaders.app_directories.Loader',
-    )),
-)
-
 MIDDLEWARE_CLASSES = (
     'django.middleware.common.CommonMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -105,12 +98,33 @@ ROOT_URLCONF = 'rankme.urls'
 # Python dotted path to the WSGI application used by Django's runserver.
 WSGI_APPLICATION = 'rankme.wsgi.application'
 
-TEMPLATE_DIRS = (
-    os.path.join(BASE_DIR, 'templates'),
-    # Put strings here, like "/home/html/django_templates" or "C:/www/django/templates".
-    # Always use forward slashes, even on Windows.
-    # Don't forget to use absolute paths, not relative paths.
-)
+TEMPLATES = [{
+    'BACKEND': 'django.template.backends.django.DjangoTemplates',
+    'DIRS': [
+        os.path.join(BASE_DIR, 'templates'),
+    ],
+    'OPTIONS': {
+        'context_processors': [
+            'django.contrib.auth.context_processors.auth',
+            'django.contrib.messages.context_processors.messages',
+            'django.template.context_processors.i18n',
+            'django.template.context_processors.debug',
+            'django.template.context_processors.request',
+            'django.template.context_processors.media',
+            'django.template.context_processors.csrf',
+            'django.template.context_processors.tz',
+            'django.template.context_processors.static',
+            'social.apps.django_app.context_processors.backends',
+            'social.apps.django_app.context_processors.login_redirect',
+        ],
+        'loaders': [
+            ('django.template.loaders.cached.Loader', [
+                'django.template.loaders.filesystem.Loader',
+                'django.template.loaders.app_directories.Loader',
+            ]),
+        ]
+    },
+}]
 
 INSTALLED_APPS = (
     'django.contrib.auth',
@@ -171,19 +185,6 @@ AUTHENTICATION_BACKENDS = (
     'django.contrib.auth.backends.ModelBackend',
 )
 
-TEMPLATE_CONTEXT_PROCESSORS = (
-    'django.contrib.auth.context_processors.auth',
-    'django.core.context_processors.debug',
-    'django.core.context_processors.i18n',
-    'django.core.context_processors.media',
-    'django.core.context_processors.static',
-    'django.core.context_processors.tz',
-    'django.contrib.messages.context_processors.messages',
-    'social.apps.django_app.context_processors.backends',
-    'social.apps.django_app.context_processors.login_redirect',
-    'django.core.context_processors.request',
-)
-
 SOCIAL_AUTH_TWITTER_KEY = get_env_variable('SOCIAL_AUTH_TWITTER_KEY', '')
 SOCIAL_AUTH_TWITTER_SECRET = get_env_variable('SOCIAL_AUTH_TWITTER_SECRET', '')
 SOCIAL_AUTH_LOGIN_REDIRECT_URL = '/'
@@ -220,8 +221,6 @@ REST_FRAMEWORK = {
     'PAGINATE_BY': 10,
     'PAGINATE_BY_PARAM': 'per_page'
 }
-
-from django.contrib.messages import constants as messages
 
 MESSAGE_TAGS = {
     messages.ERROR: 'danger'

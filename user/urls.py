@@ -1,7 +1,8 @@
-from django.conf.urls import patterns, url
+from django.conf.urls import url
 
-urlpatterns = patterns(
-    'user.views',
-    url(r'^$', 'index', name='profile'),
-    url(r'^edit/$', 'edit', name='edit_profile'),
-)
+from . import views
+
+urlpatterns = [
+    url(r'^$', views.index, name='profile'),
+    url(r'^edit/$', views.edit, name='edit_profile'),
+]
