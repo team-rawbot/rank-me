@@ -158,10 +158,8 @@ def competition_join(request, competition_slug):
 
 
 @login_required
+@require_POST
 def competition_leave(request, competition_slug):
-    if request.method != 'POST':
-        return HttpResponseNotFound("")
-
     competition = get_object_or_404(Competition, slug=competition_slug)
     competition.remove_user_access(request.user)
     messages.add_message(request, messages.SUCCESS, 'You left the competition')
