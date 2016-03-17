@@ -4,7 +4,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.core.urlresolvers import reverse
 from django.db.models.query_utils import Q
-from django.http.response import HttpResponse
+from django.http.response import HttpResponse, HttpResponseNotFound
 from django.shortcuts import get_object_or_404, render, redirect
 from django.utils import timezone
 from django.utils.translation import ugettext_lazy as _
@@ -155,6 +155,16 @@ def competition_join(request, competition_slug):
     return redirect(reverse('competition_detail', kwargs={
         'competition_slug': competition.slug
     }))
+
+
+@login_required
+@require_POST
+def competition_leave(request, competition_slug):
+    competition = get_object_or_404(Competition, slug=competition_slug)
+    competition.remove_user_access(request.user)
+    messages.add_message(request, messages.SUCCESS, 'You left the competition')
+
+    return redirect(reverse('homepage'))
 
 
 @login_required

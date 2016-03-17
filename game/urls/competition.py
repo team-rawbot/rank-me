@@ -10,4 +10,5 @@ urlpatterns = patterns(
     url(r'^game/remove/$', 'game_remove', name='game_remove'),
     url(r'^team/(?P<team_id>\d+)/$', 'team_detail', name='team_detail'),
     url(r'^join/$', 'competition_join', name='competition_join'),
+    url(r'^leave/$', 'competition_leave', name='competition_leave'),
 )
