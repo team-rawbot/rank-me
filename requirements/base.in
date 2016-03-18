@@ -5,3 +5,4 @@ python-social-auth
 pytz
 slacker
 trueskill
+dj-database-url
