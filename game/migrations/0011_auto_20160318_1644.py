@@ -9,8 +9,8 @@ def game_teams_to_users(apps, schema_editor):
     Game = apps.get_model('game', 'Game')
 
     for game in Game.objects.all():
-        game.winner_user = game.winner.users.first()
-        game.loser_user = game.winner.users.first()
+        game.winner_user_id = game.winner.users.first().pk
+        game.loser_user_id = game.loser.users.first().pk
         game.save()
 
 
@@ -18,7 +18,7 @@ def score_teams_to_users(apps, schema_editor):
     Score = apps.get_model('game', 'Score')
 
     for score in Score.objects.all():
-        score.user = score.team.users.first()
+        score.user_id = score.team.users.first().pk
         score.save()
 
 
@@ -26,7 +26,7 @@ def historical_score_teams_to_users(apps, schema_editor):
     HistoricalScore = apps.get_model('game', 'HistoricalScore')
 
     for hs in HistoricalScore.objects.all():
-        hs.user = hs.team.users.first()
+        hs.user_id = hs.team.users.first().pk
         hs.save()
 
 
