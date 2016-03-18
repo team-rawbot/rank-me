@@ -21,7 +21,7 @@ class Command(BaseCommand):
             stdev = settings.GAME_INITIAL_SIGMA
 
         scores = Score.objects.all()
-        games = Game.objects.prefetch_related('competitions').order_by('id')
+        games = Game.objects.select_related('competition').order_by('id')
 
         # remove all HistoricalScores
         HistoricalScore.objects.all().delete()

@@ -7,6 +7,11 @@ from trueskill import Rating, quality_1vs1
 
 
 def get_head2head(player, competition):
+    """
+    Compute the amount of wins and defeats against all opponents the player
+    played against. The returned value is an OrderedDict since the players
+    are ordered by their score.
+    """
     head2head = {}
     fairnesses = get_fairness(player, competition)
     games = competition.get_games_played_by(player)
@@ -41,6 +46,11 @@ def get_head2head(player, competition):
 
 
 def get_fairness(player, competition):
+    """
+    Compute the probability of draw against all opponents
+    (ie. how fair is the game).
+    Returns an OrderedDict of players by score
+    """
     qualities = {}
 
     own_score = competition.get_score(player)
@@ -68,6 +78,10 @@ def get_fairness(player, competition):
 
 
 def get_last_games_stats(player, competition, games_count):
+    """
+    Return a dictionary with the latest ``count`` played games and the
+    number of wins and defeats.
+    """
     games = competition.get_games_played_by(player)[:games_count]
     last_games = {
         'wins': 0,

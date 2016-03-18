@@ -1,6 +1,5 @@
 import operator
 import json
-import six
 
 from django.conf import settings
 from django.contrib.auth import get_user_model
@@ -27,7 +26,7 @@ class GameManager(models.Manager):
                  .order_by('-date'))
 
         if competition is not None:
-            games = games.filter(competitions=competition)
+            games = games.filter(competition=competition)
 
         games = games[:20]
 
@@ -47,8 +46,7 @@ class GameManager(models.Manager):
         if not competition.is_active():
             raise InactiveCompetitionError()
 
-        game = self.create(winner=winner, loser=loser)
-        game.competitions.add(competition)
+        game = self.create(winner=winner, loser=loser, competition=competition)
 
         game_played.send(sender=game)
         game.update_score()
@@ -84,6 +82,7 @@ class Game(models.Model):
     winner = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='games_won')
     loser = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='games_lost')
     date = models.DateTimeField(default=timezone.now)
+    competition = models.ForeignKey('Competition', related_name='games')
 
     objects = GameManager()
 
@@ -103,57 +102,57 @@ class Game(models.Model):
     def update_score(self, notify=True):
         winner = self.winner
         loser = self.loser
+        competition = self.competition
 
-        for competition in self.competitions.all():
-            if notify:
-                old_rankings = Score.objects.get_ranking_by_player(competition)
+        if notify:
+            old_rankings = Score.objects.get_ranking_by_player(competition)
 
-            winner_score = competition.get_or_create_score(winner)
-            loser_score = competition.get_or_create_score(loser)
+        winner_score = competition.get_or_create_score(winner)
+        loser_score = competition.get_or_create_score(loser)
 
-            winner_new_score, loser_new_score = rate_1vs1(
-                Rating(winner_score.score, winner_score.stdev),
-                Rating(loser_score.score, loser_score.stdev)
-            )
+        winner_new_score, loser_new_score = rate_1vs1(
+            Rating(winner_score.score, winner_score.stdev),
+            Rating(loser_score.score, loser_score.stdev)
+        )
 
-            winner_score.score = winner_new_score.mu
-            winner_score.stdev = winner_new_score.sigma
-            winner_score.save()
+        winner_score.score = winner_new_score.mu
+        winner_score.stdev = winner_new_score.sigma
+        winner_score.save()
 
-            loser_score.score = loser_new_score.mu
-            loser_score.stdev = loser_new_score.sigma
-            loser_score.save()
+        loser_score.score = loser_new_score.mu
+        loser_score.stdev = loser_new_score.sigma
+        loser_score.save()
 
-            HistoricalScore.objects.create(
-                game=self,
-                score=winner_score.score,
-                stdev=winner_score.stdev,
-                player=winner,
-                competition=competition
-            )
+        HistoricalScore.objects.create(
+            game=self,
+            score=winner_score.score,
+            stdev=winner_score.stdev,
+            player=winner,
+            competition=competition
+        )
 
-            HistoricalScore.objects.create(
-                game=self,
-                score=loser_score.score,
-                stdev=loser_score.stdev,
-                player=loser,
-                competition=competition
-            )
+        HistoricalScore.objects.create(
+            game=self,
+            score=loser_score.score,
+            stdev=loser_score.stdev,
+            player=loser,
+            competition=competition
+        )
 
-            if notify:
-                new_rankings = Score.objects.get_ranking_by_player(competition)
+        if notify:
+            new_rankings = Score.objects.get_ranking_by_player(competition)
 
-                for player in [winner, loser]:
-                    if (player not in old_rankings or
-                            old_rankings[player] != new_rankings[player]):
-                        ranking_changed.send(
-                            sender=self,
-                            player=player,
-                            old_ranking=(old_rankings[player]
-                                         if player in old_rankings else None),
-                            new_ranking=new_rankings[player],
-                            competition=competition
-                        )
+            for player in [winner, loser]:
+                if (player not in old_rankings or
+                        old_rankings[player] != new_rankings[player]):
+                    ranking_changed.send(
+                        sender=self,
+                        player=player,
+                        old_ranking=(old_rankings[player]
+                                     if player in old_rankings else None),
+                        new_ranking=new_rankings[player],
+                        competition=competition
+                    )
 
     def get_opponent(self, player):
         """
@@ -166,7 +165,7 @@ class HistoricalScoreManager(models.Manager):
     def get_latest(self, nb_games, competition):
         return (self.get_queryset()
                 .select_related('game', 'game__winner', 'game__loser')
-                .filter(game__competitions=competition)
+                .filter(game__competition=competition)
                 .order_by('-id')[:nb_games])
 
     def get_latest_results_by_player(self, nb_games, competition,
@@ -183,14 +182,14 @@ class HistoricalScoreManager(models.Manager):
 
         # add start to nb_games because slicing want the end position
         nb_games += int(start)
-        games = (Game.objects.filter(competitions=competition)
+        games = (Game.objects.filter(competition=competition)
                  .order_by('-id')
                  .prefetch_related('historical_scores')[start:nb_games])
 
         players = (get_user_model().objects
                    .filter(
-                       Q(games_won__competitions=competition) |
-                       Q(games_lost__competitions=competition)
+                       Q(games_won__competition=competition) |
+                       Q(games_lost__competition=competition)
                    )
                    .distinct())
         scores_by_player = {}
@@ -234,7 +233,7 @@ class HistoricalScoreManager(models.Manager):
                 scores_by_player[player] = player_scores
 
             positions_for_game = sorted(
-                six.iteritems(all_skills_by_game),
+                all_skills_by_game.items(),
                 key=operator.itemgetter(1),
                 reverse=True
             )
@@ -350,7 +349,6 @@ class Competition(models.Model):
     description = models.TextField(blank=True)
     start_date = models.DateTimeField(default=timezone.now)
     end_date = models.DateTimeField(null=True, blank=True)
-    games = models.ManyToManyField(Game, related_name='competitions')
     slug = models.SlugField(unique=True)
     players = models.ManyToManyField(settings.AUTH_USER_MODEL,
                                      related_name='competitions',
@@ -399,7 +397,6 @@ class Competition(models.Model):
         """
         Return if the competition start date has passed.
         """
-
         return self.start_date <= timezone.now()
 
     def is_active(self):
@@ -432,26 +429,12 @@ class Competition(models.Model):
         return games
 
     def get_head2head(self, player):
-        """
-        Compute the amount of wins and defeats against all opponents the player
-        played against. The returned value is an OrderedDict since the players
-        are ordered by their score.
-        """
         return stats.get_head2head(player, self)
 
     def get_fairness(self, player):
-        """
-        Compute the probability of draw against all opponents
-        (ie. how fair is the game).
-        Returns an OrderedDict of players by score
-        """
         return stats.get_fairness(player, self)
 
     def get_last_games_stats(self, player, competition, games_count=10):
-        """
-        Return a dictionary with the latest ``count`` played games and the
-        number of wins and defeats.
-        """
         return stats.get_last_games_stats(player, self, games_count)
 
     def get_longest_streak(self, player):
@@ -477,10 +460,10 @@ class Competition(models.Model):
         return score
 
     def get_wins(self, player):
-        return player.games_won.filter(competitions=self).count()
+        return player.games_won.filter(competition=self).count()
 
     def get_defeats(self, player):
-        return player.games_lost.filter(competitions=self).count()
+        return player.games_lost.filter(competition=self).count()
 
     def get_score(self, player):
         return player.scores.get(competition=self)

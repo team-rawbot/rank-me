@@ -65,7 +65,7 @@ def publish_game_played(sender, **kwargs):
         })
 
     event = Event(event_type=Event.TYPE_GAME_PLAYED,
-                  competition=sender.competitions.first(),
+                  competition=sender.competition,
                   details={"winner": players[0], "loser": players[1]})
     event.save()
 

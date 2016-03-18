@@ -227,7 +227,7 @@ def game_remove(request, competition_slug):
         # Remove the player score from the competition if it was its only game
         players = [last_game.winner, last_game.loser]
         for player in players:
-            count = Game.objects.filter(Q(winner=player) | Q(loser=player), competitions=competition).count()
+            count = Game.objects.filter(Q(winner=player) | Q(loser=player), competition=competition).count()
             if count == 0:
                 Score.objects.filter(competition=competition, player=player).delete()
 

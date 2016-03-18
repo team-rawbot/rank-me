@@ -61,7 +61,7 @@ class TestTeamGetOrCreate(RankMeTestCase):
     def test_head2head(self):
         christoph, laurent, rolf = (UserFactory() for i in range(3))
         for player in [christoph, laurent, rolf]:
-            self.default_competition.players.add(player)
+            self.default_competition.add_user_access(player)
 
         game = Game.objects.announce(christoph, rolf, self.default_competition)
         winner_head2head = self.default_competition.get_head2head(game.winner)

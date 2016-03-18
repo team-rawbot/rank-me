@@ -38,7 +38,7 @@ class GameSerializer(serializers.Serializer):
             'id': obj.id,
             'winner_id': obj.winner_id,
             'loser_id': obj.loser_id,
-            'competition_ids': obj.competitions.values_list('id', flat=True),
+            'competition_id': obj.competition_id,
         }
 
     def create(self, validated_data):

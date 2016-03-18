@@ -6,10 +6,8 @@ from . import post_message
 
 @receiver(game_played)
 def publish_game_played(sender, **kwargs):
-    post_message(u"[{competitions}] {winner} wins against {loser}".format(
-        competitions=' '.join(
-            [competition.name for competition in sender.competitions.all()]
-        ),
+    post_message(u"[{competition}] {winner} wins against {loser}".format(
+        competition=sender.competition.name,
         winner=sender.winner.get_full_name(),
         loser=sender.loser.get_full_name()
     ))
