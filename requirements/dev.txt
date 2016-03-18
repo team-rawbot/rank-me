@@ -7,9 +7,10 @@
 click==6.3                # via pip-tools
 defusedxml==0.4.1
 dj-database-url==0.4.0
+django-bootstrap-form==3.2
 django-debug-toolbar==1.4
 django-extensions==1.6.1
-Django==1.9.4             # via django-debug-toolbar
+Django==1.9.4             # via django-bootstrap-form, django-debug-toolbar
 djangorestframework==3.3.3
 first==2.0.1              # via pip-tools
 oauthlib==1.0.3

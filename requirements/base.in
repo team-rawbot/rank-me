@@ -6,3 +6,4 @@ pytz
 slacker
 trueskill
 dj-database-url
+django-bootstrap-form
