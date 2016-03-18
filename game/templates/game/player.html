@@ -54,7 +54,7 @@
                     {% for game_dates in last_games %}
                         <li class="date list-group-item text-muted">{{ game_dates.grouper }}</li>
                         {% for game in game_dates.list %}
-                            {% if game.winner == team %}
+                            {% if game.winner == player %}
                                 <li class="game game-win list-group-item">
                                     {% url 'team_general_detail' team_id=game.loser.id as loser_url %}
                                     {% blocktrans with loser=game.loser %}Win against <a href="{{ loser_url }}">{{ loser }}</a>{% endblocktrans %}
@@ -88,7 +88,7 @@
                             </tr>
                         </thead>
                         <tbody>
-                            {% for opponent, results in head2head.iteritems %}
+                            {% for opponent, results in head2head.items %}
                                 <tr>
                                     <td><a href="{% url 'player_detail' player_id=opponent.id competition_slug=competition.slug %}">{{ opponent }}</a></td>
                                     <td>{{ results.wins }}</td>
