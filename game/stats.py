@@ -205,7 +205,7 @@ def get_latest_results_by_player(competition, nb_games, offset=0,
                 if len(player_scores) == 0:
                     result['skill'] = competition.get_last_score_for_player(
                         player, game
-                    )
+                    ).score
                 else:
                     result['skill'] = player_scores[-1]['skill']
 

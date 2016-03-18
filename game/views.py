@@ -12,7 +12,7 @@ from django.views.decorators.http import require_POST
 from . import stats
 from .decorators import authorized_user, user_is_admin
 from .forms import GameForm, CompetitionForm
-from .models import Competition, Game, HistoricalScore, Score
+from .models import Competition, Game, Score
 
 
 @login_required
@@ -141,8 +141,8 @@ def competition_edit(request, competition_slug):
 @authorized_user
 def competition_detail_score_chart(request, competition_slug, start=0):
     competition = get_object_or_404(Competition, slug=competition_slug)
-    score_chart_data = HistoricalScore.objects.get_latest_results_by_team(
-        50, competition, start, True
+    score_chart_data = stats.get_latest_results_by_player(
+        competition, 50, int(start), True
     )
     return HttpResponse(score_chart_data, content_type='application/json')
 

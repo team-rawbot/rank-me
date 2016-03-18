@@ -44,7 +44,7 @@
                         <li class="dropdown">
                             <a class="dropdown-toggle" data-toggle="dropdown" href="#">
                                 <span class="glyphicon glyphicon-user icon-spaced-right"></span>
-                                <span id="nav-user-name">{{ user.profile.get_full_name }}</span>
+                                <span id="nav-user-name">{{ user.get_full_name }}</span>
                                 <!-- {% include 'game/_player_avatar.html' with user=user %} -->
                                 <b class="caret"></b>
                             </a>
@@ -70,7 +70,7 @@
                                 <div class="quick-profile media">
                                     <div class="pull-left">{% include 'game/_player_avatar.html' with class="media-object" %}</div>
                                     <div class="media-body">
-                                        <h4 class="quick-profile__title">{{ user.profile.get_full_name }}<br /><small>{{ user }}</small></h4>
+                                        <h4 class="quick-profile__title">{{ user.get_full_name }}<br /><small>{{ user }}</small></h4>
                                     </div>
                                 </div>
 
@@ -110,7 +110,7 @@
         var appDatas = {
             "user_id": "{{ user.id }}",
             "username": "{{ user.username }}",
-            "fullname": "{{ user.profile.get_full_name }}"
+            "fullname": "{{ user.get_full_name }}"
         };
     </script>
 
