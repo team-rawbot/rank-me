@@ -1,18 +1,19 @@
-import ast
-
-from django.contrib.auth.decorators import login_required
 from django.contrib import messages
+from django.contrib.auth import get_user_model
+from django.contrib.auth.decorators import login_required
 from django.core.urlresolvers import reverse
 from django.db.models.query_utils import Q
-from django.http.response import HttpResponse, HttpResponseNotFound
+from django.http.response import HttpResponse
 from django.shortcuts import get_object_or_404, render, redirect
 from django.utils import timezone
 from django.utils.translation import ugettext_lazy as _
 from django.views.decorators.http import require_POST
 
+from . import stats
 from .decorators import authorized_user, user_is_admin
 from .forms import GameForm, CompetitionForm
-from .models import Competition, Game, HistoricalScore, Score, Team
+from .models import Competition, Game, HistoricalScore, Score
+
 
 @login_required
 def competition_list_all(request):
@@ -36,22 +37,22 @@ def competition_list_all(request):
 
 @login_required
 @authorized_user
-def team_detail(request, competition_slug, team_id):
+def player_detail(request, competition_slug, player_id):
     competition = get_object_or_404(Competition, slug=competition_slug)
-    team = get_object_or_404(Team, pk=team_id)
+    player = get_object_or_404(get_user_model(), pk=player_id)
 
-    head2head = team.get_head2head(competition)
-    last_results = team.get_recent_stats(competition, 10)
-    longest_streak = team.get_longest_streak(competition)
-    current_streak = team.get_current_streak(competition)
+    head2head = competition.get_head2head(player)
+    last_results = competition.get_last_games_stats(player, 10)
+    longest_streak = competition.get_longest_streak(player)
+    current_streak = competition.get_current_streak(player)
 
-    wins = team.get_wins(competition)
-    defeats = team.get_defeats(competition)
+    wins = competition.get_wins(player)
+    defeats = competition.get_defeats(player)
     games = wins + defeats
-    score = team.get_score(competition)
+    score = competition.get_score(player)
 
     context = {
-        'team': team,
+        'player': player,
         'head2head': head2head,
         'last_results': last_results,
         'longest_streak': longest_streak,
@@ -61,17 +62,17 @@ def team_detail(request, competition_slug, team_id):
         'defeats': defeats,
         'score': score,
         'competition': competition,
-        'stats_per_week': team.get_stats_per_week(),
+        'stats_per_week': stats.get_stats_per_week(player, Game.objects.all()),
     }
 
-    return render(request, 'game/team.html', context)
+    return render(request, 'game/player.html', context)
 
 
 @login_required
-def team_general_detail(request, team_id):
-    team = get_object_or_404(Team, pk=team_id)
+def player_general_detail(request, player_id):
+    player = get_object_or_404(get_user_model(), pk=player_id)
 
-    return render(request, 'game/team_general.html', {'team': team})
+    return render(request, 'game/player_general.html', {'player': player})
 
 
 @login_required
@@ -223,12 +224,12 @@ def game_remove(request, competition_slug):
     if last_game.id == game.id:
         Game.objects.delete(game, competition)
 
-        # Remove the team score from the competition if it was its only game
-        teams = [last_game.winner, last_game.loser]
-        for team in teams:
-            count = Game.objects.filter(Q(winner=team) | Q(loser=team), competitions=competition).count()
+        # Remove the player score from the competition if it was its only game
+        players = [last_game.winner, last_game.loser]
+        for player in players:
+            count = Game.objects.filter(Q(winner=player) | Q(loser=player), competitions=competition).count()
             if count == 0:
-                Score.objects.filter(competition=competition, team=team).delete()
+                Score.objects.filter(competition=competition, player=player).delete()
 
         messages.add_message(request, messages.SUCCESS, 'Last game was deleted.')
     else:

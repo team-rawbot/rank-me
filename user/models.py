@@ -1,6 +1,6 @@
 from django.contrib.auth.models import User
 from django.db import models
-from django.db.models.signals import post_init
+from django.db.models.signals import post_save
 from django.dispatch import receiver
 
 
@@ -25,16 +25,6 @@ class UserProfile(models.Model):
         return self.get_full_name()
 
 
-@receiver(post_init, sender=User)
-def user_post_init(sender, instance, **kwargs):
-    """
-    https://gist.github.com/troolee/1140516
-    """
-    def get_profile():
-        user = instance
-        if not hasattr(user, '_profile_cache'):
-            user._profile_cache, _ = UserProfile._default_manager.using(user._state.db).get_or_create(user=user)
-            user._profile_cache.user = user
-        return user._profile_cache
-
-    instance.get_profile = get_profile
+@receiver(post_save, sender=User)
+def create_profile(sender, **kwargs):
+    UserProfile.objects.get_or_create(user=kwargs['instance'])

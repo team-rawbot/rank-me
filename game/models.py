@@ -2,268 +2,28 @@ import operator
 import json
 import six
 
-from collections import defaultdict, OrderedDict
-from itertools import groupby
-
-from django.contrib.auth import get_user_model
 from django.conf import settings
+from django.contrib.auth import get_user_model
 from django.core.exceptions import ValidationError
 from django.db import models, transaction
-from django.db.models import Prefetch, Q
+from django.db.models import Q
 from django.template.defaultfilters import slugify
 from django.utils import timezone
-from trueskill import Rating, rate_1vs1, quality_1vs1
 
+from trueskill import Rating, rate_1vs1
+
+from . import stats
 from .signals import (
-    competition_created, game_played, team_ranking_changed,
+    competition_created, game_played, ranking_changed,
     user_joined_competition, user_left_competition
 )
 
 
-class TeamManager(models.Manager):
-    def get_or_create_from_players(self, player_ids):
-        """
-        Return the team associated to the given players, creating it first if
-        it doesn't exist.
-
-        Args:
-            player_ids: a tuple of user ids, or a single user id.
-        """
-        if not isinstance(player_ids, tuple):
-            player_ids = (player_ids,)
-
-        # We need to get only the teams that have the exact number of player
-        # ids, otherwise we would also get teams that have the given players
-        # plus additional ones
-        team = self.annotate(c=models.Count('users')).filter(c=len(player_ids))
-
-        # Chain filter over all player ids
-        for player_id in player_ids:
-            team = team.filter(users=player_id)
-
-        if not team:
-            created = True
-            team = self.create()
-
-            for player_id in player_ids:
-                team.users.add(player_id)
-        else:
-            created = False
-            team = team.get()
-
-        return (team, created)
-
-
-class Team(models.Model):
-    users = models.ManyToManyField(settings.AUTH_USER_MODEL,
-                                   related_name='teams')
-
-    objects = TeamManager()
-
-    def __str__(self):
-        return self.get_name()
-
-    def get_name(self):
-        return u" / ".join([user.first_name.title() for user in self.users.all()])
-
-    def get_avatar(self):
-        return self.users.first().get_profile().avatar
-
-    def get_competitions(self):
-        return Competition.objects.filter(score__team=self)
-
-    def get_games(self, competition):
-        """
-        Fetch the list of games played by the team, filtered by competition.
-        """
-        User = get_user_model()
-        users_with_profile_qs = User.objects.select_related('profile')
-
-        games = Game.objects.filter(
-            Q(winner_id=self.id) | Q(loser_id=self.id)
-        ).filter(competitions=competition).order_by('-date').select_related(
-            'winner', 'loser'
-        ).prefetch_related(
-            Prefetch('winner__users', queryset=users_with_profile_qs),
-            Prefetch('loser__users', queryset=users_with_profile_qs),
-        )
-
-        return games
-
-    def get_head2head(self, competition):
-        """
-        Compute the amount of wins and defeats against all opponents the team
-        played against. The returned value is an OrderedDict since the teams
-        are ordered by their score.
-        """
-        head2head = {}
-        fairnesses = self.get_fairness(competition)
-
-        games = self.get_games(competition)
-
-        for game in games:
-            opponent = game.get_opponent(self)
-
-            if opponent not in head2head:
-                head2head[opponent] = {
-                    'wins': 0,
-                    'defeats': 0,
-                    'games': [],
-                    'fairness': fairnesses[opponent]['quality']
-                }
-
-            stat_to_increase = (
-                'wins' if game.winner_id == self.id else 'defeats'
-            )
-            head2head[opponent][stat_to_increase] += 1
-            head2head[opponent]['games'].append(game)
-
-        return OrderedDict(
-            sorted(
-                head2head.items(),
-                key=lambda t: t[0].scores.get(competition=competition).score,
-                reverse=True
-            )
-        )
-
-    def get_fairness(self, competition):
-        """
-        Compute the probability of draw against all opponents
-        (ie. how fair is the game).
-        Returns an OrderedDict of teams by score
-        """
-        qualities = {}
-
-        own_score = self.get_score(competition)
-        teams = competition.teams.all()
-
-        for team in teams:
-            if team == self:
-                continue
-            score = team.get_score(competition)
-            quality = quality_1vs1(
-                Rating(own_score.score, own_score.stdev),
-                Rating(score.score, score.stdev)
-            )
-            qualities[team] = {'score': score, 'quality': quality * 100}
-
-        return OrderedDict(
-            sorted(
-                qualities.items(),
-                key=lambda t: t[1]['score'].score,
-                reverse=True
-            )
-        )
-
-    def get_recent_stats(self, competition, count=10):
-        """
-        Return a dictionary with the latest ``count`` played games and the
-        number of wins and defeats.
-        """
-        games = self.get_games(competition)[:count]
-        last_games = {
-            'wins': 0,
-            'defeats': 0,
-            'games': []
-        }
-
-        for game in games:
-            last_games['wins' if game.winner_id == self.id else 'defeats'] += 1
-            last_games['games'].append(game)
-
-        return last_games
-
-    def get_longest_streak(self, competition):
-        games = self.get_games(competition)
-        # Create a list of booleans indicating won matches
-        wins_defeats_list = [game.winner_id == self.id for game in games]
-
-        if True in wins_defeats_list:
-            # Sum won matches series and keep the max
-            return max([sum(g) for k, g in groupby(wins_defeats_list) if k])
-        else:
-            return 0
-
-    def get_current_streak(self, competition):
-        games = self.get_games(competition)
-        streak = 0
-        for game in games:
-            if game.winner_id == self.id:
-                streak += 1
-            else:
-                break
-        return streak
-
-    def get_or_create_score(self, competition):
-        try:
-            score = Score.objects.get(
-                team=self,
-                competition=competition
-            )
-        except Score.DoesNotExist:
-            score = Score.objects.create(
-                team=self,
-                competition=competition,
-                score=settings.GAME_INITIAL_MU,
-                stdev=settings.GAME_INITIAL_SIGMA
-            )
-
-        return score
-
-    def get_wins(self, competition):
-        return self.games_won.filter(competitions=competition).count()
-
-    def get_defeats(self, competition):
-        return self.games_lost.filter(competitions=competition).count()
-
-    def get_score(self, competition):
-        return self.scores.get(competition=competition)
-
-    def get_stats_per_week(self):
-        """
-        Return games weekly statistics with the current team match number, and
-        also as an average for the whole teams that have been playing that
-        week.
-        """
-        games_per_week = defaultdict(list)
-        for game in Game.objects.all():
-            week = '%s.%02d' % (game.date.year, game.date.isocalendar()[1])
-            games_per_week[week].append(game)
-
-        stats_per_week = {}
-        for week, games in games_per_week.items():
-            players = set()
-            stats_per_week[week] = {
-                'total_count': len(games),
-                'team_count': 0,
-            }
-
-            for game in games:
-                players.add(game.winner_id)
-                players.add(game.loser_id)
-
-                if self.id in [game.winner_id, game.loser_id]:
-                    stats_per_week[week]['team_count'] += 1
-
-            stats_per_week[week]['player_count'] = len(players)
-            stats_per_week[week]['avg_game_per_team'] = (
-                float(stats_per_week[week]['total_count'] * 2)
-                / stats_per_week[week]['player_count']
-            )
-
-        return sorted(stats_per_week.items())
-
-
 class GameManager(models.Manager):
     def get_latest(self, competition=None):
-        User = get_user_model()
-        users_with_profile_qs = User.objects.select_related('profile')
-
         games = (self.get_queryset()
-                 .select_related('winner', 'loser')
-                 .prefetch_related(
-                     Prefetch('winner__users', queryset=users_with_profile_qs),
-                     Prefetch('loser__users', queryset=users_with_profile_qs))
+                 .select_related('winner', 'loser', 'winner__profile',
+                                 'loser__profile')
                  .order_by('-date'))
 
         if competition is not None:
@@ -287,9 +47,6 @@ class GameManager(models.Manager):
         if not competition.is_active():
             raise InactiveCompetitionError()
 
-        winner, created = Team.objects.get_or_create_from_players(winner)
-        loser, created = Team.objects.get_or_create_from_players(loser)
-
         game = self.create(winner=winner, loser=loser)
         game.competitions.add(competition)
 
@@ -299,23 +56,22 @@ class GameManager(models.Manager):
         return game
 
     def delete(self, game, competition):
-        history_winner = HistoricalScore.objects.get_last_for_team(
+        history_winner = HistoricalScore.objects.get_last_for_player(
             game.winner,
             game, competition
         )
-        history_loser = HistoricalScore.objects.get_last_for_team(
+        history_loser = HistoricalScore.objects.get_last_for_player(
             game.loser,
             game,
             competition
         )
 
-        Score.objects.filter()
-        winner = game.winner.get_or_create_score(competition)
+        winner = competition.get_or_create_score(game.winner)
         winner.score = history_winner.score
         winner.stdev = history_winner.stdev
         winner.save()
 
-        loser = game.loser.get_or_create_score(competition)
+        loser = competition.get_or_create_score(game.loser)
         loser.score = history_loser.score
         loser.stdev = history_loser.stdev
         loser.save()
@@ -325,8 +81,8 @@ class GameManager(models.Manager):
 
 
 class Game(models.Model):
-    winner = models.ForeignKey(Team, related_name='games_won')
-    loser = models.ForeignKey(Team, related_name='games_lost')
+    winner = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='games_won')
+    loser = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='games_lost')
     date = models.DateTimeField(default=timezone.now)
 
     objects = GameManager()
@@ -335,7 +91,7 @@ class Game(models.Model):
         if (self.winner_id is not None and self.loser_id is not None and
                 self.winner_id == self.loser_id):
             raise ValidationError(
-                "Winner and loser can't be the same team!"
+                "Winner and loser can't be the same person!"
             )
 
     def __str__(self):
@@ -350,10 +106,10 @@ class Game(models.Model):
 
         for competition in self.competitions.all():
             if notify:
-                old_rankings = Score.objects.get_ranking_by_team(competition)
+                old_rankings = Score.objects.get_ranking_by_player(competition)
 
-            winner_score = winner.get_or_create_score(competition)
-            loser_score = loser.get_or_create_score(competition)
+            winner_score = competition.get_or_create_score(winner)
+            loser_score = competition.get_or_create_score(loser)
 
             winner_new_score, loser_new_score = rate_1vs1(
                 Rating(winner_score.score, winner_score.stdev),
@@ -372,7 +128,7 @@ class Game(models.Model):
                 game=self,
                 score=winner_score.score,
                 stdev=winner_score.stdev,
-                team=winner,
+                player=winner,
                 competition=competition
             )
 
@@ -380,30 +136,30 @@ class Game(models.Model):
                 game=self,
                 score=loser_score.score,
                 stdev=loser_score.stdev,
-                team=loser,
+                player=loser,
                 competition=competition
             )
 
             if notify:
-                new_rankings = Score.objects.get_ranking_by_team(competition)
+                new_rankings = Score.objects.get_ranking_by_player(competition)
 
-                for team in [winner, loser]:
-                    if (team not in old_rankings or
-                            old_rankings[team] != new_rankings[team]):
-                        team_ranking_changed.send(
+                for player in [winner, loser]:
+                    if (player not in old_rankings or
+                            old_rankings[player] != new_rankings[player]):
+                        ranking_changed.send(
                             sender=self,
-                            team=team,
-                            old_ranking=(old_rankings[team]
-                                         if team in old_rankings else None),
-                            new_ranking=new_rankings[team],
+                            player=player,
+                            old_ranking=(old_rankings[player]
+                                         if player in old_rankings else None),
+                            new_ranking=new_rankings[player],
                             competition=competition
                         )
 
-    def get_opponent(self, team):
+    def get_opponent(self, player):
         """
-        Return the opponent team relative to the given team.
+        Return the opponent player relative to the given player.
         """
-        return self.winner if self.winner_id != team.id else self.loser
+        return self.winner if self.winner_id != player.id else self.loser
 
 
 class HistoricalScoreManager(models.Manager):
@@ -413,16 +169,16 @@ class HistoricalScoreManager(models.Manager):
                 .filter(game__competitions=competition)
                 .order_by('-id')[:nb_games])
 
-    def get_latest_results_by_team(self, nb_games, competition,
-                                   start=0, return_json=False):
+    def get_latest_results_by_player(self, nb_games, competition,
+                                     start=0, return_json=False):
         """
-        Get nb_games latest scores for each team
+        Get nb_games latest scores for each player
 
         :param nb_games:int number of games
         :param return_json:boolean
-        :return:dict Dict with key=team and value=list of score objects
+        :return:dict Dict with key=player and value=list of score objects
 
-        {team_a: [{skill: xx, played: xx, game: game_id}, ...]}
+        {player_a: [{skill: xx, played: xx, game: game_id}, ...]}
         """
 
         # add start to nb_games because slicing want the end position
@@ -431,51 +187,51 @@ class HistoricalScoreManager(models.Manager):
                  .order_by('-id')
                  .prefetch_related('historical_scores')[start:nb_games])
 
-        teams = (Team.objects
-                 .filter(
-                     Q(games_won__competitions=competition) |
-                     Q(games_lost__competitions=competition)
-                 )
-                 .distinct())
-        scores_by_team = {}
+        players = (get_user_model().objects
+                   .filter(
+                       Q(games_won__competitions=competition) |
+                       Q(games_lost__competitions=competition)
+                   )
+                   .distinct())
+        scores_by_player = {}
 
         for game in reversed(games):
             all_skills_by_game = {}
 
-            for team in teams:
-                team_scores = scores_by_team.get(team, [])
+            for player in players:
+                player_scores = scores_by_player.get(player, [])
                 result = {'game': game.id}
 
-                if team.id in [game.winner_id, game.loser_id]:
-                    team_historical_score = None
+                if player.id in [game.winner_id, game.loser_id]:
+                    player_historical_score = None
                     # We don't use get() here so we don't hit the database
                     # since historical scores are prefetched
                     for historical_score in game.historical_scores.all():
-                        if (historical_score.team_id == team.id
+                        if (historical_score.player_id == player.id
                                 and historical_score.competition_id ==
                                 competition.id):
-                            team_historical_score = historical_score
+                            player_historical_score = historical_score
                             break
 
-                    assert team_historical_score is not None
+                    assert player_historical_score is not None
 
-                    result['skill'] = team_historical_score.score
+                    result['skill'] = player_historical_score.score
 
-                    result['win'] = team.id == game.winner_id
+                    result['win'] = player.id == game.winner_id
                     result['played'] = True
                 else:
                     result['played'] = False
-                    if len(team_scores) == 0:
-                        result['skill'] = self.get_last_score_for_team(
-                            team, game, competition
+                    if len(player_scores) == 0:
+                        result['skill'] = self.get_last_score_for_player(
+                            player, game, competition
                         )
                     else:
-                        result['skill'] = team_scores[-1]['skill']
+                        result['skill'] = player_scores[-1]['skill']
 
-                all_skills_by_game[team] = result['skill']
+                all_skills_by_game[player] = result['skill']
 
-                team_scores.append(result)
-                scores_by_team[team] = team_scores
+                player_scores.append(result)
+                scores_by_player[player] = player_scores
 
             positions_for_game = sorted(
                 six.iteritems(all_skills_by_game),
@@ -483,40 +239,40 @@ class HistoricalScoreManager(models.Manager):
                 reverse=True
             )
             for idx, position in enumerate(positions_for_game, start=1):
-                scores_by_team[position[0]][-1]['position'] = idx
+                scores_by_player[position[0]][-1]['position'] = idx
 
         if return_json:
             json_result = {}
-            for team, results in scores_by_team.items():
-                json_result[team.get_name()] = results
+            for player, results in scores_by_player.items():
+                json_result[player.get_full_name()] = results
 
             return json.dumps(json_result)
 
-        return scores_by_team
+        return scores_by_player
 
-    def get_last_score_for_team(self, team, game, competition):
+    def get_last_score_for_player(self, player, game, competition):
         """
-        Returns the latest skill before game :game for team :team
+        Returns the latest skill before game :game for player :player
 
-        :param team:Team
+        :param player:Player
         :param game:Game
         :return:float skill
         """
-        return self.get_last_for_team(team, game, competition).score
+        return self.get_last_for_player(player, game, competition).score
 
-    def get_last_for_team(self, team, game, competition):
+    def get_last_for_player(self, player, game, competition):
         """
-        Return the latest historical score before game for a team in the
+        Return the latest historical score before game for a player in the
         competition.
 
-        :param team:Team
+        :param player:Player
         :param game:Game
         :param competition:Competition
         :return:HistoricalScore
         """
         last_score = HistoricalScore.objects.filter(
             game_id__lt=game.id,
-            team=team,
+            player=player,
             competition=competition
         ).order_by('-id').first()
 
@@ -525,7 +281,7 @@ class HistoricalScoreManager(models.Manager):
                 game=game,
                 score=settings.GAME_INITIAL_MU,
                 stdev=settings.GAME_INITIAL_SIGMA,
-                team=team,
+                player=player,
                 competition=competition
             )
 
@@ -534,25 +290,21 @@ class HistoricalScoreManager(models.Manager):
 
 class ScoreManager(models.Manager):
     def get_score_board(self, competition):
-        User = get_user_model()
-
         return (self.get_queryset().filter(competition=competition)
-                .order_by('-score').prefetch_related(
-                    Prefetch('team__users',
-                             queryset=User.objects.select_related('profile'))))
+                .order_by('-score').select_related('player__profile'))
 
-    def get_ranking_by_team(self, competition):
+    def get_ranking_by_player(self, competition):
         score_board = self.get_score_board(competition)
 
         return dict(zip(
-            [score.team for score in score_board],
+            [score.player for score in score_board],
             range(1, len(score_board) + 1)
         ))
 
 
 class Score(models.Model):
     competition = models.ForeignKey('Competition', related_name='scores')
-    team = models.ForeignKey(Team, related_name='scores')
+    player = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='scores')
     score = models.FloatField('skills', default=settings.GAME_INITIAL_MU)
     stdev = models.FloatField('standard deviation',
                               default=settings.GAME_INITIAL_SIGMA)
@@ -561,34 +313,28 @@ class Score(models.Model):
 
     class Meta:
         unique_together = (
-            ('competition', 'team'),
+            ('competition', 'player'),
         )
 
     def __str__(self):
         return '[%s] %s: mu = %s, s = %s' % (self.competition.name,
-                                             self.get_team_name(), self.score,
-                                             self.stdev)
-
-    def get_team_name(self):
-        return self.team.get_name()
-
-    def get_team_avatar(self):
-        return self.team.get_avatar()
+                                             self.player.get_full_name(),
+                                             self.score, self.stdev)
 
 
 class HistoricalScore(models.Model):
     game = models.ForeignKey(Game, related_name='historical_scores')
     competition = models.ForeignKey('Competition')
-    team = models.ForeignKey(Team, related_name='historical_scores')
-    score = models.FloatField('Current team score')
-    stdev = models.FloatField('Current team standard deviation',
+    player = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='historical_scores')
+    score = models.FloatField('Current player score')
+    stdev = models.FloatField('Current player standard deviation',
                               default=settings.GAME_INITIAL_SIGMA)
 
     objects = HistoricalScoreManager()
 
     class Meta:
         unique_together = (
-            ('team', 'game', 'competition'),
+            ('player', 'game', 'competition'),
         )
 
 
@@ -604,7 +350,6 @@ class Competition(models.Model):
     description = models.TextField(blank=True)
     start_date = models.DateTimeField(default=timezone.now)
     end_date = models.DateTimeField(null=True, blank=True)
-    teams = models.ManyToManyField(Team, through=Score, related_name='competitions')
     games = models.ManyToManyField(Game, related_name='competitions')
     slug = models.SlugField(unique=True)
     players = models.ManyToManyField(settings.AUTH_USER_MODEL,
@@ -674,6 +419,71 @@ class Competition(models.Model):
 
         self.players.remove(user)
         user_left_competition.send(sender=self, user=user)
+
+    def get_games_played_by(self, player):
+        """
+        Fetch the list of games played by the user, filtered by competition.
+        """
+        games = (self.games
+                     .order_by('-date')
+                     .select_related('winner', 'loser')
+                     .filter(Q(winner_id=player.id) | Q(loser_id=player.id)))
+
+        return games
+
+    def get_head2head(self, player):
+        """
+        Compute the amount of wins and defeats against all opponents the player
+        played against. The returned value is an OrderedDict since the players
+        are ordered by their score.
+        """
+        return stats.get_head2head(player, self)
+
+    def get_fairness(self, player):
+        """
+        Compute the probability of draw against all opponents
+        (ie. how fair is the game).
+        Returns an OrderedDict of players by score
+        """
+        return stats.get_fairness(player, self)
+
+    def get_last_games_stats(self, player, competition, games_count=10):
+        """
+        Return a dictionary with the latest ``count`` played games and the
+        number of wins and defeats.
+        """
+        return stats.get_last_games_stats(player, self, games_count)
+
+    def get_longest_streak(self, player):
+        return stats.get_longest_streak(player, self)
+
+    def get_current_streak(self, player):
+        return stats.get_current_streak(player, self)
+
+    def get_or_create_score(self, player):
+        try:
+            score = Score.objects.get(
+                player=player,
+                competition=self
+            )
+        except Score.DoesNotExist:
+            score = Score.objects.create(
+                player=player,
+                competition=self,
+                score=settings.GAME_INITIAL_MU,
+                stdev=settings.GAME_INITIAL_SIGMA
+            )
+
+        return score
+
+    def get_wins(self, player):
+        return player.games_won.filter(competitions=self).count()
+
+    def get_defeats(self, player):
+        return player.games_lost.filter(competitions=self).count()
+
+    def get_score(self, player):
+        return player.scores.get(competition=self)
 
 
 class InactiveCompetitionError(Exception):

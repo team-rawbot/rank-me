@@ -6,7 +6,7 @@ import mock
 from rankme.tests import RankMeTestCase
 
 from .factories import UserFactory, CompetitionFactory
-from ..models import Competition, Game
+from ..models import Game
 from ..signals import game_played
 
 
@@ -22,8 +22,8 @@ class TestGameAnnouncement(RankMeTestCase):
         Game.objects.announce(self.users[0], self.users[1],
                               self.default_competition)
         game = Game.objects.get()
-        self.assertEqual(game.winner.users.get(), self.users[0])
-        self.assertEqual(game.loser.users.get(), self.users[1])
+        self.assertEqual(game.winner, self.users[0])
+        self.assertEqual(game.loser, self.users[1])
         self.assertLess(game.loser.scores.get().score,
                         game.winner.scores.get().score)
 

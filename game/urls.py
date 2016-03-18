@@ -9,7 +9,7 @@ competition_patterns = [
     url(r'^scores/(?P<start>\d+)$', views.competition_detail_score_chart, name='competition_detail_score_chart_with_start'),
     url(r'^game/new/$', views.game_add, name='game_add'),
     url(r'^game/remove/$', views.game_remove, name='game_remove'),
-    url(r'^team/(?P<team_id>\d+)/$', views.team_detail, name='team_detail'),
+    url(r'^player/(?P<player_id>\d+)/$', views.player_detail, name='player_detail'),
     url(r'^join/$', views.competition_join, name='competition_join'),
     url(r'^leave/$', views.competition_leave, name='competition_leave'),
 ]
@@ -21,6 +21,6 @@ urlpatterns = [
         name='competition_add'),
     url(r'^competitions/(?P<competition_slug>[\w-]+)/',
         include(competition_patterns)),
-    url(r'^team/(?P<team_id>\d+)/$', views.team_general_detail,
-        name='team_general_detail'),
+    url(r'^player/(?P<player_id>\d+)/$', views.player_general_detail,
+        name='player_general_detail'),
 ]

@@ -8,9 +8,7 @@
 <div class="team">
     <header class="page-header">
         <h1>
-            {% for player in team.users.all %}
-                {% include 'game/_player_avatar.html' with user=player %}
-            {% endfor %}
+            {% include 'game/_player_avatar.html' with user=player %}
             {{ team }} <small>{{ score.score|floatformat }}</small>
         </h1>
     </header>
@@ -92,7 +90,7 @@
                         <tbody>
                             {% for opponent, results in head2head.iteritems %}
                                 <tr>
-                                    <td><a href="{% url 'team_detail' team_id=opponent.id competition_slug=competition.slug %}">{{ opponent }}</a></td>
+                                    <td><a href="{% url 'player_detail' player_id=opponent.id competition_slug=competition.slug %}">{{ opponent }}</a></td>
                                     <td>{{ results.wins }}</td>
                                     <td>{{ results.defeats }}</td>
                                     <td>{{ results.fairness }}</td>

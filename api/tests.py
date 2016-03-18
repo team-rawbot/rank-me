@@ -2,7 +2,7 @@ from django.core.urlresolvers import reverse
 from rest_framework import status
 from rest_framework.test import APITestCase
 
-from game.tests.factories import UserFactory, CompetitionFactory, TeamFactory
+from game.tests.factories import UserFactory, CompetitionFactory
 
 
 def test_route(self, route):
@@ -40,8 +40,8 @@ class GameCreateTest(APITestCase):
         user_loser = UserFactory()
 
         data = {
-            'winner_id': TeamFactory(users=(user_winner,)).id,
-            'loser_id': TeamFactory(users=(user_loser,)).id,
+            'winner_id': user_winner.id,
+            'loser_id': user_loser.id,
             'competition_id': CompetitionFactory().id
         }
 

@@ -4,18 +4,18 @@ from django.core.exceptions import ValidationError
 from django.template.defaultfilters import slugify
 from django.utils.translation import ugettext as _
 
-from .models import Competition, Game, Team
+from .models import Competition, Game
 
 
 class UserChoiceField(forms.ModelChoiceField):
     def label_from_instance(self, obj):
-        return obj.get_profile().get_full_name()
+        return obj.get_full_name()
 
 
 class GameForm(forms.Form):
     # values overridden in __init__ !
-    winner = UserChoiceField(queryset=Team.objects.none(), empty_label='')
-    loser = UserChoiceField(queryset=Team.objects.none(), empty_label='')
+    winner = UserChoiceField(queryset=get_user_model().objects.none(), empty_label='')
+    loser = UserChoiceField(queryset=get_user_model().objects.none(), empty_label='')
 
     def __init__(self, *args, **kwargs):
         self.competition = kwargs.pop('competition')

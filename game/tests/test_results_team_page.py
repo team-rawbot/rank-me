@@ -9,9 +9,9 @@ from .factories import UserFactory, CompetitionFactory
 User = get_user_model()
 
 
-class TestResultsTeamPage(RankMeTestCase):
+class TestResultsPlayerPage(RankMeTestCase):
     def setUp(self):
-        super(TestResultsTeamPage, self).setUp()
+        super(TestResultsPlayerPage, self).setUp()
 
         # Create one competition and one user.
         # Then add this user to the competition
@@ -25,47 +25,43 @@ class TestResultsTeamPage(RankMeTestCase):
     def test_page_unavailability(self):
         self.login()
 
-        response = self.client.get(reverse('team_detail', kwargs={
-            'team_id': 1,
+        response = self.client.get(reverse('player_detail', kwargs={
+            'player_id': 1,
             'competition_slug': self.default_competition.slug
         }))
         self.assertEqual(404, response.status_code)
 
     def test_page_availability(self):
-        # create 1 user (automatically creates corresponding teams)
         sylvain = UserFactory()
         christoph = UserFactory()
 
-        # create 1 game
         game = Game.objects.announce(
             sylvain, christoph, self.default_competition
         )
 
         self.login()
-        response = self.client.get( reverse('team_detail', kwargs={
-            'team_id': game.winner_id,
+        response = self.client.get(reverse('player_detail', kwargs={
+            'player_id': game.winner_id,
             'competition_slug': self.default_competition.slug
         }))
         self.assertEqual(200, response.status_code)
 
     def test_page_results(self):
-        # create 1 user (automatically creates corresponding teams)
         sylvain = UserFactory()
         christoph = UserFactory()
 
-        # create 3 game
         Game.objects.announce(sylvain, christoph, self.default_competition)
         Game.objects.announce(sylvain, christoph, self.default_competition)
         game = Game.objects.announce(
             christoph, sylvain, self.default_competition
         )
 
-        christoph_team_id = game.winner_id
-        sylvain_team_id = game.loser_id
+        christoph_id = game.winner_id
+        sylvain_id = game.loser_id
 
         self.login()
-        response = self.client.get(reverse('team_detail', kwargs={
-            'team_id': sylvain_team_id,
+        response = self.client.get(reverse('player_detail', kwargs={
+            'player_id': sylvain_id,
             'competition_slug': self.default_competition.slug
         }))
 
@@ -74,8 +70,8 @@ class TestResultsTeamPage(RankMeTestCase):
         self.assertContains(response, '<th>Longest Winning Streak</th>')
         self.assertEqual(response.context['longest_streak'], 2)
 
-        response = self.client.get(reverse('team_detail', kwargs={
-            'team_id': christoph_team_id,
+        response = self.client.get(reverse('player_detail', kwargs={
+            'player_id': christoph_id,
             'competition_slug': self.default_competition.slug
         }))
 

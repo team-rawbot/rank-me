@@ -13,7 +13,7 @@ def index(request):
     scores = list(itertools.chain.from_iterable([t.scores.all() for t in request.user.teams.all()]))
     return render(request, 'user/profile.html', {
         'user': request.user,
-        'profile': request.user.get_profile(),
+        'profile': request.user.profile,
         'scores': scores
     })
 
@@ -22,7 +22,7 @@ def index(request):
 def edit(request):
     if request.method == 'POST':
         user_form = UserForm(request.POST, instance=request.user)
-        profile_form = UserProfileForm(request.POST, instance=request.user.get_profile())
+        profile_form = UserProfileForm(request.POST, instance=request.user.profile)
 
         if user_form.is_valid() and profile_form.is_valid():
             user_form.save()
@@ -30,6 +30,6 @@ def edit(request):
             return HttpResponseRedirect(reverse_lazy('profile'))
     else:
         user_form = UserForm(instance=request.user)
-        profile_form = UserProfileForm(instance=request.user.get_profile())
+        profile_form = UserProfileForm(instance=request.user.profile)
 
     return render(request, 'user/edit.html', {'user_form': user_form, 'profile_form': profile_form})

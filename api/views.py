@@ -7,9 +7,11 @@ from rest_framework import viewsets
 from rest_framework.response import Response
 from rest_framework.authtoken.models import Token
 
-from game.models import Competition, Team, Game, Score
+from game.models import Competition, Game, Score
 
-from .serializers import CompetitionSerializer, TeamSerializer, UserSerializer, GameSerializer, ScoreSerializer
+from .serializers import (
+    CompetitionSerializer, UserSerializer, GameSerializer, ScoreSerializer
+)
 
 
 @psa('social:complete')
@@ -37,14 +39,6 @@ class CompetitionViewSet(viewsets.ReadOnlyModelViewSet):
     """
     queryset = Competition.objects.all()
     serializer_class = CompetitionSerializer
-
-
-class TeamViewSet(viewsets.ReadOnlyModelViewSet):
-    """
-    API Team endpoint
-    """
-    queryset = Team.objects.all()
-    serializer_class = TeamSerializer
 
 
 class UserViewSet(viewsets.ReadOnlyModelViewSet):

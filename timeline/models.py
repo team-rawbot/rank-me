@@ -7,7 +7,7 @@ from django.dispatch import receiver
 from django.utils.translation import ugettext as _
 
 from game.signals import (
-    competition_created, game_played, team_ranking_changed,
+    competition_created, game_played, ranking_changed,
     user_joined_competition, user_left_competition
 )
 from rankme.utils import memoize
@@ -33,8 +33,8 @@ def publish_user_joined_competition(sender, user, **kwargs):
                   details={
                       'user': {
                           'id': user.id,
-                          'name': user.get_profile().get_full_name(),
-                          'avatar': user.get_profile().avatar
+                          'name': user.profile.get_full_name(),
+                          'avatar': user.profile.avatar
                       }
                   })
     event.save()
@@ -47,8 +47,8 @@ def publish_user_left_competition(sender, user, **kwargs):
                   details={
                       'user': {
                           'id': user.id,
-                          'name': user.get_profile().get_full_name(),
-                          'avatar': user.get_profile().avatar
+                          'name': user.profile.get_full_name(),
+                          'avatar': user.profile.avatar
                       }
                   })
     event.save()
@@ -56,32 +56,32 @@ def publish_user_left_competition(sender, user, **kwargs):
 
 @receiver(game_played)
 def publish_game_played(sender, **kwargs):
-    teams = []
-    for team in (sender.winner, sender.loser):
-        teams.append({
-            "id": team.id,
-            "name": team.get_name(),
-            "avatar": team.users.first().get_profile().avatar,
+    players = []
+    for player in (sender.winner, sender.loser):
+        players.append({
+            "id": player.id,
+            "name": player.get_full_name(),
+            "avatar": player.profile.avatar,
         })
 
     event = Event(event_type=Event.TYPE_GAME_PLAYED,
                   competition=sender.competitions.first(),
-                  details={"winner": teams[0], "loser": teams[1]})
+                  details={"winner": players[0], "loser": players[1]})
     event.save()
 
 
-@receiver(team_ranking_changed)
-def publish_team_ranking_changed(sender, team, old_ranking, new_ranking,
-                                 competition, **kwargs):
-    player = {
-        "id": team.id,
-        "name": team.get_name(),
-        "avatar": team.users.first().get_profile().avatar,
+@receiver(ranking_changed)
+def publish_ranking_changed(sender, player, old_ranking, new_ranking,
+                            competition, **kwargs):
+    player_details = {
+        "id": player.id,
+        "name": player.get_full_name(),
+        "avatar": player.profile.avatar,
     }
 
     event = Event(event_type=Event.TYPE_RANKING_CHANGED,
                   competition=competition, details={
-                      "player": player,
+                      "player": player_details,
                       "old_ranking": old_ranking,
                       "new_ranking": new_ranking
                   })
@@ -89,9 +89,9 @@ def publish_team_ranking_changed(sender, team, old_ranking, new_ranking,
 
 
 class EventManager(models.Manager):
-    def get_all_for_user(self, user):
+    def get_all_for_player(self, player):
         return self.filter(
-            Q(competition__in=user.competitions.all()) | Q(competition=None)
+            Q(competition__in=player.competitions.all()) | Q(competition=None)
         )
 
 

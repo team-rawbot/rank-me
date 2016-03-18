@@ -15,11 +15,9 @@
                     <tr class="score-item">
                         <td class="rank-num">{{ forloop.counter }}</td>
                         <td>
-                            <a href="{% url 'team_detail' team_id=score.team_id competition_slug=competition.slug  %}">
-                                {% for player in score.team.users.all %}
-                                    {% include 'game/_player_avatar.html' with user=player %}
-                                {% endfor %}
-                                {{ score.team }}
+                            <a href="{% url 'player_detail' player_id=score.player_id competition_slug=competition.slug  %}">
+                                {% include 'game/_player_avatar.html' with user=score.player %}
+                                {{ score.player }}
                             </a>
                         </td>
                         <td class="text-muted">{{ score.score|floatformat:"2" }}</td>

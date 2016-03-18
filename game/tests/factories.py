@@ -3,7 +3,7 @@ from django.utils import timezone
 
 import factory
 
-from ..models import Competition, Team
+from ..models import Competition
 
 
 class UserFactory(factory.django.DjangoModelFactory):
@@ -13,20 +13,6 @@ class UserFactory(factory.django.DjangoModelFactory):
     username = factory.Sequence(lambda n: 'user%d' % n)
     email = factory.Sequence(lambda n: 'user%d@email.com' % n)
     password = factory.PostGenerationMethodCall('set_password', 'password')
-
-
-class TeamFactory(factory.django.DjangoModelFactory):
-    class Meta:
-        model = Team
-
-    @factory.post_generation
-    def users(self, create, extracted):
-        if not create:
-            return
-
-        if extracted:
-            for user in extracted:
-                self.users.add(user)
 
 
 class CompetitionFactory(factory.django.DjangoModelFactory):

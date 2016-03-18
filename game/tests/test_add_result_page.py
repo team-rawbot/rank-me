@@ -1,12 +1,8 @@
-from django.contrib.auth import get_user_model
 from django.core.urlresolvers import reverse
 
 from rankme.tests import RankMeTestCase
 
 from .factories import UserFactory, CompetitionFactory
-from ..models import Competition
-
-User = get_user_model()
 
 
 class TestAddResultPage(RankMeTestCase):
