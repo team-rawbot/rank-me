@@ -60,7 +60,7 @@ class Team(models.Model):
 
     objects = TeamManager()
 
-    def __unicode__(self):
+    def __str__(self):
         return self.get_name()
 
     def get_name(self):
@@ -260,8 +260,7 @@ class GameManager(models.Manager):
         users_with_profile_qs = User.objects.select_related('profile')
 
         games = (self.get_queryset()
-                 .select_related('winner', 'loser', 'winner__users__profile',
-                 'loser__users__profile')
+                 .select_related('winner', 'loser')
                  .prefetch_related(
                      Prefetch('winner__users', queryset=users_with_profile_qs),
                      Prefetch('loser__users', queryset=users_with_profile_qs))
@@ -339,7 +338,7 @@ class Game(models.Model):
                 "Winner and loser can't be the same team!"
             )
 
-    def __unicode__(self):
+    def __str__(self):
         return u"%s beats %s" % (
             self.winner,
             self.loser
@@ -437,8 +436,7 @@ class HistoricalScoreManager(models.Manager):
                      Q(games_won__competitions=competition) |
                      Q(games_lost__competitions=competition)
                  )
-                 .distinct()
-                 .select_related('winner', 'loser'))
+                 .distinct())
         scores_by_team = {}
 
         for game in reversed(games):
@@ -566,7 +564,7 @@ class Score(models.Model):
             ('competition', 'team'),
         )
 
-    def __unicode__(self):
+    def __str__(self):
         return '[%s] %s: mu = %s, s = %s' % (self.competition.name,
                                              self.get_team_name(), self.score,
                                              self.stdev)
@@ -620,7 +618,7 @@ class Competition(models.Model):
     class Meta:
         ordering = ('name',)
 
-    def __unicode__(self):
+    def __str__(self):
         return self.name
 
     def save(self, *args, **kwargs):

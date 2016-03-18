@@ -21,7 +21,7 @@ class UserProfile(models.Model):
 
         return display_name.title()
 
-    def __unicode__(self):
+    def __str__(self):
         return self.get_full_name()
 
 

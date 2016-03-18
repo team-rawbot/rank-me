@@ -20,10 +20,8 @@ class RecalculateCommandTestCase(RankMeTestCase):
         Game.objects.announce(users[0], users[1], default_competition)
         Game.objects.announce(users[0], users[1], default_competition)
 
-        args = [25, 8]
-        opts = {}
         stdout = StringIO()
-        call_command('recalculate', stdout=stdout, *args, **opts)
+        call_command('recalculate', '25', '8', stdout=stdout)
 
         winner_score, loser_score = rate_1vs1(
             Rating(25, 8), Rating(25, 8)

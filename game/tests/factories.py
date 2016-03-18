@@ -7,7 +7,8 @@ from ..models import Competition, Team
 
 
 class UserFactory(factory.django.DjangoModelFactory):
-    FACTORY_FOR = get_user_model()
+    class Meta:
+        model = get_user_model()
 
     username = factory.Sequence(lambda n: 'user%d' % n)
     email = factory.Sequence(lambda n: 'user%d@email.com' % n)
@@ -15,7 +16,8 @@ class UserFactory(factory.django.DjangoModelFactory):
 
 
 class TeamFactory(factory.django.DjangoModelFactory):
-    FACTORY_FOR = Team
+    class Meta:
+        model = Team
 
     @factory.post_generation
     def users(self, create, extracted):
@@ -28,7 +30,8 @@ class TeamFactory(factory.django.DjangoModelFactory):
 
 
 class CompetitionFactory(factory.django.DjangoModelFactory):
-    FACTORY_FOR = Competition
+    class Meta:
+        model = Competition
 
     name = factory.Sequence(lambda n: 'competition%d' % n)
     start_date = timezone.now()
