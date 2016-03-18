@@ -1,7 +1,8 @@
 from rankme.tests import RankMeTestCase
 
 from .factories import UserFactory, CompetitionFactory
-from ..models import Competition, HistoricalScore, Game
+from .. import stats
+from ..models import HistoricalScore, Game
 
 
 class TestHistoricalScore(RankMeTestCase):
@@ -12,8 +13,8 @@ class TestHistoricalScore(RankMeTestCase):
         game = Game.objects.announce(users[0], users[1], default_competition)
         self.assertEqual(HistoricalScore.objects.count(), 2)
 
-        historical_scores = HistoricalScore.objects.get_latest_results_by_player(
-            10, default_competition
+        historical_scores = stats.get_latest_results_by_player(
+            default_competition, 10
         )
         self.assertEqual(len(historical_scores), 2)
         self.assertEqual(historical_scores[game.winner][0]['position'], 1)
@@ -24,8 +25,8 @@ class TestHistoricalScore(RankMeTestCase):
         game = Game.objects.announce(users[1], users[0], default_competition)
         self.assertEqual(HistoricalScore.objects.count(), 6)
 
-        historical_scores = HistoricalScore.objects.get_latest_results_by_player(
-            10, default_competition
+        historical_scores = stats.get_latest_results_by_player(
+            default_competition, 10
         )
         self.assertEqual(len(historical_scores), 2)
 
@@ -36,7 +37,7 @@ class TestHistoricalScore(RankMeTestCase):
         self.assertEqual(historical_scores[game.winner][2]['position'], 1)
         self.assertEqual(historical_scores[game.loser][2]['position'], 2)
 
-        historical_scores = HistoricalScore.objects.get_latest_results_by_player(
-            2, default_competition
+        historical_scores = stats.get_latest_results_by_player(
+            default_competition, 2
         )
         self.assertEqual(len(historical_scores[game.winner]), 2)

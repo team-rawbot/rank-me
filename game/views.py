@@ -102,7 +102,7 @@ def competition_detail(request, competition_slug):
     competition = get_object_or_404(Competition, slug=competition_slug)
 
     latest_results = Game.objects.get_latest(competition)
-    score_board = Score.objects.get_score_board(competition)
+    score_board = competition.get_score_board()
 
     context = {
         'latest_results': latest_results,
