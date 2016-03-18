@@ -5,7 +5,7 @@
     <div class="event-icon event-icon--competition glyphicon glyphicon-tower"></div>
 </div>
 <div class="event-body">
-    {% blocktrans with url=competition_url name=event.get_details.competition.name %}
+    {% blocktrans with url=competition_url name=event.details.competition.name %}
         Competition <strong><a href="{{ url }}">{{ name }}</a></strong> was created
     {% endblocktrans %}
 </div>

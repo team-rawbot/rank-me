@@ -1,6 +1,6 @@
 import json
 
-from django.contrib.postgres.fields import JSONField
+from django.contrib.postgres.fields import HStoreField, JSONField
 from django.db import models
 from django.db.models import Q
 from django.dispatch import receiver
@@ -10,7 +10,6 @@ from game.signals import (
     competition_created, game_played, ranking_changed,
     user_joined_competition, user_left_competition
 )
-from rankme.utils import memoize
 
 
 @receiver(competition_created)
@@ -110,7 +109,7 @@ class Event(models.Model):
     )
 
     event_type = models.CharField(max_length=50, choices=TYPES)
-    details = JSONField()
+    details = JSONField(default=dict)
     date = models.DateTimeField(auto_now_add=True)
     competition = models.ForeignKey('game.Competition', null=True)
 
@@ -119,14 +118,5 @@ class Event(models.Model):
     class Meta:
         ordering = ["-date"]
 
-    @memoize
     def get_details(self):
-        details = {}
-
-        for key, value in self.details.iteritems():
-            try:
-                details[key] = json.loads(value)
-            except:
-                details[key] = value
-
-        return details
+        return self.details

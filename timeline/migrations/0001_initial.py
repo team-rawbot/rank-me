@@ -1,7 +1,8 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 
-from django.contrib.postgres.fields import JSONField
+import django.contrib.postgres.fields.hstore
+import django.contrib.postgres.operations
 from django.db import models, migrations
 
 
@@ -12,12 +13,13 @@ class Migration(migrations.Migration):
     ]
 
     operations = [
+        django.contrib.postgres.operations.HStoreExtension(),
         migrations.CreateModel(
             name='Event',
             fields=[
                 ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
                 ('event_type', models.CharField(max_length=50)),
-                ('details', JSONField()),
+                ('details', django.contrib.postgres.fields.hstore.HStoreField()),
                 ('date', models.DateTimeField(auto_now_add=True)),
                 ('competition', models.ForeignKey(to='game.Competition')),
             ],
