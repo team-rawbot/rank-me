@@ -1,13 +1,8 @@
-import datetime
-import pytz
-
-from django.conf import settings
 from django.core.urlresolvers import reverse
-from django.utils import timezone
 
 from rankme.tests import RankMeTestCase
 
-from .factories import UserFactory
+from ..factories import UserFactory
 
 
 class TestHomepage(RankMeTestCase):

@@ -1,8 +1,8 @@
 from rankme.tests import RankMeTestCase
 
-from .factories import UserFactory, CompetitionFactory
-from .. import stats
-from ..models import HistoricalScore, Game
+from ..factories import UserFactory, CompetitionFactory
+from ... import stats
+from ...models import HistoricalScore, Game
 
 
 class TestHistoricalScore(RankMeTestCase):

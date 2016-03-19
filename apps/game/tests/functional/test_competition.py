@@ -7,8 +7,8 @@ from django.utils import timezone
 
 from rankme.tests import RankMeTestCase
 
-from ..models import Competition
-from .factories import UserFactory, CompetitionFactory
+from ...models import Competition
+from ..factories import UserFactory, CompetitionFactory
 
 
 class TestCompetition(RankMeTestCase):

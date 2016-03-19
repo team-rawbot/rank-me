@@ -4,9 +4,9 @@ import mock
 
 from rankme.tests import RankMeTestCase
 
-from .factories import UserFactory, CompetitionFactory
-from .. import stats
-from ..signals import ranking_changed
+from ..factories import UserFactory, CompetitionFactory
+from ... import stats
+from ...signals import ranking_changed
 
 
 class TestTeamGetOrCreate(RankMeTestCase):

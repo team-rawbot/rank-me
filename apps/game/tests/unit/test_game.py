@@ -5,9 +5,9 @@ import mock
 
 from rankme.tests import RankMeTestCase
 
-from .factories import UserFactory, CompetitionFactory
-from ..models import Game
-from ..signals import game_played
+from ..factories import UserFactory, CompetitionFactory
+from ...models import Game
+from ...signals import game_played
 
 
 class TestGameAnnouncement(RankMeTestCase):

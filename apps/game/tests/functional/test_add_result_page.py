@@ -2,7 +2,7 @@ from django.core.urlresolvers import reverse
 
 from rankme.tests import RankMeTestCase
 
-from .factories import UserFactory, CompetitionFactory
+from ..factories import UserFactory, CompetitionFactory
 
 
 class TestAddResultPage(RankMeTestCase):

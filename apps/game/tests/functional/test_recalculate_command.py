@@ -5,8 +5,8 @@ from django.core.management import call_command
 from trueskill import Rating, rate_1vs1
 
 from rankme.tests import RankMeTestCase
-from ..models import Competition, Game
-from .factories import UserFactory, CompetitionFactory
+from ...models import Game
+from ..factories import UserFactory, CompetitionFactory
 
 
 class RecalculateCommandTestCase(RankMeTestCase):

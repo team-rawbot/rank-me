@@ -3,8 +3,8 @@ from django.core.urlresolvers import reverse
 
 from rankme.tests import RankMeTestCase
 
-from ..models import Game
-from .factories import UserFactory, CompetitionFactory
+from ...models import Game
+from ..factories import UserFactory, CompetitionFactory
 
 User = get_user_model()
 
