@@ -3,8 +3,6 @@ from itertools import groupby
 import json
 import operator
 
-from django.core.exceptions import ObjectDoesNotExist
-
 from trueskill import Rating, quality_1vs1
 
 
@@ -49,20 +47,22 @@ def get_head2head(player, competition):
 
 def get_fairness(player, competition):
     """
-    Compute the probability of draw against all opponents
-    (ie. how fair is the game).
-    Returns an OrderedDict of players by score
+    Compute the probability of draw against all opponents (ie. how fair is the
+    game). Return an OrderedDict of players by score.
     """
     qualities = {}
 
     own_score = competition.get_score(player)
     opponents = competition.players.exclude(pk=player.pk)
+    scores = (competition.scores.filter(player__in=opponents)
+                                .select_related('player'))
+    score_by_opponent = {score.player: score for score in scores}
 
     for opponent in opponents:
-        try:
-            score = competition.get_score(opponent)
-        except ObjectDoesNotExist:
+        if opponent not in score_by_opponent:
             continue
+
+        score = score_by_opponent[opponent]
 
         quality = quality_1vs1(
             Rating(own_score.score, own_score.stdev),
