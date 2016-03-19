@@ -102,7 +102,7 @@ class Competition(models.Model):
 
     def get_games_played_by(self, player):
         """
-        Fetch the list of games played by the user, filtered by competition.
+        Fetch the list of games played by the user in the competition.
         """
         games = (self.games
                      .order_by('-date')

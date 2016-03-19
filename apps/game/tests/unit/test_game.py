@@ -11,9 +11,9 @@ from ...models import Game, HistoricalScore
 from ...signals import game_played
 
 
-class TestGameAnnouncement(RankMeTestCase):
+class GameTestCase(RankMeTestCase):
     def setUp(self):
-        super(TestGameAnnouncement, self).setUp()
+        super().setUp()
 
         # Create 4 dummy users
         self.users = [UserFactory() for id in range(4)]
@@ -99,3 +99,7 @@ class TestGameAnnouncement(RankMeTestCase):
         self.default_competition.add_game(self.users[0], self.users[1])
         new_score = self.default_competition.get_score(self.users[0])
         self.assertTrue(new_score.score > old_score.score)
+
+    def test_get_opponent_returns_opponent(self):
+        game = self.default_competition.add_game(self.users[0], self.users[1])
+        self.assertEqual(game.get_opponent(self.users[0]), self.users[1])
