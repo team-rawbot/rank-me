@@ -1,6 +1,8 @@
 from django.conf import settings
 from django.db import models
 
+from trueskill import Rating, rate_1vs1
+
 
 class Score(models.Model):
     competition = models.ForeignKey('Competition', related_name='scores')
@@ -48,3 +50,38 @@ class HistoricalScore(models.Model):
         unique_together = (
             ('player', 'game'),
         )
+
+
+def update_players_scores(winner, loser, game):
+    """
+    Compute the new score of the winner and the loser, update their scores and
+    create ``HistoricalScore`` objects.
+    """
+    winner_score = game.competition.get_or_create_score(winner)
+    loser_score = game.competition.get_or_create_score(loser)
+
+    winner_new_score, loser_new_score = rate_1vs1(
+        Rating(winner_score.score, winner_score.stdev),
+        Rating(loser_score.score, loser_score.stdev)
+    )
+
+    update_player_score(winner_score, winner_new_score, game)
+    update_player_score(loser_score, loser_new_score, game)
+
+
+def update_player_score(old_score, new_score, game):
+    """
+    Update the player score with the new TrueSkill score. The ``game``
+    parameter is used to track the game the update is coming from to create the
+    ``HistoricalScore`` object.
+    """
+    old_score.score = new_score.mu
+    old_score.stdev = new_score.sigma
+    old_score.save()
+
+    HistoricalScore.objects.create(
+        game=game,
+        score=old_score.score,
+        stdev=old_score.stdev,
+        player=old_score.player,
+    )

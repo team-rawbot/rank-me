@@ -3,6 +3,8 @@ from itertools import groupby
 import json
 import operator
 
+from .models import HistoricalScore
+
 from trueskill import Rating, quality_1vs1
 
 
@@ -202,9 +204,14 @@ def get_latest_results_by_player(competition, nb_games, offset=0,
             else:
                 result['played'] = False
                 if len(player_scores) == 0:
-                    result['skill'] = competition.get_last_score_for_player(
+                    last_score = competition.get_last_score_for_player(
                         player, game
-                    ).score
+                    )
+
+                    if not last_score:
+                        last_score = HistoricalScore.objects.get_default()
+
+                    result['skill'] = last_score.score
                 else:
                     result['skill'] = player_scores[-1]['skill']
 
@@ -229,29 +236,3 @@ def get_latest_results_by_player(competition, nb_games, offset=0,
         return json.dumps(json_result)
 
     return scores_by_player
-
-
-def get_last_score_for_player(player, competition, default_score,
-                              last_game=None):
-    """
-    Return the latest historical score before game for a player in the
-    competition.
-
-    :param player:Player
-    :param game:Game
-    :param competition:Competition
-    :return:HistoricalScore
-    """
-    last_score = (player.historical_scores
-                        .filter(game__competition=competition)
-                        .order_by('-id'))
-
-    if last_game:
-        last_score = last_score.filter(game_id__lt=last_game.id)
-
-    last_score = last_score.first()
-
-    if last_score is None:
-        last_score = default_score
-
-    return last_score

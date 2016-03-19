@@ -5,10 +5,10 @@ from django.db.models import Q
 from django.template.defaultfilters import slugify
 from django.utils import timezone
 
-from .. import signals, stats
+from .. import signals
 from ..exceptions import CannotLeaveCompetitionError
 from .game import Game
-from .score import HistoricalScore, Score
+from .score import Score
 
 
 class CompetitionManager(models.Manager):
@@ -176,13 +176,14 @@ class Competition(models.Model):
         Returns the latest HistoricalScore before ``last_game`` for the given
         ``player``.
         """
-        default_score = HistoricalScore.objects.get_default()
-        default_score.game = last_game
-        default_score.competition = self
-        default_score.player = player
+        last_score = (player.historical_scores
+                            .filter(game__competition=self)
+                            .order_by('-id'))
 
-        return stats.get_last_score_for_player(player, self, default_score,
-                                               last_game)
+        if last_game:
+            last_score = last_score.filter(game_id__lt=last_game.id)
+
+        return last_score.first()
 
     def get_latest_games(self, n=20):
         """

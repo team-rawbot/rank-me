@@ -1,5 +1,3 @@
-from trueskill import Rating, rate_1vs1
-
 from django.conf import settings
 from django.core.exceptions import ValidationError
 from django.db import models, transaction
@@ -7,7 +5,7 @@ from django.utils import timezone
 
 from .. import signals
 from ..exceptions import InactiveCompetitionError
-from .score import HistoricalScore
+from .score import update_players_scores
 
 
 class GameManager(models.Manager):
@@ -67,68 +65,43 @@ class Game(models.Model):
         )
 
     def delete(self):
-        history_winner = self.competition.get_last_score_for_player(
-            self.winner, self
-        )
-        history_loser = self.competition.get_last_score_for_player(
-            self.loser, self
-        )
+        """
+        Delete the game object and handle related score deletion.
+        """
+        for player in [self.winner, self.loser]:
+            historical_score = self.competition.get_last_score_for_player(
+                player, self
+            )
 
-        winner = self.competition.get_or_create_score(self.winner)
-        winner.score = history_winner.score
-        winner.stdev = history_winner.stdev
-        winner.save()
-
-        loser = self.competition.get_or_create_score(self.loser)
-        loser.score = history_loser.score
-        loser.stdev = history_loser.stdev
-        loser.save()
+            # If the player has a previous score, set its current score to the
+            # one before the deleted game. Otherwise, delete its related score
+            # since this was its only game in the competition
+            if historical_score:
+                score = self.competition.get_or_create_score(player)
+                score.score = historical_score.score
+                score.stdev = historical_score.stdev
+                score.save()
+            else:
+                score = self.competition.get_score(player)
+                score.delete()
 
         self.historical_scores.all().delete()
         super().delete()
 
     def update_score(self, notify=True):
-        winner = self.winner
-        loser = self.loser
-        competition = self.competition
+        """
+        Update players scores. This method should be called when a new game is
+        created.
+        """
+        if notify:
+            old_rankings = self.competition.get_ranking_by_player()
+
+        update_players_scores(self.winner, self.loser, self)
 
         if notify:
-            old_rankings = competition.get_ranking_by_player()
+            new_rankings = self.competition.get_ranking_by_player()
 
-        winner_score = competition.get_or_create_score(winner)
-        loser_score = competition.get_or_create_score(loser)
-
-        winner_new_score, loser_new_score = rate_1vs1(
-            Rating(winner_score.score, winner_score.stdev),
-            Rating(loser_score.score, loser_score.stdev)
-        )
-
-        winner_score.score = winner_new_score.mu
-        winner_score.stdev = winner_new_score.sigma
-        winner_score.save()
-
-        loser_score.score = loser_new_score.mu
-        loser_score.stdev = loser_new_score.sigma
-        loser_score.save()
-
-        HistoricalScore.objects.create(
-            game=self,
-            score=winner_score.score,
-            stdev=winner_score.stdev,
-            player=winner,
-        )
-
-        HistoricalScore.objects.create(
-            game=self,
-            score=loser_score.score,
-            stdev=loser_score.stdev,
-            player=loser,
-        )
-
-        if notify:
-            new_rankings = competition.get_ranking_by_player()
-
-            for player in [winner, loser]:
+            for player in [self.winner, self.loser]:
                 if (player not in old_rankings or
                         old_rankings[player] != new_rankings[player]):
                     signals.ranking_changed.send(
@@ -137,7 +110,7 @@ class Game(models.Model):
                         old_ranking=(old_rankings[player]
                                      if player in old_rankings else None),
                         new_ranking=new_rankings[player],
-                        competition=competition
+                        competition=self.competition
                     )
 
     def get_opponent(self, player):
