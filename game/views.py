@@ -41,10 +41,10 @@ def player_detail(request, competition_slug, player_id):
     competition = get_object_or_404(Competition, slug=competition_slug)
     player = get_object_or_404(get_user_model(), pk=player_id)
 
-    head2head = competition.get_head2head(player)
-    last_results = competition.get_last_games_stats(player, 10)
-    longest_streak = competition.get_longest_streak(player)
-    current_streak = competition.get_current_streak(player)
+    head2head = stats.get_head2head(player, competition)
+    last_results = stats.get_last_games_stats(player, competition, 10)
+    longest_streak = stats.get_longest_streak(player, competition)
+    current_streak = stats.get_current_streak(player, competition)
 
     wins = competition.get_wins(player)
     defeats = competition.get_defeats(player)
@@ -101,7 +101,7 @@ def competition_detail(request, competition_slug):
     """
     competition = get_object_or_404(Competition, slug=competition_slug)
 
-    latest_results = Game.objects.get_latest(competition)
+    latest_results = competition.get_latest_games()
     score_board = competition.get_score_board()
 
     context = {
@@ -206,7 +206,6 @@ def game_add(request, competition_slug):
 @authorized_user
 @require_POST
 def game_remove(request, competition_slug):
-
     competition = get_object_or_404(Competition, slug=competition_slug)
 
     if not competition.is_active():
@@ -219,10 +218,10 @@ def game_remove(request, competition_slug):
     game_id = request.POST['game_id']
     game = get_object_or_404(Game, pk=game_id)
 
-    last_game = Game.objects.get_latest(competition)[0]
+    last_game = competition.get_latest_games()[0]
 
     if last_game.id == game.id:
-        Game.objects.delete(game, competition)
+        game.delete()
 
         # Remove the player score from the competition if it was its only game
         players = [last_game.winner, last_game.loser]

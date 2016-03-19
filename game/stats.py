@@ -189,8 +189,7 @@ def get_latest_results_by_player(competition, nb_games, offset=0,
                 # We don't use get() here so we don't hit the database
                 # since historical scores are prefetched
                 for historical_score in game.historical_scores.all():
-                    if (historical_score.player_id == player.id and
-                            historical_score.competition_id == competition.id):
+                    if historical_score.player_id == player.id:
                         player_historical_score = historical_score
                         break
 
@@ -243,8 +242,9 @@ def get_last_score_for_player(player, competition, default_score,
     :param competition:Competition
     :return:HistoricalScore
     """
-    last_score = (competition.historical_scores.filter(player=player)
-                                               .order_by('-id'))
+    last_score = (player.historical_scores
+                        .filter(game__competition=competition)
+                        .order_by('-id'))
 
     if last_game:
         last_score = last_score.filter(game_id__lt=last_game.id)

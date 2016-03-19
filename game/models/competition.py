@@ -7,11 +7,15 @@ from django.utils import timezone
 
 from .. import signals, stats
 from ..exceptions import CannotLeaveCompetitionError
+from .game import Game
 from .score import HistoricalScore, Score
 
 
 class CompetitionManager(models.Manager):
     def get_visible_for_user(self, user):
+        """
+        Return all competitions the given user has access to.
+        """
         return self.filter(
             Q(players=user.id) | Q(creator_id=user.id)
         ).distinct()
@@ -50,6 +54,12 @@ class Competition(models.Model):
         if new_competition:
             signals.competition_created.send(sender=self)
 
+    def add_game(self, winner, loser):
+        """
+        Announce a new game in the competition with the given winner and loser.
+        """
+        return Game.objects.announce(winner, loser, self)
+
     def user_has_read_access(self, user):
         return self.user_has_write_access()
 
@@ -62,13 +72,13 @@ class Competition(models.Model):
 
     def is_over(self):
         """
-        Return if the competition end date is reached.
+        Return True if the competition end date is reached.
         """
         return self.end_date is not None and self.end_date < timezone.now()
 
     def is_started(self):
         """
-        Return if the competition start date has passed.
+        Return True if the competition start date has passed.
         """
         return self.start_date <= timezone.now()
 
@@ -96,32 +106,15 @@ class Competition(models.Model):
         """
         games = (self.games
                      .order_by('-date')
-                     .select_related('winner', 'loser')
+                     .select_related('winner', 'winner__profile', 'loser',
+                                     'loser__profile')
                      .filter(Q(winner_id=player.id) | Q(loser_id=player.id)))
 
         return games
 
-    def get_head2head(self, player):
-        return stats.get_head2head(player, self)
-
-    def get_fairness(self, player):
-        return stats.get_fairness(player, self)
-
-    def get_last_games_stats(self, player, competition, games_count=10):
-        return stats.get_last_games_stats(player, self, games_count)
-
-    def get_longest_streak(self, player):
-        return stats.get_longest_streak(player, self)
-
-    def get_current_streak(self, player):
-        return stats.get_current_streak(player, self)
-
     def get_or_create_score(self, player):
         try:
-            score = Score.objects.get(
-                player=player,
-                competition=self
-            )
+            score = self.get_score(player)
         except Score.DoesNotExist:
             score = Score.objects.create(
                 player=player,
@@ -133,24 +126,44 @@ class Competition(models.Model):
         return score
 
     def get_wins(self, player):
+        """
+        Return the number of games won by the player in the competition.
+        """
         return player.games_won.filter(competition=self).count()
 
     def get_defeats(self, player):
+        """
+        Return the number of games lost by the player in the competition.
+        """
         return player.games_lost.filter(competition=self).count()
 
     def get_score(self, player):
+        """
+        Return the score of the user in the competition.
+        """
         return player.scores.get(competition=self)
 
     def get_players(self):
+        """
+        Return a list of players who have played at least 1 game in the
+        competition.
+        """
         return get_user_model().objects.filter(
                   Q(games_won__competition=self) |
                   Q(games_lost__competition=self)).distinct()
 
     def get_score_board(self):
+        """
+        Return sorted scores (highest to lowest) from players in the
+        competition.
+        """
         return (self.scores.order_by('-score')
                            .select_related('player__profile'))
 
     def get_ranking_by_player(self):
+        """
+        Return a dict {player: position} for every player in the ranking.
+        """
         score_board = self.get_score_board()
 
         return dict(zip(
@@ -160,11 +173,8 @@ class Competition(models.Model):
 
     def get_last_score_for_player(self, player, last_game=None):
         """
-        Returns the latest skill before game :game for player :player
-
-        :param player:Player
-        :param game:Game
-        :return:float skill
+        Returns the latest HistoricalScore before ``last_game`` for the given
+        ``player``.
         """
         default_score = HistoricalScore.objects.get_default()
         default_score.game = last_game
@@ -173,3 +183,9 @@ class Competition(models.Model):
 
         return stats.get_last_score_for_player(player, self, default_score,
                                                last_game)
+
+    def get_latest_games(self, n=20):
+        """
+        Return the latest ``n`` games in the competition.
+        """
+        return self.games.get_latest(n)

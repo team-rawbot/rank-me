@@ -36,8 +36,8 @@ class HistoricalScoreManager(models.Manager):
 
 class HistoricalScore(models.Model):
     game = models.ForeignKey('Game', related_name='historical_scores')
-    competition = models.ForeignKey('Competition', related_name='historical_scores')
-    player = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='historical_scores')
+    player = models.ForeignKey(settings.AUTH_USER_MODEL,
+                               related_name='historical_scores')
     score = models.FloatField('Current player score')
     stdev = models.FloatField('Current player standard deviation',
                               default=settings.GAME_INITIAL_SIGMA)
@@ -46,5 +46,5 @@ class HistoricalScore(models.Model):
 
     class Meta:
         unique_together = (
-            ('player', 'game', 'competition'),
+            ('player', 'game'),
         )

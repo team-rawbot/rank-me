@@ -11,16 +11,13 @@ from .score import HistoricalScore
 
 
 class GameManager(models.Manager):
-    def get_latest(self, competition=None):
+    def get_latest(self, n):
         games = (self.get_queryset()
                  .select_related('winner', 'loser', 'winner__profile',
                                  'loser__profile')
                  .order_by('-date'))
 
-        if competition is not None:
-            games = games.filter(competition=competition)
-
-        games = games[:20]
+        games = games[:n]
 
         return games
 
@@ -45,30 +42,6 @@ class GameManager(models.Manager):
 
         return game
 
-    def delete(self, game, competition):
-        history_winner = HistoricalScore.objects.get_last_for_player(
-            game.winner,
-            game, competition
-        )
-        history_loser = HistoricalScore.objects.get_last_for_player(
-            game.loser,
-            game,
-            competition
-        )
-
-        winner = competition.get_or_create_score(game.winner)
-        winner.score = history_winner.score
-        winner.stdev = history_winner.stdev
-        winner.save()
-
-        loser = competition.get_or_create_score(game.loser)
-        loser.score = history_loser.score
-        loser.stdev = history_loser.stdev
-        loser.save()
-
-        game.delete()
-        game.historical_scores.all().delete()
-
 
 class Game(models.Model):
     winner = models.ForeignKey(settings.AUTH_USER_MODEL,
@@ -92,6 +65,27 @@ class Game(models.Model):
             self.winner,
             self.loser
         )
+
+    def delete(self):
+        history_winner = self.competition.get_last_score_for_player(
+            self.winner, self
+        )
+        history_loser = self.competition.get_last_score_for_player(
+            self.loser, self
+        )
+
+        winner = self.competition.get_or_create_score(self.winner)
+        winner.score = history_winner.score
+        winner.stdev = history_winner.stdev
+        winner.save()
+
+        loser = self.competition.get_or_create_score(self.loser)
+        loser.score = history_loser.score
+        loser.stdev = history_loser.stdev
+        loser.save()
+
+        self.historical_scores.all().delete()
+        super().delete()
 
     def update_score(self, notify=True):
         winner = self.winner
@@ -122,7 +116,6 @@ class Game(models.Model):
             score=winner_score.score,
             stdev=winner_score.stdev,
             player=winner,
-            competition=competition
         )
 
         HistoricalScore.objects.create(
@@ -130,7 +123,6 @@ class Game(models.Model):
             score=loser_score.score,
             stdev=loser_score.stdev,
             player=loser,
-            competition=competition
         )
 
         if notify:

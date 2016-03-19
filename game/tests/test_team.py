@@ -5,7 +5,7 @@ import mock
 from rankme.tests import RankMeTestCase
 
 from .factories import UserFactory, CompetitionFactory
-from ..models import Game
+from .. import stats
 from ..signals import ranking_changed
 
 
@@ -20,42 +20,40 @@ class TestTeamGetOrCreate(RankMeTestCase):
     def test_longest_streak(self):
         christoph, laurent, rolf = (UserFactory() for i in range(3))
 
-        game = Game.objects.announce(christoph, rolf, self.default_competition)
+        game = self.default_competition.add_game(christoph, rolf)
         self.assertEqual(
-            self.default_competition.get_longest_streak(game.winner), 1
+            stats.get_longest_streak(game.winner, self.default_competition), 1
         )
         self.assertEqual(
-            self.default_competition.get_longest_streak(game.loser), 0
+            stats.get_longest_streak(game.loser, self.default_competition), 0
         )
-        game = Game.objects.announce(christoph, rolf, self.default_competition)
+        game = self.default_competition.add_game(christoph, rolf)
         self.assertEqual(
-            self.default_competition.get_longest_streak(game.winner), 2
+            stats.get_longest_streak(game.winner, self.default_competition), 2
         )
-        game = Game.objects.announce(christoph, laurent,
-                                     self.default_competition)
+        game = self.default_competition.add_game(christoph, laurent)
         self.assertEqual(
-            self.default_competition.get_longest_streak(game.winner), 3
+            stats.get_longest_streak(game.winner, self.default_competition), 3
         )
 
         # C-C-C-Combo breaker
-        game = Game.objects.announce(rolf, christoph, self.default_competition)
+        game = self.default_competition.add_game(rolf, christoph)
         self.assertEqual(
-            self.default_competition.get_longest_streak(game.loser), 3
+            stats.get_longest_streak(game.loser, self.default_competition), 3
         )
         self.assertEqual(
-            self.default_competition.get_longest_streak(game.winner), 1
+            stats.get_longest_streak(game.winner, self.default_competition), 1
         )
 
-        game = Game.objects.announce(christoph, rolf, self.default_competition)
+        game = self.default_competition.add_game(christoph, rolf)
         self.assertEqual(
-            self.default_competition.get_longest_streak(game.winner), 3
+            stats.get_longest_streak(game.winner, self.default_competition), 3
         )
-        Game.objects.announce(christoph, rolf, self.default_competition)
-        Game.objects.announce(christoph, rolf, self.default_competition)
-        game = Game.objects.announce(christoph, laurent,
-                                     self.default_competition)
+        self.default_competition.add_game(christoph, rolf)
+        self.default_competition.add_game(christoph, rolf)
+        game = self.default_competition.add_game(christoph, laurent)
         self.assertEqual(
-            self.default_competition.get_longest_streak(game.winner), 4
+            stats.get_longest_streak(game.winner, self.default_competition), 4
         )
 
     def test_head2head(self):
@@ -63,9 +61,9 @@ class TestTeamGetOrCreate(RankMeTestCase):
         for player in [christoph, laurent, rolf]:
             self.default_competition.add_user_access(player)
 
-        game = Game.objects.announce(christoph, rolf, self.default_competition)
-        winner_head2head = self.default_competition.get_head2head(game.winner)
-        loser_head2head = self.default_competition.get_head2head(game.loser)
+        game = self.default_competition.add_game(christoph, rolf)
+        winner_head2head = stats.get_head2head(game.winner, self.default_competition)
+        loser_head2head = stats.get_head2head(game.loser, self.default_competition)
 
         self.assertNotIn(game.winner, winner_head2head)
         self.assertNotIn(game.loser, loser_head2head)
@@ -78,9 +76,9 @@ class TestTeamGetOrCreate(RankMeTestCase):
         self.assertEqual(loser_head2head[game.winner]['defeats'], 1)
         self.assertEqual(len(loser_head2head[game.winner]['games']), 1)
 
-        game = Game.objects.announce(rolf, christoph, self.default_competition)
-        winner_head2head = self.default_competition.get_head2head(game.winner)
-        loser_head2head = self.default_competition.get_head2head(game.loser)
+        game = self.default_competition.add_game(rolf, christoph)
+        winner_head2head = stats.get_head2head(game.winner, self.default_competition)
+        loser_head2head = stats.get_head2head(game.loser, self.default_competition)
 
         self.assertEqual(winner_head2head[game.loser]['wins'], 1)
         self.assertEqual(winner_head2head[game.loser]['defeats'], 1)
@@ -88,9 +86,9 @@ class TestTeamGetOrCreate(RankMeTestCase):
         self.assertEqual(loser_head2head[game.winner]['wins'], 1)
         self.assertEqual(loser_head2head[game.winner]['defeats'], 1)
 
-        game = Game.objects.announce(rolf, christoph, self.default_competition)
-        winner_head2head = self.default_competition.get_head2head(game.winner)
-        loser_head2head = self.default_competition.get_head2head(game.loser)
+        game = self.default_competition.add_game(rolf, christoph)
+        winner_head2head = stats.get_head2head(game.winner, self.default_competition)
+        loser_head2head = stats.get_head2head(game.loser, self.default_competition)
 
         self.assertEqual(winner_head2head[game.loser]['wins'], 2)
         self.assertEqual(winner_head2head[game.loser]['defeats'], 1)
@@ -98,10 +96,9 @@ class TestTeamGetOrCreate(RankMeTestCase):
         self.assertEqual(loser_head2head[game.winner]['wins'], 1)
         self.assertEqual(loser_head2head[game.winner]['defeats'], 2)
 
-        game = Game.objects.announce(laurent, christoph,
-                                     self.default_competition)
-        winner_head2head = self.default_competition.get_head2head(game.winner)
-        loser_head2head = self.default_competition.get_head2head(game.loser)
+        game = self.default_competition.add_game(laurent, christoph)
+        winner_head2head = stats.get_head2head(game.winner, self.default_competition)
+        loser_head2head = stats.get_head2head(game.loser, self.default_competition)
 
         self.assertEqual(winner_head2head[game.loser]['wins'], 1)
         self.assertEqual(winner_head2head[game.loser]['defeats'], 0)
@@ -125,11 +122,9 @@ class TestTeamSignals(RankMeTestCase):
 
         christoph, laurent, rolf = (UserFactory() for i in range(3))
 
-        game1 = Game.objects.announce(rolf, christoph,
-                                      self.default_competition)
-        game2 = Game.objects.announce(christoph, rolf,
-                                      self.default_competition)
-        Game.objects.announce(christoph, rolf, self.default_competition)
+        game1 = self.default_competition.add_game(rolf, christoph)
+        game2 = self.default_competition.add_game(christoph, rolf)
+        self.default_competition.add_game(christoph, rolf)
 
         self.assertEqual(ranking_changed_receiver.call_count, 4)
         args_list = ranking_changed_receiver.call_args_list
