@@ -1,12 +1,10 @@
-import json
-
-from django.contrib.postgres.fields import HStoreField, JSONField
+from django.contrib.postgres.fields import JSONField
 from django.db import models
 from django.db.models import Q
 from django.dispatch import receiver
 from django.utils.translation import ugettext as _
 
-from game.signals import (
+from ..game.signals import (
     competition_created, game_played, ranking_changed,
     user_joined_competition, user_left_competition
 )

@@ -1,5 +1,6 @@
 from django.shortcuts import render
-from game.models import Competition
+
+from ..game.models import Competition
 from .models import Event
 
 

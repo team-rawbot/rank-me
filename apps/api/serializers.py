@@ -1,7 +1,7 @@
 from django.contrib.auth import get_user_model
 from rest_framework import serializers
 
-from game.models import Competition, Game, Score
+from ..game.models import Competition, Game, Score
 
 
 class ScoreSerializer(serializers.ModelSerializer):

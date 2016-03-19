@@ -2,7 +2,8 @@ from django.core.urlresolvers import reverse
 from rest_framework import status
 from rest_framework.test import APITestCase
 
-from game.tests.factories import UserFactory, CompetitionFactory
+from ..game.tests.factories import UserFactory, CompetitionFactory
+from rankme.tests import RankMeTestCase
 
 
 def test_route(self, route):
@@ -15,7 +16,7 @@ def test_route(self, route):
     self.assertIsNotNone(response.data)
 
 
-class CompetitionListTests(APITestCase):
+class CompetitionListTests(APITestCase, RankMeTestCase):
     def test_list_competitions(self):
         """
         Ensure we can list all competitions.
@@ -23,7 +24,7 @@ class CompetitionListTests(APITestCase):
         test_route(self, 'competition-list')
 
 
-class PlayersListTests(APITestCase):
+class PlayersListTests(APITestCase, RankMeTestCase):
     def test_list_players(self):
         """
         Ensure we can list all players.
@@ -31,7 +32,7 @@ class PlayersListTests(APITestCase):
         test_route(self, 'team-list')
 
 
-class GameCreateTest(APITestCase):
+class GameCreateTest(APITestCase, RankMeTestCase):
     def test_create_game(self):
         user = UserFactory()
         self.client.force_authenticate(user)

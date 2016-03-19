@@ -1,8 +1,9 @@
-import slack
-
-from game.models import Competition, Game
-from game.tests.factories import UserFactory, CompetitionFactory
 from rankme.tests import RankMeTestCase
+
+from apps import slack
+from ...game.models import Game
+from ...game.tests.factories import UserFactory, CompetitionFactory
+
 
 class SlackTest(RankMeTestCase):
     def test_message_sending(self):

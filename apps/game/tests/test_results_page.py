@@ -2,10 +2,10 @@
 
 from django.contrib.auth import get_user_model
 from django.core.urlresolvers import reverse
-from game.models import Competition, Game
 
 from rankme.tests import RankMeTestCase
 
+from ..models import Game
 from .factories import UserFactory, CompetitionFactory
 
 User = get_user_model()

@@ -1,5 +1,6 @@
 from django.contrib import admin
-from game.models import Competition, Game, Score
+
+from .models import Competition, Game, Score
 
 
 class CompetitionAdmin(admin.ModelAdmin):

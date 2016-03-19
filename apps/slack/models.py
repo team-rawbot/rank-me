@@ -1,6 +1,6 @@
 from django.dispatch import receiver
-from game.signals import game_played, ranking_changed
 
+from ..game.signals import game_played, ranking_changed
 from . import post_message
 
 

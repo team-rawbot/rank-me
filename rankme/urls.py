@@ -4,10 +4,10 @@ import django.contrib.auth.views
 
 import social.apps.django_app.urls
 
-from timeline import views as timeline_views
-from game import urls as game_urls
-from api import urls as api_urls
-from user import urls as user_urls
+from apps.timeline import views as timeline_views
+from apps.game import urls as game_urls
+from apps.api import urls as api_urls
+from apps.user import urls as user_urls
 
 admin.autodiscover()
 
