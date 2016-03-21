@@ -23,9 +23,9 @@
 }
 
   .timeline-event {
-    @include display-flex;
-    @include flex-direction(row);
-    @include align-items(center);
+    display: flex;
+    flex-direction: row;
+    align-items: center;
 
     + .timeline-event {
       margin-top: $spacing-unit;
@@ -66,7 +66,7 @@
       top: calc(50% + #{$half-spacing-unit});
       left: 32px;
 
-      @include background-image(linear-gradient(left, $gray-light, transparentize($gray-light, 1)));
+      background-image: linear-gradient(to right, $gray-light, transparentize($gray-light, 1));
     }
 
     h4 {
@@ -103,7 +103,7 @@
       z-index: 1;
 
       border-radius: 50%;
-      @include box-shadow(0 0 0 1px rgba(0,0,0,.1) inset);
+      box-shadow: 0 0 0 1px rgba(0,0,0,.1) inset;
     }
   }
     .event-img {
@@ -126,7 +126,7 @@
     border: 8px solid white;
     background-color: $gray-light;
     border-radius: 50%;
-    @include box-shadow(0 0 0 1px rgba(0,0,0,.1) inset);
+    box-shadow: 0 0 0 1px rgba(0,0,0,.1) inset;
   }
     .event-icon--joined {
       background-color: $brand-info;
