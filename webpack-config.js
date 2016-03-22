@@ -27,6 +27,7 @@ module.exports = function(production) {
 
   if (production) {
     // Minify
+    config.plugins = [];
     config.plugins.push(new webpack.optimize.UglifyJsPlugin());
   }
   else {
