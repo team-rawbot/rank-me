@@ -1,20 +1,11 @@
-require.config({
-    deps: ["init"],
-    locale: "en",
+import $ from 'jquery';
 
-    paths: {
-        jquery     : "../vendors/jquery/dist/jquery",
-        bootstrap  : "../vendors/bootstrap-sass-official/assets/javascripts/bootstrap",
-        d3         : "../vendors/d3/d3",
-        underscore : "../vendors/underscore/underscore"
-    },
+import * as AddResult from 'modules/add_result';
+import * as TeamChart from 'modules/team_charts';
+import * as ScoreChart from 'modules/score_chart';
 
-    shim: {
-        bootstrap: {
-            deps: ["jquery"]
-        },
-        underscore: {
-            exports: "_"
-        }
-    }
+$(function() {
+    AddResult.init();
+    TeamChart.drawChart();
+    ScoreChart.drawChart($('#score-chart-container'));
 });
