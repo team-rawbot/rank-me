@@ -194,7 +194,7 @@ function doDraw(container) {
 
         yAxis = d3.svg.axis()
             .scale(y)
-            .ticks(20)
+            .ticks(10)
             .tickSize(0)
             .orient('left');
 
