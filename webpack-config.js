@@ -22,12 +22,18 @@ module.exports = function(production) {
           }
         }
       ]
-    }
+    },
+    plugins: [
+        new webpack.ProvidePlugin({
+            $: "jquery",
+            jQuery: "jquery",
+            "window.jQuery": "jquery"
+        })
+    ]
   };
 
   if (production) {
     // Minify
-    config.plugins = [];
     config.plugins.push(new webpack.optimize.UglifyJsPlugin());
   }
   else {
