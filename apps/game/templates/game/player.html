@@ -9,7 +9,7 @@
     <header class="page-header">
         <h1>
             {% include 'game/_player_avatar.html' with user=player %}
-            {{ team }} <small>{{ score.score|floatformat }}</small>
+            {{ player }} <small>{{ score.score|floatformat }}</small>
         </h1>
     </header>
 
@@ -24,18 +24,18 @@
                 <thead>
                     <tr>
                         <td>{% trans "Week" %}</td>
-                        <td>{% trans "Nb game played by {{ team }}" %}</td>
+                        <td>{% trans "Nb game played by {{ player }}" %}</td>
                         <td>{% trans "Total game" %}</td>
-                        <td>{% trans "All team avg" %}</td>
+                        <td>{% trans "All player avg" %}</td>
                     </tr>
                 </thead>
                 <tbody>
                     {% for week, stats in stats_per_week %}
                         <tr>
                             <td>{{ week }}</td>
-                            <td>{{ stats.team_count }}</td>
+                            <td>{{ stats.players_count }}</td>
                             <td>{{ stats.total_count }}</td>
-                            <td>{{ stats.avg_game_per_team }}</td>
+                            <td>{{ stats.avg_game_per_player }}</td>
                         </tr>
                     {% endfor %}
                 </tbody>
@@ -56,12 +56,12 @@
                         {% for game in game_dates.list %}
                             {% if game.winner == player %}
                                 <li class="game game-win list-group-item">
-                                    {% url 'team_general_detail' team_id=game.loser.id as loser_url %}
+                                    {% url 'player_general_detail' player_id=game.loser.id as loser_url %}
                                     {% blocktrans with loser=game.loser %}Win against <a href="{{ loser_url }}">{{ loser }}</a>{% endblocktrans %}
                                 </li>
                             {% else %}
                                 <li class="game game-defeat list-group-item">
-                                    {% url 'team_general_detail' team_id=game.winner.id as winner_url %}
+                                    {% url 'player_general_detail' player_id=game.winner.id as winner_url %}
                                     {% blocktrans with winner=game.winner %}Defeat against <a href="{{ winner_url }}">{{ winner }}</a>{% endblocktrans %}
                                 </li>
                             {% endif %}
