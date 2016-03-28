@@ -11,6 +11,7 @@ Django==1.9.4             # via django-bootstrap-form
 djangorestframework==3.3.3
 factory-boy==2.6.1
 fake-factory==0.5.7       # via factory-boy
+freezegun==0.3.6
 mock==1.3.0
 oauthlib==1.0.3
 pbr==1.8.1                # via mock
@@ -18,7 +19,7 @@ pluggy==0.3.1             # via tox
 psycopg2==2.6.1
 py==1.4.31                # via tox
 PyJWT==1.4.0              # via python-social-auth
-python-dateutil==2.5.1    # via fake-factory
+python-dateutil==2.5.1    # via fake-factory, freezegun
 python-social-auth==0.2.14
 python3-openid==3.0.9
 pytz==2016.1

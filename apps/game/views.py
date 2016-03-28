@@ -50,7 +50,7 @@ def player_detail(request, competition_slug, player_id):
         'defeats': defeats,
         'score': score,
         'competition': competition,
-        'stats_per_week': stats.get_stats_per_week(player, Game.objects.all()),
+        'stats_per_week': stats.get_stats_per_week(player),
     }
 
     return render(request, 'game/player.html', context)
