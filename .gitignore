@@ -2,7 +2,7 @@
 /node_modules/*
 /envdir/*
 !/envdir/.gitkeep
-/static/css/main.css
+/static/build
 /rankme.db
 .sass-cache
 /.vagrant
@@ -10,3 +10,4 @@
 /.coverage
 /.tox
 __pycache__
+*.map

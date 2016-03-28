@@ -21,15 +21,15 @@ body {
 
 .app {
   height: 100%;
-  @include display-flex;
-  @include flex-direction(column);
+  display: flex;
+  flex-direction: column;
 }
 
 .app-layout {
-  @include display-flex;
-  @include flex-direction(row);
-  @include align-items(stretch);
-  @include flex-grow(1);
+  display: flex;
+  flex-direction: row;
+  align-items: stretch;
+  flex-grow: 1;
 }
 
 .sidebar {
@@ -48,19 +48,19 @@ body {
 }
 
 .app-content {
-  @include flex-grow(1);
+  flex-grow: 1;
   padding: $spacing-unit;
 }
 
 .page-header {
-  margin: -#{$spacing-unit} -#{$spacing-unit} #{$spacing-unit} -#{$spacing-unit};
+  margin: -#{$spacing-unit};
+  margin-bottom: $spacing-unit;
   padding: $spacing-unit;
 
-  // background-color: $brand-lighter;
   border-bottom: 1px solid $brand-light;
 
   > :first-child,
-  #{headings()}:first-of-type {
+  h1, h2, h3, h4, h5, h6 {
     margin-top: 0;
   }
   > :last-child {

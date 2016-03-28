@@ -16,4 +16,4 @@
     - { role: base }
     - { role: postgresql }
     - { role: django }
-    # - { role: gulp }
+    - { role: gulp }
