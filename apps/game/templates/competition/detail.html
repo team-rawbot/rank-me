@@ -6,20 +6,23 @@
 
 {% block content %}
     <div class="page-header">
-        {% if user_can_edit_competition %}
-            <a href="{% url 'game_add' competition_slug=competition.slug %}"
-                id="add-result-button" class="btn btn--primary pull-right {% if not competition.is_active %}disabled{% endif %}">
-                {% trans "Add a result" %}
-            </a>
+        <ul class="list-inline pull-right">
+        {% if user_is_admin_of_competition %}
+            <li>
+                <a href="{% url 'competition_edit' competition_slug=competition.slug %}" class="btn btn--default">Edit</a>
+            </li>
         {% endif %}
+        {% if user_can_edit_competition %}
+            <li>
+                <a href="{% url 'game_add' competition_slug=competition.slug %}"
+                    id="add-result-button" class="btn btn--primary pull-right {% if not competition.is_active %}disabled{% endif %}">
+                    {% trans "Add a result" %}
+                </a>
+            </li>
+        {% endif %}
+        </ul>
 
-        <h1 class="mrgb0">
-            {{ competition }}
-            {% if user_is_admin_of_competition %}
-                <a href="{% url 'competition_edit' competition_slug=competition.slug %}"
-                    class="btn">Edit</a>
-            {% endif %}
-        </h1>
+        <h1 class="mrgb0">{{ competition }}</h1>
 
         {% if competition.description %}
             <p class="mrgt0 text-muted">{{ competition.description | linebreaksbr }}</p>

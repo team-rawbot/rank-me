@@ -6,15 +6,12 @@
 
 {% block content %}
 <header class="page-header">
-    <h1>
-        {% trans "Edit" %}
-        <small>{{ competition.name }}</small>
-    </h1>
+    <h1>{{ competition.name }}</h1>
 </header>
 
 <form action="" method="post">
     {% csrf_token %}
     {{ form|bootstrap }}
-    <p><input type="submit" value="{% trans "Update" %}" class="btn btn-primary" /></p>
+    <p><input type="submit" value="{% trans "Update" %}" class="btn btn--primary" /></p>
 </form>
 {% endblock %}
