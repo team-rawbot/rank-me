@@ -4,6 +4,9 @@
 !/envdir/.gitkeep
 /static/css/main.css
 /rankme.db
-/.sass-cache
+.sass-cache
 /.vagrant
 /.venv
+/.coverage
+/.tox
+__pycache__

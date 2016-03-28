@@ -1,0 +1,143 @@
+{% extends "base.html" %}
+
+{% load static i18n %}
+
+{% block body_class %}home{% endblock %}
+
+{% block sidebar %}
+<div class="scores">
+    <div class="score-board box box--soft">
+        <h4 class="box__title box--soft__title">{% trans "Scores" %}</h4>
+
+        {% if score_board %}
+            <table class="table">
+                {% for score in score_board %}
+                    <tr class="score-item">
+                        <td class="rank-num">{{ forloop.counter }}</td>
+                        <td>
+                            <a href="{% url 'player_detail' player_id=score.player_id competition_slug=competition.slug  %}">
+                                {% include 'game/_player_avatar.html' with user=score.player %}
+                                {{ score.player.profile.get_full_name }}
+                            </a>
+                        </td>
+                        <td class="text-muted">{{ score.score|floatformat:"2" }}</td>
+                    </tr>
+                {% endfor %}
+            </table>
+        {% else %}
+            <div class="panel-body">
+                {% trans "No scores registered yet." %}
+            </div>
+        {% endif %}
+    </div>
+
+    <div class="box box--soft">
+        <form action="{% url "competition_leave"  competition_slug=competition.slug %}" method="post">
+            {% csrf_token %}
+            <button class="btn btn-danger">{% trans "Leave competition" %}</button>
+        </form>
+    </div>
+</div>
+{% endblock %}
+
+{% block content %}
+    <div class="page-header">
+        {% if user_can_edit_competition %}
+            <a href="{% url 'game_add' competition_slug=competition.slug %}"
+                id="add-result-button" class="btn btn-primary pull-right {% if not competition.is_active %}disabled{% endif %}">
+                <span class="glyphicon glyphicon-plus icon-spaced-right"></span>
+                {% trans "Add a result" %}
+            </a>
+        {% endif %}
+
+        <h1>{{ competition }}
+            {% if user_is_admin_of_competition %}
+                <a href="{% url 'competition_edit' competition_slug=competition.slug %}"
+                    class="btn">Edit</a>
+            {% endif %}
+        </h1>
+
+        {% if not competition.is_active %}
+            <div class="alert alert-info">
+                {% if competition.is_over %}
+                    {% blocktrans with end_date=competition.end_date %}Ended on {{ end_date }}{% endblocktrans %}
+                {% elif not competition.is_started %}
+                    {% blocktrans with start_date=competition.start_date %}Starts on {{ start_date }}{% endblocktrans %}
+                {% endif %}
+            </div>
+        {% endif %}
+
+        {% if competition.description %}
+            <p class="description">{{ competition.description | linebreaksbr }}</p>
+        {% endif %}
+    </div>
+
+    <div class="box box--soft">
+        <div class="box__heading">
+            <div class="btn-group">
+                <button class="move-chart btn btn-default btn-sm" data-movement="10"><span class="glyphicon glyphicon-chevron-left"></span></button>
+                <button class="reset-chart btn btn-default btn-sm">Last 50</button>
+                <button class="move-chart btn btn-default btn-sm" data-movement="-10"><span class="glyphicon glyphicon-chevron-right"></span></button>
+            </div>
+
+            <div class="pull-right">
+                <label for="score-chart-mode-position" class="radio-inline">
+                    <input id="score-chart-mode-position" name="score-chart-mode" type="radio" value="position" checked="checked">
+                    {% trans "Position" %}
+                </label>
+
+                <label for="score-chart-mode-skill" class="radio-inline">
+                    <input id="score-chart-mode-skill" name="score-chart-mode" type="radio" value="skill">
+                    {% trans "Skill" %}
+                </label>
+            </div>
+        </div>
+
+        <div id="score-chart-container" class="well" data-json="{% url 'competition_detail_score_chart' competition.slug %}">
+            {% include '_spinner.html' %}
+        </div>
+    </div>
+
+    <div class="latest-results box box--soft">
+        <div class="box__heading">
+            <h4 class="box__title">{% trans "Last 20 games" %}</h4>
+        </div>
+        {% if latest_results %}
+            <table class="games table table-striped">
+                <thead>
+                    <th>{% trans "Winner" %}</th>
+                    <th>{% trans "Loser" %}</th>
+                    <th>{% trans "Date" %}</th>
+                    <th>{% trans "Action" %}</th>
+                </thead>
+                <tbody>
+                    {% for game in latest_results %}
+                        <tr class="game-item">
+                            {% include 'game/_score_detail.html' %}
+                            <td>
+                                {%if forloop.first %}
+                                <form action="{% url 'game_remove' competition_slug=competition.slug %}" method="POST">
+                                    {% csrf_token %}
+                                    <input type="hidden" name="game_id" value="{{ game.id }}">
+                                    <button type="submit" class="btn btn-danger {% if not competition.is_active %}disabled{% endif %}">
+                                        <span class="glyphicon glyphicon-trash icon-spaced-right"></span>
+                                        {% trans "Remove" %}
+                                    </button>
+                                </form>
+                                {% endif %}
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        {% else %}
+            <div class="panel-body">
+                {% trans "No result yet." %}
+            </div>
+        {% endif %}
+    </div>
+{% endblock %}
+
+{% block extra_footer_js %}
+    <script src="{% static "js/score_chart.js" %}"></script>
+{% endblock %}

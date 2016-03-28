@@ -1,0 +1,16 @@
+{% load i18n %}
+
+<div class="event-hook">
+    <div class="event-icon event-icon--ranking glyphicon glyphicon-chevron-{% if event.get_details.old_ranking %}{% if event.get_details.old_ranking < event.get_details.new_ranking %}down{% else %}up{% endif %}{% else %}right{% endif %}"></div>
+</div>
+<div class="event-body">
+    <p class="event-competition"><a href="{% url "competition_detail" event.competition.slug %}" class="text-muted">{{ event.competition }}</a></p>
+
+    <strong>{% include 'timeline/_player.html' with player=event.get_details.player %}</strong>
+
+    {% if event.get_details.old_ranking %}
+        {% blocktrans with old_ranking=event.get_details.old_ranking new_ranking=event.get_details.new_ranking %}goes from #{{ old_ranking }} to #{{ new_ranking }}{% endblocktrans %}
+    {% else %}
+        {% blocktrans with ranking=event.get_details.new_ranking %}enters the ranking and is #{{ ranking }}{% endblocktrans %}
+    {% endif %}
+</div>

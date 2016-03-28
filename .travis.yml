@@ -1,17 +1,16 @@
 language: python
+services:
+    - postgresql
+addons:
+  postgresql: "9.4"
 python:
-# Tests for Python 3 are disabled for now because of
-# https://code.djangoproject.com/ticket/23455
-#  - "3.3"
-  - "2.7"
+  - "3.4"
 env:
     global:
-        - DJANGO_SETTINGS_MODULE=rankme.settings.test
         - DATABASE_URL=postgres://postgres@localhost/rankme
 install:
     - pip install -r requirements/test.txt --use-mirrors
 script:
-    - python manage.py test
+    - ./runtests.sh
 before_script:
-    - psql -d template1 -c 'create extension hstore;' -U postgres
     - psql -c 'create database rankme;' -U postgres
