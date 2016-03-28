@@ -11,7 +11,9 @@ register = template.Library()
 def competitions_list(context):
     request = context['request']
     return {
-        'competitions': Competition.objects.get_visible_for_user(request.user).order_by('name')
+        'competitions': Competition.ongoing_objects
+                                   .get_visible_for_user(request.user)
+                                   .order_by('name')
     }
 
 

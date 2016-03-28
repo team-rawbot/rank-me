@@ -1,6 +1,9 @@
+from datetime import timedelta
+
 import mock
 
 from django.dispatch import receiver
+from django.utils import timezone
 
 from rankme.tests import RankMeTestCase
 
@@ -68,3 +71,25 @@ class CompetitionTestCase(RankMeTestCase):
         c.add_game(users[1], users[2])
         games = c.get_games_played_by(users[0])
         self.assertEqual(list(games), [played_game])
+
+    def test_ongoing_competition_manager_doesnt_return_past_competition(self):
+        c = CompetitionFactory(end_date=timezone.now() - timedelta(days=1))
+        self.assertNotIn(c, Competition.ongoing_objects.all())
+
+    def test_ongoing_competition_manager_doesnt_return_future_competition(self):
+        c = CompetitionFactory(start_date=timezone.now() + timedelta(days=1))
+        self.assertNotIn(c, Competition.ongoing_objects.all())
+
+    def test_ongoing_competition_manager_returns_competition_with_empty_end_date(self):
+        c = CompetitionFactory(
+            end_date=None,
+            start_date=timezone.now() - timedelta(days=1)
+        )
+        self.assertIn(c, Competition.ongoing_objects.all())
+
+    def test_ongoing_competition_manager_returns_started_and_unfinished_competition(self):
+        c = CompetitionFactory(
+            end_date=timezone.now() + timedelta(days=1),
+            start_date=timezone.now() - timedelta(days=1)
+        )
+        self.assertIn(c, Competition.ongoing_objects.all())
