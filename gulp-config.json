@@ -5,7 +5,8 @@
         "webpack": [
           "./static/js/main.js"
         ],
-        "images": "static/images/**/*.{gif,jpg,jpeg,png,svg}"
+        "images": "static/images/**/*.{gif,jpg,jpeg,png,svg}",
+        "templates": "./**/templates/**/*.html"
     },
     "dest": {
         "css": "static/build",
