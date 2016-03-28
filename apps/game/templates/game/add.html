@@ -12,6 +12,9 @@
 <form id="add-result" action="" method="post">
     {% csrf_token %}
     {{ form|bootstrap }}
-    <p><input type="submit" value="{% trans "Add result" %}" class="btn btn-primary" /></p>
+    <p>
+        <input type="submit" name="save_add" value="{% trans "Save and add another" %}" class="btn btn-primary" />
+        <input type="submit" name="save" value="{% trans "Save" %}" class="btn btn-secondary" />
+    </p>
 </form>
 {% endblock %}

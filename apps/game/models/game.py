@@ -59,9 +59,10 @@ class Game(models.Model):
             )
 
     def __str__(self):
-        return u"%s beats %s" % (
-            self.winner,
-            self.loser
+        return "[{competition}] {winner} beats {loser}".format(
+            competition=self.competition,
+            winner=self.winner.profile.get_full_name(),
+            loser=self.loser.profile.get_full_name()
         )
 
     def delete(self):
