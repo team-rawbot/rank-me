@@ -1,0 +1,18 @@
+/**
+* Object
+* TOGGLER
+*/
+
+.toggler {}
+
+.toggler__handle {
+
+}
+
+.toggler__container {
+    display: none;
+
+    &.visible {
+        display: block;
+    }
+}
