@@ -5,8 +5,9 @@
 {% block content %}
 <div class="team">
     <header class="page-header media">
+        <p class="mrgt0 text-muted text-uppercase">{{ competition.name }}</p>
         <div class="media__left">
-            {% include 'game/_player_avatar.html' with user=player %}
+            {% include 'game/_player_avatar.html' with user=player class="user-avatar--large" %}
         </div>
         <div class="media__body">
             <h1>

@@ -5,6 +5,7 @@
 .btn--primary {
   &:focus,
   &:hover {
+    color: $btn-primary-color;
     box-shadow: 0 0 15px 2px $brand-color;
   }
 }

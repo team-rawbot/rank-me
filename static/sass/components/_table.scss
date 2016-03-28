@@ -24,13 +24,17 @@ table {
   }
 
   tbody {
-    tr:hover {
-      background-color: lighten($alt-color-darker, 5%);
-    }
+    tr {
+      &:hover {
+        background-color: lighten($alt-color-darker, 5%);
+      }
 
-    td,
-    th {
-      border-bottom: 1px dashed $alt-color-dark;
+      &:not(:last-child) {
+        td,
+        th {
+          border-bottom: 1px dashed $alt-color-dark;
+        }
+      }
     }
   }
 }

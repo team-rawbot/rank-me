@@ -1,14 +1,15 @@
 {% extends "base.html" %}
 {% load i18n static %}
 
-{% block body_class %}add-result{% endblock %}
+{% block page %}
+    <div class="anonymous">
+        <div class="anonymous__body">
+            <header class="page-header">
+                <p class="mrgb0"><a href="/" class="brand">Rank-Me</a></p>
+                <p class="mrgt0">{% trans "Create competitions and track your scores." %}</p>
+            </header>
 
-{% block content %}
-<header class="page-header">
-    <h1>{% trans "Hi there!" %}</h1>
-    <p>{% trans "Create competitions and track your scores." %}</p>
-</header>
-
-<p><a href="{% url 'social:social.apps.django_app.views.auth' backend='twitter' %}" class="btn btn-lg btn-primary" title="{% trans "Sign in with Twitter" %}">{% trans "Sign in with Twitter" %}</a></p>
+            <a href="{% url 'social:social.apps.django_app.views.auth' backend='twitter' %}" class="btn btn--primary" title="{% trans "Sign in with Twitter" %}">{% trans "Sign in with Twitter" %}</a>
+        </div>
+    </div>
 {% endblock %}
-

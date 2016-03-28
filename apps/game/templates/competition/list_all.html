@@ -17,7 +17,7 @@
                     {% include "competition/_list.html" with competitions=past_competitions %}
                 </ul>
             {% else %}
-                <p class="alert alert-info">{% trans "No past competition to display." %}</p>
+                <p>{% trans "No past competition to display." %}</p>
             {% endif %}
         </div>
         <div class="grid__item md-w-1/3">
@@ -27,7 +27,7 @@
                     {% include "competition/_list.html" with competitions=ongoing_competitions %}
                 </ul>
             {% else %}
-                <p class="alert alert-info">{% trans "No ongoing competition to display." %}</p>
+                <p>{% trans "No ongoing competition to display." %}</p>
             {% endif %}
         </div>
         <div class="grid__item md-w-1/3">
@@ -37,7 +37,7 @@
                     {% include "competition/_list.html" with competitions=upcoming_competitions %}
                 </ul>
             {% else %}
-                <p class="alert alert-info">{% trans "No upcoming competition to display." %}</p>
+                <p>{% trans "No upcoming competition to display." %}</p>
             {% endif %}
         </div>
     </div>

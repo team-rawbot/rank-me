@@ -5,19 +5,12 @@
 
 .user-avatar {
   width: 32px;
-  margin-right: 0.5em;
 
   border-radius: 50%;
-
-  .page-header & {
+}
+  .user-avatar--large {
     width: 48px;
   }
-
-  .quick-profile & {
-    width: 64px;
-    margin-right: 0;
-  }
-}
 
 .rank-num {
   text-align: right;

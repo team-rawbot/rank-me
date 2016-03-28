@@ -8,63 +8,65 @@
     <link href="https://fonts.googleapis.com/css?family=Rubik:300,400,500" rel="stylesheet" type="text/css">
 </head>
 <body class="{% block body_class %}{% endblock %}">
-    <div class="app">
-        <aside class="app__sidebar">
-            <div class="clearfix">
-                <a href="/" class="brand pull-left">Rank-Me</a>
-                <button id="sidebar-collapse-button" class="btn btn--default pull-right">Menu</button>
-            </div>
-
-            <div id="sidebar-collapse">
-                <div>
-                    <h4>{% trans "Your competitions" %}</h4>
-                    <ul class="list-stacked list-stacked--divided list-stacked--large">
-                        <li>
-                            <ul class="list-stacked list-stacked--tiny">
-                                {% competitions_list %}
-                            </ul>
-                        </li>
-                        <li>
-                            <ul class="list-stacked list-stacked--tiny">
-                                <li><a href="{% url "competition_list_all" %}" class="text-muted">{% trans "View all competitions" %}</a></li>
-                                <li><a href="{% url "competition_add" %}" class="text-muted">{% trans "Create new..." %}</a></li>
-                            </ul>
-                        </li>
-                    </ul>
+    {% block page %}
+        <div class="app">
+            <aside class="app__sidebar">
+                <div class="clearfix">
+                    <a href="/" class="brand pull-left">Rank-Me</a>
+                    <button id="sidebar-collapse-button" class="btn btn--default pull-right">Menu</button>
                 </div>
 
-                {% if user.profile %}
-                    <div class="quick-profile">
-                        <ul class="list-stacked list-stacked--tiny">
+                <div id="sidebar-collapse">
+                    <div>
+                        <h4>{% trans "Your competitions" %}</h4>
+                        <ul class="list-stacked list-stacked--divided list-stacked--large">
                             <li>
-                                <div class="media">
-                                    <div class="media__left">{% include 'game/_player_avatar.html' with class="media-object" %}</div>
-                                    <div class="media__body">
-                                        <h4 class="mrg0"><a href="{% url 'profile' %}">{{ user.get_full_name }}</a></h4>
-                                        <p class="mrgt0 text-small">{{ user }}</p>
-                                    </div>
-                                </div>
+                                <ul class="list-stacked list-stacked--tiny">
+                                    {% competitions_list %}
+                                </ul>
                             </li>
-                            <li><a href="{% url 'edit_profile' %}">{% trans "Account settings" %}</a></li>
-                            <li><a href="{% url 'auth_logout' %}">{% trans "Log out" %}</a></li>
+                            <li>
+                                <ul class="list-stacked list-stacked--tiny">
+                                    <li><a href="{% url "competition_list_all" %}" class="text-muted">{% trans "View all competitions" %}</a></li>
+                                    <li><a href="{% url "competition_add" %}" class="text-muted">{% trans "Create new..." %}</a></li>
+                                </ul>
+                            </li>
                         </ul>
                     </div>
-                {% endif %}
-            </div>
-        </aside>
 
-        <div class="app__body">
-            {% if messages %}
-                <div class="messages">
-                    {% for message in messages %}
-                        <div class="alert alert-{{ message.tags }}">{{ message }}</div>
-                    {% endfor %}
+                    {% if user.profile %}
+                        <div class="quick-profile">
+                            <ul class="list-stacked list-stacked--tiny">
+                                <li>
+                                    <div class="media">
+                                        <div class="media__left mrgr-">{% include 'game/_player_avatar.html' with class="user-avatar--large" %}</div>
+                                        <div class="media__body">
+                                            <h4 class="mrg0"><a href="{% url 'profile' %}">{{ user.get_full_name }}</a></h4>
+                                            <p class="mrgv0 text-small">{{ user }}</p>
+                                            <p class="mrgv--"><a href="{% url 'edit_profile' %}" class="text-muted">{% trans "Account settings" %}</a></p>
+                                            <p class="mrgv--"><a href="{% url 'auth_logout' %}" class="text-muted">{% trans "Log out" %}</a></p>
+                                        </div>
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+                    {% endif %}
                 </div>
-            {% endif %}
+            </aside>
 
-            {% block content %}{% endblock %}
+            <div class="app__body">
+                {% if messages %}
+                    <div class="messages">
+                        {% for message in messages %}
+                            <div class="alert alert-{{ message.tags }}">{{ message }}</div>
+                        {% endfor %}
+                    </div>
+                {% endif %}
+
+                {% block content %}{% endblock %}
+            </div>
         </div>
-    </div>
+    {% endblock %}
 
     <script type="text/javascript">
         var appDatas = {

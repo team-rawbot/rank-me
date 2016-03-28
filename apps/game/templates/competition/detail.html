@@ -118,10 +118,10 @@
                                 {% for score in score_board %}
                                     <tr class="score-item">
                                         <td class="rank-num">{{ forloop.counter }}</td>
+                                        <td width="1">{% include 'game/_player_avatar.html' with user=score.player %}</td>
                                         <td>
-                                            <a href="{% url 'player_detail' player_id=score.player_id competition_slug=competition.slug  %}" class="media">
-                                                <div class="media__left mrgr--">{% include 'game/_player_avatar.html' with user=score.player %}</div>
-                                                <div class="media__body">{{ score.player.profile.get_full_name }}</div>
+                                            <a href="{% url 'player_detail' player_id=score.player_id competition_slug=competition.slug %}">
+                                                {{ score.player.profile.get_full_name }}
                                             </a>
                                         </td>
                                         <td width="1" class="text-muted text-right">{{ score.score|floatformat:"2" }}</td>

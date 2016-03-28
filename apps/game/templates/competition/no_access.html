@@ -10,5 +10,5 @@
 </header>
 
 <p class="lead">{% blocktrans %}You don't have access to the competition <strong>{{ competition }}</strong> yet.{% endblocktrans %}</p>
-<p><a href="{% url "competition_join" competition_slug=competition.slug %}" class="btn btn-primary btn-lg">{% trans "Request access now" %}</a></p>
+<p><a href="{% url "competition_join" competition_slug=competition.slug %}" class="btn btn--primary">{% trans "Request access now" %}</a></p>
 {% endblock %}
