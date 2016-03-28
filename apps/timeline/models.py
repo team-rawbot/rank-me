@@ -87,7 +87,7 @@ def publish_ranking_changed(sender, player, old_ranking, new_ranking,
 
 class EventManager(models.Manager):
     def get_all_for_player(self, player):
-        return self.filter(
+        return self.select_related('competition').filter(
             Q(competition__in=player.competitions.all()) | Q(competition=None)
         )
 
