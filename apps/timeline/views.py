@@ -11,7 +11,7 @@ def index(request):
 
     # Private homepage
     context = {
-        'events': Event.objects.get_all_for_player(request.user),
+        'events': Event.objects.get_all_for_player(request.user)[:50],
         'competitions': Competition.objects.get_visible_for_user(request.user)
     }
     return render(request, 'timeline/index.html', context)
