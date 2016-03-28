@@ -1,6 +1,7 @@
 from django.contrib.postgres.fields import JSONField
 from django.db import models
 from django.db.models import Q
+from django.db.models.signals import post_delete
 from django.dispatch import receiver
 from django.utils.translation import ugettext as _
 
@@ -8,6 +9,7 @@ from ..game.signals import (
     competition_created, game_played, ranking_changed,
     user_joined_competition, user_left_competition
 )
+from ..game.models import Game
 
 
 @receiver(competition_created)
@@ -63,8 +65,17 @@ def publish_game_played(sender, **kwargs):
 
     event = Event(event_type=Event.TYPE_GAME_PLAYED,
                   competition=sender.competition,
-                  details={"winner": players[0], "loser": players[1]})
+                  details={
+                      "winner": players[0],
+                      "loser": players[1],
+                      "game_id": sender.id,
+                  })
     event.save()
+
+
+@receiver(post_delete, sender=Game)
+def delete_related_events(sender, instance, **kwargs):
+    Event.objects.filter(details__game_id=instance.id).delete()
 
 
 @receiver(ranking_changed)
@@ -80,14 +91,15 @@ def publish_ranking_changed(sender, player, old_ranking, new_ranking,
                   competition=competition, details={
                       "player": player_details,
                       "old_ranking": old_ranking,
-                      "new_ranking": new_ranking
+                      "new_ranking": new_ranking,
+                      "game_id": sender.id,
                   })
     event.save()
 
 
 class EventManager(models.Manager):
     def get_all_for_player(self, player):
-        return self.filter(
+        return self.select_related('competition').filter(
             Q(competition__in=player.competitions.all()) | Q(competition=None)
         )
 

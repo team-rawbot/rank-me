@@ -21,6 +21,24 @@ class CompetitionManager(models.Manager):
         ).distinct()
 
 
+class OngoingCompetitionManager(CompetitionManager):
+    def get_queryset(self):
+        return super().get_queryset().filter(
+            Q(end_date__gt=timezone.now()) | Q(end_date__isnull=True),
+            start_date__lte=timezone.now(),
+        )
+
+
+class PastCompetitionManager(CompetitionManager):
+    def get_queryset(self):
+        return super().get_queryset().filter(end_date__lte=timezone.now())
+
+
+class UpcomingCompetitionManager(CompetitionManager):
+    def get_queryset(self):
+        return super().get_queryset().filter(start_date__gt=timezone.now())
+
+
 class Competition(models.Model):
     name = models.CharField(max_length=255, unique=True)
     description = models.TextField(blank=True)
@@ -34,6 +52,9 @@ class Competition(models.Model):
                                 related_name='my_competitions')
 
     objects = CompetitionManager()
+    ongoing_objects = OngoingCompetitionManager()
+    past_objects = PastCompetitionManager()
+    upcoming_objects = UpcomingCompetitionManager()
 
     class Meta:
         ordering = ('name',)

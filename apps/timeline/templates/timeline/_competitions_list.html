@@ -1,0 +1,12 @@
+{% load i18n %}
+
+{% for competition in competitions %}
+    <li class="list-group-item">
+        <a href="{% url "competition_detail" competition_slug=competition.slug %}">
+            <span class="pull-right text-muted">{rank}</span>
+            {{ competition }}
+        </a>
+    </li>
+{% empty %}
+    <p><a href="{% url "competition_list_all" %}">{% trans "Browse competitions to join" %}</a></p>
+{% endfor %}
