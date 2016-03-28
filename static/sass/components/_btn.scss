@@ -1,0 +1,14 @@
+/*----------------------------------------*\
+  BUTTONS
+\*----------------------------------------*/
+
+.btn--primary {
+  &:focus,
+  &:hover {
+    box-shadow: 0 0 15px 2px $brand-color;
+  }
+}
+
+.btn--danger {
+  background-color: $brand-danger;
+}

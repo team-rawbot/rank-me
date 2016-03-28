@@ -1,0 +1,36 @@
+/**
+ * Object
+ * TABLE
+ */
+
+table {
+  td,
+  th {
+    vertical-align: middle;
+
+    &:first-child {
+      padding-left: 0;
+    }
+    &:last-child {
+      padding-right: 0;
+    }
+  }
+
+  thead {
+    td,
+    th {
+      border-bottom: 1px solid $alt-color-dark;
+    }
+  }
+
+  tbody {
+    tr:hover {
+      background-color: lighten($alt-color-darker, 5%);
+    }
+
+    td,
+    th {
+      border-bottom: 1px dashed $alt-color-dark;
+    }
+  }
+}

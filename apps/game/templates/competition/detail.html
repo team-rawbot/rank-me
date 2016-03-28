@@ -1,64 +1,32 @@
 {% extends "base.html" %}
 
-{% load static i18n %}
+{% load static i18n ago %}
 
 {% block body_class %}home{% endblock %}
-
-{% block sidebar %}
-<div class="scores">
-    <div class="score-board box box--soft">
-        <h4 class="box__title box--soft__title">{% trans "Scores" %}</h4>
-
-        {% if score_board %}
-            <table class="table">
-                {% for score in score_board %}
-                    <tr class="score-item">
-                        <td class="rank-num">{{ forloop.counter }}</td>
-                        <td>
-                            <a href="{% url 'player_detail' player_id=score.player_id competition_slug=competition.slug  %}">
-                                {% include 'game/_player_avatar.html' with user=score.player %}
-                                {{ score.player.profile.get_full_name }}
-                            </a>
-                        </td>
-                        <td class="text-muted">{{ score.score|floatformat:"2" }}</td>
-                    </tr>
-                {% endfor %}
-            </table>
-        {% else %}
-            <div class="panel-body">
-                {% trans "No scores registered yet." %}
-            </div>
-        {% endif %}
-    </div>
-
-    <div class="box box--soft">
-        <form action="{% url "competition_leave"  competition_slug=competition.slug %}" method="post">
-            {% csrf_token %}
-            <button class="btn btn-danger">{% trans "Leave competition" %}</button>
-        </form>
-    </div>
-</div>
-{% endblock %}
 
 {% block content %}
     <div class="page-header">
         {% if user_can_edit_competition %}
             <a href="{% url 'game_add' competition_slug=competition.slug %}"
-                id="add-result-button" class="btn btn-primary pull-right {% if not competition.is_active %}disabled{% endif %}">
-                <span class="glyphicon glyphicon-plus icon-spaced-right"></span>
+                id="add-result-button" class="btn btn--primary pull-right {% if not competition.is_active %}disabled{% endif %}">
                 {% trans "Add a result" %}
             </a>
         {% endif %}
 
-        <h1>{{ competition }}
+        <h1 class="mrgb0">
+            {{ competition }}
             {% if user_is_admin_of_competition %}
                 <a href="{% url 'competition_edit' competition_slug=competition.slug %}"
                     class="btn">Edit</a>
             {% endif %}
         </h1>
 
+        {% if competition.description %}
+            <p class="mrgt0 text-muted">{{ competition.description | linebreaksbr }}</p>
+        {% endif %}
+
         {% if not competition.is_active %}
-            <div class="alert alert-info">
+            <div class="text-danger">
                 {% if competition.is_over %}
                     {% blocktrans with end_date=competition.end_date %}Ended on {{ end_date }}{% endblocktrans %}
                 {% elif not competition.is_started %}
@@ -66,75 +34,114 @@
                 {% endif %}
             </div>
         {% endif %}
-
-        {% if competition.description %}
-            <p class="description">{{ competition.description | linebreaksbr }}</p>
-        {% endif %}
     </div>
 
-    <div class="box box--soft">
-        <div class="box__heading">
-            <div class="btn-group">
-                <button class="move-chart btn btn-default btn-sm" data-movement="10"><span class="glyphicon glyphicon-chevron-left"></span></button>
-                <button class="reset-chart btn btn-default btn-sm">Last 50</button>
-                <button class="move-chart btn btn-default btn-sm" data-movement="-10"><span class="glyphicon glyphicon-chevron-right"></span></button>
+    <div class="mrgb+">
+        <div class="clearfix">
+            <div class="pull-left">
+                <button class="move-chart btn btn--default btn--small" data-movement="10">&larr;</button>
+                <button class="reset-chart btn btn--default btn--small">Last 50</button>
+                <button class="move-chart btn btn--default btn--small" data-movement="-10">&rarr;</button>
             </div>
 
             <div class="pull-right">
-                <label for="score-chart-mode-position" class="radio-inline">
+                <label for="score-chart-mode-position" class="label--inline text-muted">
                     <input id="score-chart-mode-position" name="score-chart-mode" type="radio" value="position" checked="checked">
                     {% trans "Position" %}
                 </label>
 
-                <label for="score-chart-mode-skill" class="radio-inline">
+                <label for="score-chart-mode-skill" class="label--inline text-muted">
                     <input id="score-chart-mode-skill" name="score-chart-mode" type="radio" value="skill">
                     {% trans "Skill" %}
                 </label>
             </div>
         </div>
 
-        <div id="score-chart-container" class="well" data-json="{% url 'competition_detail_score_chart' competition.slug %}">
+        <div id="score-chart-container" data-json="{% url 'competition_detail_score_chart' competition.slug %}">
             {% include '_spinner.html' %}
         </div>
     </div>
 
-    <div class="latest-results box box--soft">
-        <div class="box__heading">
-            <h4 class="box__title">{% trans "Last 20 games" %}</h4>
-        </div>
-        {% if latest_results %}
-            <table class="games table table-striped">
-                <thead>
-                    <th>{% trans "Winner" %}</th>
-                    <th>{% trans "Loser" %}</th>
-                    <th>{% trans "Date" %}</th>
-                    <th>{% trans "Action" %}</th>
-                </thead>
-                <tbody>
-                    {% for game in latest_results %}
-                        <tr class="game-item">
-                            {% include 'game/_score_detail.html' %}
-                            <td>
-                                {%if forloop.first %}
-                                <form action="{% url 'game_remove' competition_slug=competition.slug %}" method="POST">
-                                    {% csrf_token %}
-                                    <input type="hidden" name="game_id" value="{{ game.id }}">
-                                    <button type="submit" class="btn btn-danger {% if not competition.is_active %}disabled{% endif %}">
-                                        <span class="glyphicon glyphicon-trash icon-spaced-right"></span>
-                                        {% trans "Remove" %}
-                                    </button>
-                                </form>
-                                {% endif %}
-                            </td>
-                        </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
-        {% else %}
-            <div class="panel-body">
-                {% trans "No result yet." %}
+    <div class="grid">
+        <div class="grid__item w-2/3">
+            <div class="latest-results panel">
+                <header class="panel__header">
+                    <h4>{% trans "Last 20 games" %}</h4>
+                </header>
+
+                <div class="panel__body">
+                    {% if latest_results %}
+                        <table class="games table table-striped">
+                            <thead>
+                                <th>{% trans "Winner" %}</th>
+                                <th>{% trans "Loser" %}</th>
+                                <th>{% trans "Date" %}</th>
+                                <th width="1">{% trans "Action" %}</th>
+                            </thead>
+                            <tbody>
+                                {% for game in latest_results %}
+                                    <tr class="game-item">
+                                        <td>{{ game.winner.get_full_name }}</td>
+                                        <td>{{ game.loser.get_full_name }}</td>
+                                        <td>{{ game.date | ago }}</td>
+                                        <td>
+                                            {%if forloop.first %}
+                                            <form action="{% url 'game_remove' competition_slug=competition.slug %}" method="POST">
+                                                {% csrf_token %}
+                                                <input type="hidden" name="game_id" value="{{ game.id }}">
+                                                <button type="submit" class="btn btn--danger btn--small {% if not competition.is_active %}disabled{% endif %}">
+                                                    {% trans "Remove" %}
+                                                </button>
+                                            </form>
+                                            {% endif %}
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    {% else %}
+                        {% trans "No result yet." %}
+                    {% endif %}
+                </div>
             </div>
-        {% endif %}
+        </div>
+        <div class="grid__item w-1/3">
+            <div class="scores">
+                <div class="score-board panel">
+                    <header class="panel__header">
+                        <h4>{% trans "Scores" %}</h4>
+                    </header>
+
+                    <div class="panel__body">
+                        {% if score_board %}
+                            <table class="table">
+                                {% for score in score_board %}
+                                    <tr class="score-item">
+                                        <td class="rank-num">{{ forloop.counter }}</td>
+                                        <td>
+                                            <a href="{% url 'player_detail' player_id=score.player_id competition_slug=competition.slug  %}" class="media">
+                                                <div class="media__left mrgr--">{% include 'game/_player_avatar.html' with user=score.player %}</div>
+                                                <div class="media__body">{{ score.player.profile.get_full_name }}</div>
+                                            </a>
+                                        </td>
+                                        <td width="1" class="text-muted text-right">{{ score.score|floatformat:"2" }}</td>
+                                    </tr>
+                                {% endfor %}
+                            </table>
+                        {% else %}
+                            {% trans "No scores registered yet." %}
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+
+            <div class="mrgt">
+                <form action="{% url "competition_leave"  competition_slug=competition.slug %}" method="post">
+                    {% csrf_token %}
+                    <button class="btn btn--default btn--block">{% trans "Leave competition" %}</button>
+                </form>
+            </div>
+        </div>
     </div>
 {% endblock %}
 

@@ -7,6 +7,8 @@
   width: 32px;
   margin-right: 0.5em;
 
+  border-radius: 50%;
+
   .page-header & {
     width: 48px;
   }
@@ -22,16 +24,16 @@
 
   tr:first-child & {
     font-size: 24px;
-    font-weight: bold;
+    font-weight: 500;
   }
 
   tr:nth-child(2) & {
     font-size: 20px;
-    font-weight: bold;
+    font-weight: 500;
   }
 
   tr:nth-child(3) & {
     font-size: 16px;
-    font-weight: bold;
+    font-weight: 500;
   }
 }

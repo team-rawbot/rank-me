@@ -5,104 +5,64 @@
     <title>Rank-Me</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="{% static "build/main.css" %}" rel="stylesheet" media="screen">
+    <link href="https://fonts.googleapis.com/css?family=Rubik:300,400,500" rel="stylesheet" type="text/css">
 </head>
 <body class="{% block body_class %}{% endblock %}">
     <div class="app">
-        <nav class="navbar navbar-default navbar-fixed-top">
-            <div class="container-fluid">
-                <div class="navbar-header">
-                    {% if user and user.is_authenticated %}
-                    <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#main-navbar">
-                        <span class="sr-only">Toggle navigation</span>
-                        <span class="icon-bar"></span>
-                        <span class="icon-bar"></span>
-                        <span class="icon-bar"></span>
-                    </button>
-                    {% endif %}
-                    <a class="navbar-brand" href="/">Rank-Me</a>
-                </div>
+        <aside class="app__sidebar">
+            <div class="clearfix">
+                <a href="/" class="brand pull-left">Rank-Me</a>
+                <button id="sidebar-collapse-button" class="btn btn--default pull-right">Menu</button>
+            </div>
 
-                {% if user and user.is_authenticated %}
-                <div class="collapse navbar-collapse" id="main-navbar">
-                    <ul class="nav navbar-nav navbar-right">
-                        <li class="dropdown">
-                            <a class="dropdown-toggle" data-toggle="dropdown" href="#">
-                                <span class="glyphicon glyphicon-tower icon-spaced-right"></span>
-                                {% trans "Competitions" %}
-                                <b class="caret"></b>
-                            </a>
-                            <ul class="dropdown-menu dropdown-menu-right" role="menu">
+            <div id="sidebar-collapse">
+                <div>
+                    <h4>{% trans "Your competitions" %}</h4>
+                    <ul class="list-stacked list-stacked--divided list-stacked--large">
+                        <li>
+                            <ul class="list-stacked list-stacked--tiny">
                                 {% competitions_list %}
-                                {% if competitions_list %}
-                                    <li class="divider"></li>
-                                {% endif %}
-                                <li><a href="{% url "competition_list_all" %}">{% trans "All competitions" %}</a></li>
-                                <li class="divider"></li>
-                                <li><a href="{% url "competition_add" %}">{% trans "Create new..." %}</a></li>
                             </ul>
                         </li>
-                        <li class="dropdown">
-                            <a class="dropdown-toggle" data-toggle="dropdown" href="#">
-                                <span class="glyphicon glyphicon-user icon-spaced-right"></span>
-                                <span id="nav-user-name">{{ user.get_full_name }}</span>
-                                <!-- {% include 'game/_player_avatar.html' with user=user %} -->
-                                <b class="caret"></b>
-                            </a>
-                            <ul class="dropdown-menu dropdown-menu-right" role="menu">
-                                <li><a href="{% url 'profile' %}">{% trans "View your profile" %}</a></li>
-                                <li><a href="{% url 'edit_profile' %}">{% trans "Account settings" %}</a></li>
-                                <li class="divider"></li>
-                                <li><a href="{% url 'auth_logout' %}">{% trans "Log out" %}</a></li>
+                        <li>
+                            <ul class="list-stacked list-stacked--tiny">
+                                <li><a href="{% url "competition_list_all" %}" class="text-muted">{% trans "View all competitions" %}</a></li>
+                                <li><a href="{% url "competition_add" %}" class="text-muted">{% trans "Create new..." %}</a></li>
                             </ul>
                         </li>
                     </ul>
                 </div>
-                {% endif %}
-            </div>
-        </nav>
 
-        <div class="app-layout">
-            {% spaceless %}
-                <aside class="sidebar">
-                    {% block sidebar %}
-                        {% if user.profile %}
-                            <div class="box box--highlighted">
-                                <div class="quick-profile media">
-                                    <div class="pull-left">{% include 'game/_player_avatar.html' with class="media-object" %}</div>
-                                    <div class="media-body">
-                                        <h4 class="quick-profile__title">{{ user.get_full_name }}<br /><small>{{ user }}</small></h4>
+                {% if user.profile %}
+                    <div class="quick-profile">
+                        <ul class="list-stacked list-stacked--tiny">
+                            <li>
+                                <div class="media">
+                                    <div class="media__left">{% include 'game/_player_avatar.html' with class="media-object" %}</div>
+                                    <div class="media__body">
+                                        <h4 class="mrg0"><a href="{% url 'profile' %}">{{ user.get_full_name }}</a></h4>
+                                        <p class="mrgt0 text-small">{{ user }}</p>
                                     </div>
                                 </div>
-
-                                <ul class="list-group">
-                                    <li class="list-group-item">
-                                        <a href="{% url 'profile' %}">
-                                            <span class="glyphicon glyphicon-user icon-spaced-right"></span>{% trans "View your profile" %}
-                                        </a>
-                                    </li>
-                                    <li class="list-group-item">
-                                        <a href="{% url 'edit_profile' %}">
-                                            <span class="glyphicon glyphicon-cog icon-spaced-right"></span>{% trans "Account settings" %}
-                                        </a>
-                                    </li>
-                                </ul>
-                            </div>
-                        {% endif %}
-                    {% endblock %}
-                </aside>
-            {% endspaceless %}
-
-            <div class="app-content">
-                {% if messages %}
-                    <div class="messages">
-                        {% for message in messages %}
-                            <div class="alert alert-{{ message.tags }}">{{ message }}</div>
-                        {% endfor %}
+                            </li>
+                            <li><a href="{% url 'edit_profile' %}">{% trans "Account settings" %}</a></li>
+                            <li><a href="{% url 'auth_logout' %}">{% trans "Log out" %}</a></li>
+                        </ul>
                     </div>
                 {% endif %}
-
-                {% block content %}{% endblock %}
             </div>
+        </aside>
+
+        <div class="app__body">
+            {% if messages %}
+                <div class="messages">
+                    {% for message in messages %}
+                        <div class="alert alert-{{ message.tags }}">{{ message }}</div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+
+            {% block content %}{% endblock %}
         </div>
     </div>
 

@@ -105,10 +105,10 @@ function doDraw(container) {
 
         var margin = { top: 20, right: 150, bottom: 10, left: 40 };
         var width = container.width() - margin.left - margin.right;
-        var height = 400;
+        var height = 500;
 
         attribute = $(modeSelector + ':checked').val();
-        var color = d3.scale.category20();
+        var color = d3.scale.category20c();
 
         x = d3.scale.linear()
             .range([0, width]);
@@ -175,13 +175,15 @@ function doDraw(container) {
             .data(function(d) { return d.values; })
           .enter()
             .append('circle')
-            .attr('r', function(d) { return d.played ? 5 : 0; })
-            .style('fill', function(d) { return d.win ? color(d.name) : 'white'; })
+            .attr('r', function(d) { return d.played ? 6 : 0; })
+            .style('fill', function(d) { return d.win ? color(d.name) : '#27323A'; })
             .style('stroke', function(d) { return color(d.name); })
+            .attr('stroke-width', function(d) { return 2; })
             .attr("transform", function(d, idx) { return "translate(" + x(idx + 1) + "," + y(d[attribute]) + ")"; })
             .call(highlighter);
 
-        var itemNumber = data[Object.keys(data)[0]].length;
+        var keys = Object.keys(data),
+            itemNumber = data[keys[0]].length;
 
         position.append("text")
             .datum(function(d) { return {name: d.name, value: d.values[d.values.length - 1]}; })
@@ -194,13 +196,13 @@ function doDraw(container) {
 
         yAxis = d3.svg.axis()
             .scale(y)
-            .ticks(10)
+            .ticks(keys.length)
             .tickSize(0)
             .orient('left');
 
         svg.append("g")
             .attr("class", "y axis")
-            .attr("transform", function(d, idx) { return "translate(-5, 0)"; })
+            .attr("transform", function(d, idx) { return "translate(-15, 0)"; })
             .call(yAxis);
 
     });

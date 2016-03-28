@@ -1,0 +1,46 @@
+/*----------------------------------------*\
+  TYPOGRAPHY
+\*----------------------------------------*/
+
+/**
+ * Links
+ */
+
+a {
+  text-decoration: none;
+
+  &:focus,
+  &:hover {
+    color: lighten($brand-color, 25%);
+  }
+}
+
+
+/**
+ * Headings
+ */
+
+h1, h2, h3 {
+  font-weight: 300;
+}
+
+
+/**
+ * Miscs
+ */
+
+strong,
+b,
+th,
+label {
+  font-weight: 500;
+}
+
+
+/**
+ * Text
+ */
+
+.text-danger {
+  color: $brand-danger;
+}

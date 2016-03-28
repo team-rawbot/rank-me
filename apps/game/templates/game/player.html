@@ -2,22 +2,25 @@
 
 {% load i18n game_extras %}
 
-{% block sidebar %}{% endblock %}
-
 {% block content %}
 <div class="team">
-    <header class="page-header">
-        <h1>
+    <header class="page-header media">
+        <div class="media__left">
             {% include 'game/_player_avatar.html' with user=player %}
-            {{ team }} <small>{{ score.score|floatformat }}</small>
-        </h1>
+        </div>
+        <div class="media__body">
+            <h1>
+                {{ player.get_full_name }}
+                <small class="text-muted">{{ score.score|floatformat }}</small>
+            </h1>
+        </div>
     </header>
 
-    <div class="panel panel-default">
-        <div class="panel-heading">
-            <h3 class="panel-title">{% trans "Games per week" %}</h3>
-        </div>
-        <div class="panel-body games-per-week">
+    <div class="panel mrgb+">
+        <header class="panel__header">
+            <h3>{% trans "Games per week" %}</h3>
+        </header>
+        <div class="panel__body games-per-week">
             {% include '_spinner.html' %}
 
             <table id="games-per-week" class="table hidden">
@@ -43,39 +46,41 @@
         </div>
     </div>
 
-    <div class="row">
-        <div class="col-md-3">
-            <div class="panel panel-default">
-                <div class="panel-heading">
-                    <h3 class="panel-title">{% trans "Last 10 games" %}</h3>
-                </div>
-                <ul class="team-last-games list-group">
-                    {% regroup last_results.games by date|date:"d F Y" as last_games %}
-                    {% for game_dates in last_games %}
-                        <li class="date list-group-item text-muted">{{ game_dates.grouper }}</li>
-                        {% for game in game_dates.list %}
-                            {% if game.winner == player %}
-                                <li class="game game-win list-group-item">
-                                    {% url 'team_general_detail' team_id=game.loser.id as loser_url %}
-                                    {% blocktrans with loser=game.loser %}Win against <a href="{{ loser_url }}">{{ loser }}</a>{% endblocktrans %}
-                                </li>
-                            {% else %}
-                                <li class="game game-defeat list-group-item">
-                                    {% url 'team_general_detail' team_id=game.winner.id as winner_url %}
-                                    {% blocktrans with winner=game.winner %}Defeat against <a href="{{ winner_url }}">{{ winner }}</a>{% endblocktrans %}
-                                </li>
-                            {% endif %}
+    <div class="grid">
+        <div class="grid__item md-w-1/4">
+            <div class="panel">
+                <header class="panel__header">
+                    <h3>{% trans "Last 10 games" %}</h3>
+                </header>
+                <div class="panel__body">
+                    <ul class="team-last-games list-stacked list-stacked--tiny">
+                        {% regroup last_results.games by date|date:"d F Y" as last_games %}
+                        {% for game_dates in last_games %}
+                            <li class="date text-muted">{{ game_dates.grouper }}</li>
+                            {% for game in game_dates.list %}
+                                {% if game.winner == player %}
+                                    <li class="game game-win list-group-item">
+                                        {#% url 'team_general_detail' team_id=game.loser.id as loser_url %#}
+                                        {% blocktrans with loser=game.loser.get_full_name %}Win against <a href="{{ loser_url }}">{{ loser }}</a>{% endblocktrans %}
+                                    </li>
+                                {% else %}
+                                    <li class="game game-defeat list-group-item">
+                                        {#% url 'team_general_detail' team_id=game.winner.id as winner_url %#}
+                                        {% blocktrans with winner=game.winner.get_full_name %}Defeat against <a href="{{ winner_url }}">{{ winner }}</a>{% endblocktrans %}
+                                    </li>
+                                {% endif %}
+                            {% endfor %}
                         {% endfor %}
-                    {% endfor %}
-                </ul>
+                    </ul>
+                </div>
             </div>
         </div>
-        <div class="col-md-6">
-            <div class="panel panel-default">
-                <div class="panel-heading">
-                    <h3 class="panel-title">{% trans "Head-to-Head" %}</h3>
-                </div>
-                <div class="panel-body head-2-head">
+        <div class="grid__item md-w-1/2">
+            <div class="panel">
+                <header class="panel__header">
+                    <h3>{% trans "Head-to-Head" %}</h3>
+                </header>
+                <div class="panel__body head-2-head">
                     {% include '_spinner.html' %}
 
                     <table id="head-2-head-results" class="table hidden">
@@ -90,7 +95,7 @@
                         <tbody>
                             {% for opponent, results in head2head.items %}
                                 <tr>
-                                    <td><a href="{% url 'player_detail' player_id=opponent.id competition_slug=competition.slug %}">{{ opponent }}</a></td>
+                                    <td><a href="{% url 'player_detail' player_id=opponent.id competition_slug=competition.slug %}">{{ opponent.get_full_name }}</a></td>
                                     <td>{{ results.wins }}</td>
                                     <td>{{ results.defeats }}</td>
                                     <td>{{ results.fairness }}</td>
@@ -101,12 +106,12 @@
                 </div>
             </div>
         </div>
-        <div class="col-md-3">
-            <div class="panel panel-default">
-                <div class="panel-heading">
-                    <h3 class="panel-title">{% trans "Statistics" %}</h3>
-                </div>
-                <div class="panel-body">
+        <div class="grid__item md-w-1/4">
+            <div class="panel">
+                <header class="panel__header">
+                    <h3>{% trans "Statistics" %}</h3>
+                </header>
+                <div class="panel__body">
                     <table class="team-statistics table table-bordered">
                         <tbody>
                             <tr>
