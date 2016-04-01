@@ -21,6 +21,16 @@ class UserProfile(models.Model):
 
         return display_name.title()
 
+    def get_short_name(self):
+        full_name = "%s %s" % (self.user.first_name, self.user.last_name[0] + '.' if self.user.last_name else '')
+
+        if not full_name.strip():
+            display_name = self.user.username
+        else:
+            display_name = full_name
+
+        return display_name.title()
+
     def __str__(self):
         return self.get_full_name()
 

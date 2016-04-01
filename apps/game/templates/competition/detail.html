@@ -84,8 +84,8 @@
                             <tbody>
                                 {% for game in latest_results %}
                                     <tr class="game-item">
-                                        <td>{{ game.winner.get_full_name }}</td>
-                                        <td>{{ game.loser.get_full_name }}</td>
+                                        <td>{{ game.winner.profile.get_short_name }}</td>
+                                        <td>{{ game.loser.profile.get_short_name }}</td>
                                         <td>{{ game.date | ago }}</td>
                                         <td>
                                             {%if forloop.first %}
@@ -124,7 +124,7 @@
                                         <td width="1">{% include 'game/_player_avatar.html' with user=score.player %}</td>
                                         <td>
                                             <a href="{% url 'player_detail' player_id=score.player_id competition_slug=competition.slug %}">
-                                                {{ score.player.profile.get_full_name }}
+                                                {{ score.player.profile.get_short_name }}
                                             </a>
                                         </td>
                                         <td width="1" class="text-muted text-right">{{ score.score|floatformat:"2" }}</td>

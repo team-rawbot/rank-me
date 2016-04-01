@@ -240,7 +240,7 @@ def get_latest_results_by_player(competition, nb_games, offset=0,
     if return_json:
         json_result = {}
         for player, results in scores_by_player.items():
-            json_result[player.get_full_name()] = results
+            json_result[player.profile.get_short_name()] = results
 
         return json.dumps(json_result)
 
