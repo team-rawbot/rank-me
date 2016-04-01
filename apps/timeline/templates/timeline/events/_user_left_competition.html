@@ -1,7 +1,7 @@
 {% load i18n %}
 
 <div class="event-hook">
-    <div class="event-icon event-icon--joined glyphicon glyphicon-ban-circle"></div>
+    <div class="event-dot event-dot--left"></div>
 </div>
 <div class="event-body">
     {% blocktrans with username=event.get_details.user.name competition=event.competition %}<strong>{{ username }}</strong> left the competition {{ competition }}{% endblocktrans %}

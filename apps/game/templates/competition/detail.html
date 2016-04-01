@@ -60,7 +60,7 @@
             </div>
         </div>
 
-        <div id="score-chart-container" data-json="{% url 'competition_detail_score_chart' competition.slug %}">
+        <div id="score-chart-container" class="chart" data-json="{% url 'competition_detail_score_chart' competition.slug %}">
             {% include '_spinner.html' %}
         </div>
     </div>
@@ -146,8 +146,4 @@
             </div>
         </div>
     </div>
-{% endblock %}
-
-{% block extra_footer_js %}
-    <script src="{% static "js/score_chart.js" %}"></script>
 {% endblock %}

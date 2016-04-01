@@ -15,6 +15,16 @@ a {
   }
 }
 
+.link-ghost {
+  color: $text-color;
+  border-bottom: 1px solid $alt-color;
+
+  &:focus,
+  &:hover {
+    color: white;
+  }
+}
+
 
 /**
  * Headings
