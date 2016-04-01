@@ -28,18 +28,18 @@
                 <thead>
                     <tr>
                         <td>{% trans "Week" %}</td>
-                        <td>{% trans "Games played" %}</td>
-                        <td>{% trans "Total game" %}</td>
-                        <td>{% trans "All player avg" %}</td>
+                        <td>{% trans "Games played by player" %}</td>
+                        <td>{% trans "Total number of games played" %}</td>
+                        <td>{% trans "Average of games played" %}</td>
                     </tr>
                 </thead>
                 <tbody>
                     {% for week, stats in stats_per_week %}
                         <tr>
                             <td>{{ week }}</td>
-                            <td>{{ stats.player_count }}</td>
-                            <td>{{ stats.total_count }}</td>
-                            <td>{{ stats.avg_game_per_player }}</td>
+                            <td>{{ stats.games_played_by_player }}</td>
+                            <td>{{ stats.games_total }}</td>
+                            <td>{{ stats.avg_games_played }}</td>
                         </tr>
                     {% endfor %}
                 </tbody>

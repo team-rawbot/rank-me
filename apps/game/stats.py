@@ -148,8 +148,8 @@ def get_stats_per_week(player, limit_days=140):
     for week, games in games_per_week.items():
         players = set()
         stats_per_week[week] = {
-            'total_count': len(games),
-            'players_count': 0,
+            'games_total': len(games),
+            'games_played_by_player': 0,
         }
 
         for game in games:
@@ -157,12 +157,13 @@ def get_stats_per_week(player, limit_days=140):
             players.add(game.loser_id)
 
             if player.id in [game.winner_id, game.loser_id]:
-                stats_per_week[week]['players_count'] += 1
+                stats_per_week[week]['games_played_by_player'] += 1
 
-        stats_per_week[week]['player_count'] = len(players)
-        stats_per_week[week]['avg_game_per_player'] = (
-            float(stats_per_week[week]['total_count'] * 2) /
-            stats_per_week[week]['player_count']
+        stats_per_week[week]['players_total'] = len(players)
+        # Divide number of players by 2 because 1 game = 2 players
+        stats_per_week[week]['avg_games_played'] = (
+            stats_per_week[week]['games_total'] /
+            (stats_per_week[week]['players_total'] / 2)
         )
 
     return sorted(stats_per_week.items())
