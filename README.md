@@ -31,6 +31,17 @@ Go to [rank-me.lo/api](http://rank-me.lo/api)
 * Create a Git tag
 * `fab deploy:{{tag}}`
 
+## Running the tests
+
+To run the tests, make sure test dependencies are installed by running the
+following command in the box:
+
+    pip install -r requirements/test.txt
+
+And then run the tests with the following command (again, in the box):
+
+    ./runtests.sh
+
 ## Contribute
 
 Any contribution welcome! Ideally use pull requests and make sure that the

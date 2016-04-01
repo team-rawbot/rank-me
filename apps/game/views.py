@@ -50,7 +50,7 @@ def player_detail(request, competition_slug, player_id):
         'defeats': defeats,
         'score': score,
         'competition': competition,
-        'stats_per_week': stats.get_stats_per_week(player, Game.objects.all()),
+        'stats_per_week': stats.get_stats_per_week(player),
     }
 
     return render(request, 'game/player.html', context)
@@ -172,17 +172,31 @@ def game_add(request, competition_slug):
         form = GameForm(request.POST, competition=competition)
 
         if form.is_valid():
-            Game.objects.announce(
-                form.cleaned_data['winner'],
-                form.cleaned_data['loser'],
-                competition
+            winner, loser = form.cleaned_data['winner'], form.cleaned_data['loser']
+            game = competition.add_game(winner, loser)
+            messages.add_message(
+                request, messages.SUCCESS, _('Game %s added.') % game
             )
 
-            return redirect(reverse('competition_detail', kwargs={
+            # save_add is set if the user clicked on "add another"
+            if 'save_add' in request.POST:
+                redirect_route = 'game_add'
+                redirect_qs = '?winner={winner}&loser={loser}'.format(
+                    winner=winner.id, loser=loser.id
+                )
+            else:
+                redirect_route = 'competition_detail'
+                redirect_qs = ''
+
+            return redirect(reverse(redirect_route, kwargs={
                 'competition_slug': competition.slug
-            }))
+            }) + redirect_qs)
     else:
-        form = GameForm(competition=competition)
+        selected_winner, selected_loser = request.GET.get('winner'), request.GET.get('loser')
+        form = GameForm(competition=competition, initial={
+            'winner': selected_winner,
+            'loser': selected_loser
+        })
 
     return render(request, 'game/add.html', {
         'form': form,

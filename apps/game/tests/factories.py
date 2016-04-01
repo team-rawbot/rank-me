@@ -20,6 +20,6 @@ class CompetitionFactory(factory.django.DjangoModelFactory):
         model = Competition
 
     name = factory.Sequence(lambda n: 'competition%d' % n)
-    start_date = timezone.now()
+    start_date = factory.LazyAttribute(lambda _: timezone.now())
     end_date = None
     creator = factory.SubFactory(UserFactory)

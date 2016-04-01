@@ -1,9 +1,12 @@
 from collections import defaultdict, OrderedDict
+import datetime
 from itertools import groupby
 import json
 import operator
 
-from .models import HistoricalScore
+from django.utils import timezone
+
+from .models import Game, HistoricalScore
 
 from trueskill import Rating, quality_1vs1
 
@@ -124,14 +127,20 @@ def get_current_streak(player, competition):
     return streak
 
 
-def get_stats_per_week(player, games):
+def get_stats_per_week(player, limit_days=140):
     """
     Return games weekly statistics with the current player match number,
     and also as an average for the whole players that have been playing
-    that week.
+    that week. ``limit_days`` is the number of days back in time of games taken
+    into consideration. This might be rounded up to get to a monday since the
+    stats are done on a weekly basis.
     """
     games_per_week = defaultdict(list)
-    for game in games:
+    date_limit = timezone.now() - datetime.timedelta(days=limit_days)
+    # We always want to count the week stats starting on monday so we substract
+    # enough days to get to the previous monday if necessary
+    date_limit -= datetime.timedelta(days=date_limit.weekday())
+    for game in Game.objects.filter(date__gte=date_limit):
         week = '%s.%02d' % (game.date.year, game.date.isocalendar()[1])
         games_per_week[week].append(game)
 

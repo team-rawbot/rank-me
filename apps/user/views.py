@@ -1,5 +1,3 @@
-import itertools
-
 from django.contrib.auth.decorators import login_required
 from django.core.urlresolvers import reverse_lazy
 from django.http.response import HttpResponseRedirect
@@ -10,7 +8,8 @@ from .forms import UserProfileForm, UserForm
 
 @login_required
 def index(request):
-    scores = list(itertools.chain.from_iterable(request.user.scores.all()))
+    scores = request.user.scores.all()
+
     return render(request, 'user/profile.html', {
         'user': request.user,
         'profile': request.user.profile,
