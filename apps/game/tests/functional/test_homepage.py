@@ -17,4 +17,4 @@ class TestHomepage(RankMeTestCase):
         Redirect to 'all competitions' page as we don't have homepage yet
         """
         response = self.client.get(reverse('homepage'))
-        self.assertContains(response, '<small>%s</small>' % self.user.username)
+        self.assertContains(response, 'Your competitions')
