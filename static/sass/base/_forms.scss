@@ -1,0 +1,15 @@
+/**
+ * Base
+ * FORMS
+ */
+
+.help-block {
+  display: block;
+  margin-top: $spacing-unit-tiny;
+
+  color: $muted-color;
+
+  .has-error & {
+    color: $brand-danger;
+  }
+}

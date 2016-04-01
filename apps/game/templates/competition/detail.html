@@ -6,27 +6,31 @@
 
 {% block content %}
     <div class="page-header">
-        <ul class="list-inline pull-right">
-        {% if user_is_admin_of_competition %}
-            <li>
-                <a href="{% url 'competition_edit' competition_slug=competition.slug %}" class="btn btn--default">Edit</a>
-            </li>
-        {% endif %}
-        {% if user_can_edit_competition %}
-            <li>
-                <a href="{% url 'game_add' competition_slug=competition.slug %}"
-                    id="add-result-button" class="btn btn--primary pull-right {% if not competition.is_active %}disabled{% endif %}">
-                    {% trans "Add a result" %}
-                </a>
-            </li>
-        {% endif %}
-        </ul>
+        <div class="mirror">
+            <div class="mirror__item mrgb--">
+                <h1 class="mrgb0">{{ competition }}</h1>
 
-        <h1 class="mrgb0">{{ competition }}</h1>
+                {% if competition.description %}
+                    <p class="mrgv0 text-muted">{{ competition.description | linebreaksbr }}</p>
+                {% endif %}
+            </div>
 
-        {% if competition.description %}
-            <p class="mrgt0 text-muted">{{ competition.description | linebreaksbr }}</p>
-        {% endif %}
+            <ul class="list-inline list-inline--small mirror__item">
+                {% if user_is_admin_of_competition %}
+                    <li>
+                        <a href="{% url 'competition_edit' competition_slug=competition.slug %}" class="btn btn--default">Edit</a>
+                    </li>
+                {% endif %}
+                {% if user_can_edit_competition %}
+                    <li>
+                        <a href="{% url 'game_add' competition_slug=competition.slug %}"
+                            id="add-result-button" class="btn btn--primary pull-right {% if not competition.is_active %}disabled{% endif %}">
+                            {% trans "Add a result" %}
+                        </a>
+                    </li>
+                {% endif %}
+            </ul>
+        </div>
 
         {% if not competition.is_active %}
             <div class="text-danger">
@@ -39,7 +43,7 @@
         {% endif %}
     </div>
 
-    <div class="mrgb+">
+    <div class="hidden-sm-down mrgb+">
         <div class="clearfix">
             <div class="pull-left">
                 <button class="move-chart btn btn--default btn--small" data-movement="10">&larr;</button>
@@ -65,50 +69,8 @@
         </div>
     </div>
 
-    <div class="grid">
-        <div class="grid__item xl-w-2/3 mrgb">
-            <div class="latest-results panel">
-                <header class="panel__header">
-                    <h4>{% trans "Last 20 games" %}</h4>
-                </header>
-
-                <div class="panel__body">
-                    {% if latest_results %}
-                        <table class="games table table-striped">
-                            <thead>
-                                <th>{% trans "Winner" %}</th>
-                                <th>{% trans "Loser" %}</th>
-                                <th>{% trans "Date" %}</th>
-                                <th width="1">{% trans "Action" %}</th>
-                            </thead>
-                            <tbody>
-                                {% for game in latest_results %}
-                                    <tr class="game-item">
-                                        <td>{{ game.winner.profile.get_short_name }}</td>
-                                        <td>{{ game.loser.profile.get_short_name }}</td>
-                                        <td>{{ game.date | ago }}</td>
-                                        <td>
-                                            {%if forloop.first %}
-                                            <form action="{% url 'game_remove' competition_slug=competition.slug %}" method="POST">
-                                                {% csrf_token %}
-                                                <input type="hidden" name="game_id" value="{{ game.id }}">
-                                                <button type="submit" class="btn btn--danger btn--small {% if not competition.is_active %}disabled{% endif %}">
-                                                    {% trans "Remove" %}
-                                                </button>
-                                            </form>
-                                            {% endif %}
-                                        </td>
-                                    </tr>
-                                {% endfor %}
-                            </tbody>
-                        </table>
-                    {% else %}
-                        {% trans "No result yet." %}
-                    {% endif %}
-                </div>
-            </div>
-        </div>
-        <div class="grid__item xl-w-1/3">
+    <div class="grid grid--rev">
+        <div class="grid__item xl-w-1/3 mrgb">
             <div class="scores">
                 <div class="score-board panel">
                     <header class="panel__header">
@@ -120,7 +82,7 @@
                             <table class="table">
                                 {% for score in score_board %}
                                     <tr class="score-item">
-                                        <td class="rank-num">{{ forloop.counter }}</td>
+                                        <td width="1" class="rank-num">{{ forloop.counter }}</td>
                                         <td width="1">{% include 'game/_player_avatar.html' with user=score.player %}</td>
                                         <td>
                                             <a href="{% url 'player_detail' player_id=score.player_id competition_slug=competition.slug %}">
@@ -143,6 +105,48 @@
                     {% csrf_token %}
                     <button class="btn btn--default btn--block">{% trans "Leave competition" %}</button>
                 </form>
+            </div>
+        </div>
+        <div class="grid__item xl-w-2/3">
+            <div class="latest-results panel">
+                <header class="panel__header">
+                    <h4>{% trans "Last 20 games" %}</h4>
+                </header>
+
+                <div class="panel__body">
+                    {% if latest_results %}
+                        <table class="games table table-striped">
+                            <thead>
+                                <th>{% trans "Winner" %}</th>
+                                <th>{% trans "Loser" %}</th>
+                                <th>{% trans "Date" %}</th>
+                                <th width="1" class="hidden-sm-down">{% trans "Action" %}</th>
+                            </thead>
+                            <tbody>
+                                {% for game in latest_results %}
+                                    <tr class="game-item">
+                                        <td>{{ game.winner.profile.get_short_name }}</td>
+                                        <td>{{ game.loser.profile.get_short_name }}</td>
+                                        <td>{{ game.date | ago }}</td>
+                                        <td class="hidden-sm-down">
+                                            {%if forloop.first %}
+                                            <form action="{% url 'game_remove' competition_slug=competition.slug %}" method="POST">
+                                                {% csrf_token %}
+                                                <input type="hidden" name="game_id" value="{{ game.id }}">
+                                                <button type="submit" class="btn btn--danger btn--small {% if not competition.is_active %}disabled{% endif %}">
+                                                    {% trans "Remove" %}
+                                                </button>
+                                            </form>
+                                            {% endif %}
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    {% else %}
+                        {% trans "No result yet." %}
+                    {% endif %}
+                </div>
             </div>
         </div>
     </div>

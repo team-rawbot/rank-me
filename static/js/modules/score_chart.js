@@ -72,30 +72,42 @@ function redraw() {
 }
 
 export function drawChart(container) {
-    if(container.length == 0) {
+    if (container.length == 0) {
         return;
     }
 
+    // Move back and forth in time to display results
     $(moveSelector).on('click', function () {
         offset += $(this).data('movement');
         offset = Math.max(offset, 0);
         doDraw(container);
     });
 
+    // Reset button display last results
     $(resetSelector).on('click', function () {
         offset = 0;
         doDraw(container);
     });
 
+    // Listen for display change (position|skill)
     $(modeSelector).on('change', function() {
         attribute = $(this).val();
         redraw();
+    });
+
+    // Listen to resize (debounced) and redraw graph
+    var timeout;
+    window.addEventListener('resize', () => {
+        if (timeout) clearTimeout(timeout);
+        timeout = setTimeout(doDraw.bind(this, container), 150);
     });
 
     doDraw(container);
 }
 
 function doDraw(container) {
+    console.log('DRAW');
+
     var url = container.data('json') + offset;
     d3.json(url, function(err, data) {
         if(err) {
@@ -105,16 +117,16 @@ function doDraw(container) {
 
         var keys = d3.keys(data);
         var margin = { top: 20, right: 120, bottom: 10, left: 60 };
-        var width = container.width() - margin.left - margin.right;
+        var width = container.width();
         var height = 34 * keys.length;
 
         attribute = $(modeSelector + ':checked').val();
         var color = d3.scale.category20c();
 
         x = d3.scale.linear()
-            .range([0, width]);
+            .range([0, width - margin.left - margin.right]);
         y = d3.scale.linear()
-            .range([0, height]);
+            .range([0, height - margin.top - margin.bottom]);
 
         line = d3.svg.line()
             .interpolate('linear')
@@ -128,11 +140,13 @@ function doDraw(container) {
         container.empty();
         svg = d3.select(container[0])
             .append('svg')
-            .attr('width', width + margin.left + margin.right)
-            .attr('height', height + margin.top + margin.bottom)
+            .attr('width', width)
+            .attr('height', height)
+            .attr('preserveAspectRatio', 'xMidYMid')
+            .attr('viewBox', '0 0 ' + width + ' ' + height)
             .call(zoom)
             .style('pointer-events', 'all')
-          .append('g')
+            .append('g')
             .attr('transform', 'translate(' + margin.left + ',' + margin.top + ')');
 
         color.domain(keys);
@@ -162,7 +176,7 @@ function doDraw(container) {
 
         var position = svg.selectAll('.position')
             .data(positions)
-          .enter()
+            .enter()
             .append('g')
             .attr('class', 'position');
 
@@ -174,7 +188,7 @@ function doDraw(container) {
 
         position.selectAll('circle')
             .data(function(d) { return d.values; })
-          .enter()
+            .enter()
             .append('circle')
             .attr('r', function(d) { return d.played ? 6 : 0; })
             .style('fill', function(d) { return d.win ? color(d.name) : '#27323A'; })
@@ -214,7 +228,7 @@ function highlighter(elems) {
             .attr('data-player', function(d) { return d.name; })
             .on('mouseover', highlight)
             .on('mouseout', unhighlight)
-          .append('title')
+            .append('title')
             .text(function(d) {
                 if(d.value) {
                     d = d.value;

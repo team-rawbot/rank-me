@@ -4,7 +4,11 @@
  */
 
 table {
-  font-size: rem(16px);
+  font-size: rem(14px);
+
+  @media (min-width: $screen-md-min) {
+    font-size: rem(16px);
+  }
 
   td,
   th {

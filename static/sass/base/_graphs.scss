@@ -4,6 +4,12 @@
  */
 
 .chart {
+  svg {
+    display: block;
+    max-width: 100%;
+    height: auto;
+  }
+
   path {
     fill: none;
     stroke-width: 2px;

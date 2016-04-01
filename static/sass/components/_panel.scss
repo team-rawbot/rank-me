@@ -10,13 +10,17 @@
   .panel__header,
   .panel__body,
   .panel__footer {
-    padding: $spacing-unit-small $spacing-unit-default;
+    padding: $spacing-unit-tiny $spacing-unit-small;
 
     > :first-child {
       margin-top: 0;
     }
     > :last-child {
       margin-bottom: 0;
+    }
+
+    @media (min-width: $screen-md-min) {
+      padding: $spacing-unit-small $spacing-unit-default;
     }
   }
 
