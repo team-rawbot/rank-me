@@ -9,68 +9,93 @@ body {
 }
 
 body {
-  padding: 70px 0 0 0;
+  background-color: $alt-color-darker;
 }
 
-// Main layout
-
-.container-fluid {
-  padding-left: $spacing-unit;
-  padding-right: $spacing-unit;
-}
 
 .app {
-  height: 100%;
-  display: flex;
-  flex-direction: column;
+  min-height: 100%;
 }
 
-.app-layout {
-  display: flex;
-  flex-direction: row;
-  align-items: stretch;
-  flex-grow: 1;
-}
+  .app__sidebar {
+    padding: $spacing-unit-small;
 
-.sidebar {
-  width: 280px;
-
-  background: $brand-lighter;
-  border-right: 1px solid $brand-light;
-
-  &:empty {
-    display: none;
+    background-color: $alt-color-dark;
   }
 
-  a {
-    color: $brand-dark;
+    #sidebar-collapse {
+      display: none;
+    }
+
+  .app__body {
+    padding: $spacing-unit-small;
   }
+
+
+.anonymous {
+  min-height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  text-align: center;
 }
 
-.app-content {
-  flex-grow: 1;
-  padding: $spacing-unit;
+
+.brand {
+  font-size: rem(32px);
+  text-transform: uppercase;
 }
+
 
 .page-header {
-  margin: -#{$spacing-unit};
-  margin-bottom: $spacing-unit;
-  padding: $spacing-unit;
-
-  border-bottom: 1px solid $brand-light;
-
-  > :first-child,
-  h1, h2, h3, h4, h5, h6 {
-    margin-top: 0;
-  }
-  > :last-child {
-    margin-bottom: 0;
-  }
+  margin-bottom: $spacing-unit-default;
 }
 
 
-// Sidebar
+@media (min-width: $screen-md-min) {
+  .app {
+    display: flex;
+  }
 
-.quick-profile {
-  margin-bottom: $half-spacing-unit;
+    .app__sidebar {
+      min-width: 300px;
+      padding: $spacing-unit-default;
+    }
+
+      #sidebar-collapse-button {
+        display: none;
+      }
+      #sidebar-collapse {
+        display: block !important;
+      }
+
+    .app__body {
+      flex: 1;
+      padding: $spacing-unit-default $spacing-unit-large;
+    }
+
+  .quick-profile {
+    width: 300px;
+    padding: $spacing-unit-default;
+
+    position: fixed;
+    left: 0;
+    bottom: 0;
+
+    background-color: $alt-color-dark;
+
+    &::before {
+      content: '';
+      display: block;
+      width: 100%;
+      height: 50px;
+
+      position: absolute;
+      left: 0;
+      bottom: 100%;
+
+      background-image: linear-gradient(to top, $alt-color-dark, transparentize($alt-color-dark, 1));
+    }
+  }
 }

@@ -66,24 +66,23 @@ class TestCompetition(RankMeTestCase):
         }))
         self.assertEqual(200, response.status_code)
 
-    def test_access_on_competition(self):
-        """
-        John has no access to defaut_competition by default
-        Then add John to default_competition
-        """
+    def test_access_on_unaccessible_competition_doesnt_show_competition(self):
         competition = CompetitionFactory()
-
         john = UserFactory()
         self.client.login(username=john.username, password='password')
 
         response = self.client.get(reverse('competition_detail', kwargs={
             'competition_slug': competition.slug
         }))
-        self.assertContains(response, '<h1>Access denied</h1>')
+        self.assertEqual(response.status_code, 403)
 
+    def test_access_on_accessible_competition_shows_competition(self):
+        competition = CompetitionFactory()
+        john = UserFactory()
+        self.client.login(username=john.username, password='password')
         competition.players.add(john)
 
         response = self.client.get(reverse('competition_detail', kwargs={
             'competition_slug': competition.slug
         }))
-        self.assertContains(response, "<h1>%s" % competition.name)
+        self.assertEqual(response.status_code, 200)

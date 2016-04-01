@@ -7,14 +7,14 @@
 
 .spinner {
   margin: 0 auto;
-  padding: $double-spacing-unit 0;
+  padding: $spacing-unit-large 0;
   width: 70px;
   text-align: center;
 
   > div {
     width: 18px;
     height: 18px;
-    background-color: $brand-primary;
+    background-color: $brand-color;
 
     border-radius: 100%;
     display: inline-block;

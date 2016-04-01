@@ -2,13 +2,13 @@
 
 <div class="event-hook">
     <div class="event-img-wrap">
-        <img class="event-img img-circle user-avatar" src="{{ event.get_details.winner.avatar }}"/>
+        <img class="event-img user-avatar" src="{{ event.get_details.winner.avatar }}"/>
     </div>
 </div>
 <div class="event-body">
     <p class="event-competition"><a href="{% url "competition_detail" event.competition.slug %}" class="text-muted">{{ event.competition }}</a></p>
 
-    <p>
+    <p class="mrgt0">
         <strong>{% include 'timeline/_player.html' with player=event.get_details.winner %}</strong>
         {% trans "won against" %}
         <strong>{% include 'timeline/_player.html' with player=event.get_details.loser %}</strong>

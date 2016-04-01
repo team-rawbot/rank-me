@@ -18,7 +18,7 @@
     bottom: 0;
     z-index: -1;
 
-    background-color: $gray-light;
+    background-color: $alt-color-light;
   }
 }
 
@@ -28,30 +28,34 @@
     align-items: center;
 
     + .timeline-event {
-      margin-top: $spacing-unit;
+      margin-top: $spacing-unit-default;
     }
   }
 
   .timeline-date {
-    margin: $spacing-unit 0;
-    padding-top: $spacing-unit;
+    margin: $spacing-unit-default 0;
+    padding-top: $spacing-unit-default;
     padding-left: 68px;
 
     position: relative;
 
+    &:first-child {
+      margin-top: 0;
+    }
+
     &::before {
       content: '';
       display: block;
-      width: 12px;
-      height: 12px;
-      margin-top: -6px;
+      width: 14px;
+      height: 14px;
+      margin-top: -7px;
 
       position: absolute;
-      top: calc(50% + #{$half-spacing-unit});
-      left: 22px;
+      top: calc(50% + #{$spacing-unit-small});
+      left: 21px;
 
-      border: 2px solid $gray-light;
-      background-color: white;
+      border: 2px solid $alt-color-light;
+      background-color: $alt-color-darker;
       border-radius: 50%;
     }
 
@@ -63,10 +67,10 @@
       margin-top: -1px;
 
       position: absolute;
-      top: calc(50% + #{$half-spacing-unit});
-      left: 32px;
+      top: calc(50% + #{$spacing-unit-small});
+      left: 33px;
 
-      background-image: linear-gradient(to right, $gray-light, transparentize($gray-light, 1));
+      background-image: linear-gradient(to right, $alt-color-light, transparentize($alt-color-light, 1));
     }
 
     h4 {
@@ -77,56 +81,41 @@
       position: relative;
       z-index: 1;
 
-      background-color: white;
+      font-size: $font-size-small;
+      color: $muted-color;
+      text-transform: uppercase;
+
+      background-color: $alt-color-darker;
     }
   }
 
   .event-hook {
     width: 56px;
-    margin-right: $half-spacing-unit;
+    margin-right: $spacing-unit-small;
   }
 
   .event-img-wrap {
     display: block;
     position: relative;
-
-    &::after {
-      content: '';
-      display: block;
-      margin: 8px;
-
-      position: absolute;
-      top: 0;
-      right: 0;
-      bottom: 0;
-      left: 0;
-      z-index: 1;
-
-      border-radius: 50%;
-      box-shadow: 0 0 0 1px rgba(0,0,0,.1) inset;
-    }
   }
     .event-img {
       width: 100%;
-
-      border: 8px solid white;
+      border-radius: 50%;
     }
 
   .event-icon {
-    width: 40px;
-    height: 40px;
-    margin-left: 8px;
-    margin-right: $spacing-unit;
+    width: 20px;
+    height: 20px;
+    margin-left: 18px;
 
     font-size: 12px;
     text-align: center;
     line-height: 24px;
     color: white;
 
-    border: 8px solid white;
-    background-color: $gray-light;
+    background-color: $alt-color-light;
+    border: 4px solid $alt-color-darker;
     border-radius: 50%;
-    box-shadow: 0 0 0 1px rgba(0,0,0,.1) inset;
   }
     .event-icon--joined {
       background-color: $brand-info;
@@ -138,7 +127,7 @@
       background-color: $brand-danger;
     }
     .event-icon--competition {
-      background-color: $brand-primary;
+      background-color: $brand-color;
     }
 
   .event-body {
@@ -148,7 +137,8 @@
   }
 
   .event-competition {
-    font-size: 13px;
-
+    margin-top: 0;
     margin-bottom: 5px;
+
+    font-size: 13px;
   }

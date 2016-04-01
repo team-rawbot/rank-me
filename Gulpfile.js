@@ -30,6 +30,7 @@ gulp.task('serve', function() {
 
   gulp.watch(config.src.sass, ['sass']);
   gulp.watch(config.src.javascript, ['webpack', reload]);
+  gulp.watch(config.src.templates, reload);
 });
 
 /**

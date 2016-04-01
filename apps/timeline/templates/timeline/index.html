@@ -4,34 +4,12 @@
 
 {% block body_class %}home{% endblock %}
 
-{% block sidebar %}
-    {{ block.super }}
-
-    <div class="box">
-        <h4 class="box__title">{% trans "Your competitions" %}</h4>
-        <ul class="list-group">
-            {% include "timeline/_competitions_list.html" with competitions=ongoing_competitions %}
-        </ul>
-        {% if past_competitions %}
-            <div class="toggler">
-                <h4 class="box__title">{% trans "Archives" %}
-                    <small class="pull-right"><a href="#" class="toggler__handle" data-toggler="{% trans "Hide" %}">{% trans "Show" %}</a></small>
-                </h4>
-                <ul class="list-group toggler__container">
-                    {% include "timeline/_competitions_list.html" with competitions=past_competitions %}
-                </ul>
-            </div>
-        {% endif %}
-    </div>
-{% endblock %}
-
-
 {% block content %}
 <header class="page-header">
     <h1>{% trans "Recent activity" %}</h1>
 </header>
 
-<ul class="timeline list list-unstyled">
+<ul class="timeline list">
     {% for event in events %}
         {% ifchanged event.date|ago %}
             <li class="timeline-date"><h4>{{ event.date | ago }}</h4></li>

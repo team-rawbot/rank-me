@@ -17,7 +17,7 @@ def authorized_user(func):
 
         return render(request, 'competition/no_access.html', {
             'competition': competition,
-        })
+        }, status=403)
 
     return decorator
 

@@ -13,8 +13,8 @@
     {% csrf_token %}
     {{ form|bootstrap }}
     <p>
-        <input type="submit" name="save_add" value="{% trans "Save and add another" %}" class="btn btn-primary" />
-        <input type="submit" name="save" value="{% trans "Save" %}" class="btn btn-secondary" />
+        <input type="submit" name="save" value="{% trans "Save" %}" class="btn btn--primary" />
+        <input type="submit" name="save_add" value="{% trans "Save and add more" %}" class="btn btn--default" />
     </p>
 </form>
 {% endblock %}

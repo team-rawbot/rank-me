@@ -12,6 +12,6 @@
 <form id="add-result" action="" method="post">
     {% csrf_token %}
     {{ form|bootstrap }}
-    <p><input type="submit" value="{% trans "Create" %}" class="btn btn-primary" /></p>
+    <p><input type="submit" value="{% trans "Create" %}" class="btn btn--primary" /></p>
 </form>
 {% endblock %}
