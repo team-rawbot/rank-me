@@ -8,24 +8,27 @@ path {
   stroke-width: 2px;
 }
 
-.axis path,
-.axis line {
-  fill: none;
-  stroke: $text-color;
-  shape-rendering: crispEdges;
-}
-
-.axis path {
-  display: none;
-}
-
-circle.highlighted,
-path.highlighted {
-  stroke-width: 3px;
+circle,
+path {
+  &.highlighted {
+    stroke-width: 3px;
+  }
 }
 
 text.highlighted {
   font-weight: 500;
+}
+
+.axis {
+  line {
+    fill: none;
+    stroke: $text-color;
+    shape-rendering: crispEdges;
+  }
+
+  path {
+    display: none;
+  }
 }
 
 .tick,

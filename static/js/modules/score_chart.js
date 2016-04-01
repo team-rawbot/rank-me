@@ -103,9 +103,10 @@ function doDraw(container) {
             return;
         }
 
-        var margin = { top: 20, right: 150, bottom: 10, left: 40 };
+        var keys = d3.keys(data);
+        var margin = { top: 20, right: 120, bottom: 10, left: 60 };
         var width = container.width() - margin.left - margin.right;
-        var height = 500;
+        var height = 34 * keys.length;
 
         attribute = $(modeSelector + ':checked').val();
         var color = d3.scale.category20c();
@@ -134,7 +135,7 @@ function doDraw(container) {
           .append('g')
             .attr('transform', 'translate(' + margin.left + ',' + margin.top + ')');
 
-        color.domain(d3.keys(data));
+        color.domain(keys);
 
         for(var name in data) {
             if(data.hasOwnProperty(name)) {
@@ -188,7 +189,7 @@ function doDraw(container) {
         position.append('text')
             .datum(function(d) { return {name: d.name, value: d.values[d.values.length - 1]}; })
             .attr('transform', function(d) { return 'translate(' + x(itemNumber) + ',' + y(d.value[attribute]) + ')'; })
-            .attr('x', 10)
+            .attr('x', 20)
             .attr('dy', '.35em')
             .style('fill', function(d) { return color(d.name); })
             .text(function(d) { return d.name; })
@@ -201,10 +202,9 @@ function doDraw(container) {
             .orient('left');
 
         svg.append('g')
-            .attr('class', 'y axis')
-            .attr('transform', function(d, idx) { return 'translate(-15, 0)'; })
+            .attr('class', 'y axis text-large')
+            .attr('transform', function(d, idx) { return 'translate(-25, 0)'; })
             .call(yAxis);
-
     });
 }
 
