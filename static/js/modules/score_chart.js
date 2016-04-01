@@ -57,7 +57,7 @@ function redraw() {
         duration = 100;
     }
 
-    var t = svg.selectAll(".position").transition().duration(duration);
+    var t = svg.selectAll('.position').transition().duration(duration);
 
     setDomain(event);
 
@@ -66,7 +66,7 @@ function redraw() {
         .attr('d', function(d) { return line(d.values); });
 
     t.selectAll('circle')
-        .attr("transform", function(d, idx) { return "translate(" + x(idx + 1) + "," + y(d[attribute]) + ")"; });
+        .attr('transform', function(d, idx) { return 'translate(' + x(idx + 1) + ',' + y(d[attribute]) + ')'; });
 
     svg.select('.y.axis').call(yAxis);
 }
@@ -116,13 +116,13 @@ function doDraw(container) {
             .range([0, height]);
 
         line = d3.svg.line()
-            .interpolate("linear")
+            .interpolate('linear')
             .x(function(d, idx) { return x(idx + 1); })
             .y(function(d) { return y(d[attribute]); });
 
         var zoom = d3.behavior.zoom()
             .scaleExtent([0.1, 1])
-            .on("zoom", redraw);
+            .on('zoom', redraw);
 
         container.empty();
         svg = d3.select(container[0])
@@ -130,9 +130,9 @@ function doDraw(container) {
             .attr('width', width + margin.left + margin.right)
             .attr('height', height + margin.top + margin.bottom)
             .call(zoom)
-            .style("pointer-events", "all")
+            .style('pointer-events', 'all')
           .append('g')
-            .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+            .attr('transform', 'translate(' + margin.left + ',' + margin.top + ')');
 
         color.domain(d3.keys(data));
 
@@ -168,7 +168,7 @@ function doDraw(container) {
         position.append('path')
             .attr('d', function(d) { return line(d.values); })
             .attr('class', 'line')
-            .style("stroke", function (d) { return color(d.name); })
+            .style('stroke', function (d) { return color(d.name); })
             .call(highlighter);
 
         position.selectAll('circle')
@@ -179,17 +179,17 @@ function doDraw(container) {
             .style('fill', function(d) { return d.win ? color(d.name) : '#27323A'; })
             .style('stroke', function(d) { return color(d.name); })
             .attr('stroke-width', function(d) { return 2; })
-            .attr("transform", function(d, idx) { return "translate(" + x(idx + 1) + "," + y(d[attribute]) + ")"; })
+            .attr('transform', function(d, idx) { return 'translate(' + x(idx + 1) + ',' + y(d[attribute]) + ')'; })
             .call(highlighter);
 
         var keys = Object.keys(data),
             itemNumber = data[keys[0]].length;
 
-        position.append("text")
+        position.append('text')
             .datum(function(d) { return {name: d.name, value: d.values[d.values.length - 1]}; })
-            .attr("transform", function(d) { return "translate(" + x(itemNumber) + "," + y(d.value[attribute]) + ")"; })
-            .attr("x", 10)
-            .attr("dy", ".35em")
+            .attr('transform', function(d) { return 'translate(' + x(itemNumber) + ',' + y(d.value[attribute]) + ')'; })
+            .attr('x', 10)
+            .attr('dy', '.35em')
             .style('fill', function(d) { return color(d.name); })
             .text(function(d) { return d.name; })
             .call(highlighter);
@@ -200,9 +200,9 @@ function doDraw(container) {
             .tickSize(0)
             .orient('left');
 
-        svg.append("g")
-            .attr("class", "y axis")
-            .attr("transform", function(d, idx) { return "translate(-15, 0)"; })
+        svg.append('g')
+            .attr('class', 'y axis')
+            .attr('transform', function(d, idx) { return 'translate(-15, 0)'; })
             .call(yAxis);
 
     });
@@ -211,7 +211,7 @@ function doDraw(container) {
 function highlighter(elems) {
     elems.each(function() {
         d3.select(this)
-            .attr('class', function(d) { return 'player-' + d.name; })
+            .attr('data-player', function(d) { return d.name; })
             .on('mouseover', highlight)
             .on('mouseout', unhighlight)
           .append('title')
@@ -227,11 +227,9 @@ function highlighter(elems) {
 }
 
 function highlight(d) {
-    var c = 'player-' + d.name;
-    d3.selectAll('.' + c).attr('class', 'highlighted ' + c);
+    d3.selectAll('[data-player="' + d.name + '"]').classed({'highlighted': true});
 }
 
 function unhighlight(d) {
-    var c = 'player-' + d.name;
-    d3.selectAll('.' + c).attr('class', c);
+    d3.selectAll('[data-player="' + d.name + '"]').classed({'highlighted': false});
 }
