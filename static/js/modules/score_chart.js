@@ -213,6 +213,7 @@ function doDraw(container) {
             .scale(y)
             .ticks(keys.length)
             .tickSize(0)
+            .tickFormat(d3.format('d'))
             .orient('left');
 
         svg.append('g')

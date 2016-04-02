@@ -112,7 +112,6 @@ function head2head(container) {
         .append('g');
 
     var columns = [0, 80, 185, 265];
-    var dotWidth = 15;
 
     legend.append('circle')
         .attr('cx', function(d, idx) { return columns[idx] })
