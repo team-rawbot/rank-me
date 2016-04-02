@@ -2,7 +2,7 @@
 {% url "competition_detail" event.get_details.competition.slug as competition_url %}
 
 <div class="event-hook">
-    <div class="event-dot event-dot--competition"></div>
+    <div class="event-dot"></div>
 </div>
 <div class="event-body">
     {% blocktrans with url=competition_url name=event.details.competition.name %}

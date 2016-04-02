@@ -2,6 +2,13 @@
   BUTTONS
 \*----------------------------------------*/
 
+.btn--default {
+  &:focus,
+  &:hover {
+    box-shadow: 0 0 15px 2px $alt-color-light;
+  }
+}
+
 .btn--primary {
   &:focus,
   &:hover {

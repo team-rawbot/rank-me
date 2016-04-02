@@ -105,9 +105,9 @@
     }
 
   .event-dot {
-    width: 20px;
-    height: 20px;
-    margin-left: 18px;
+    width: 16px;
+    height: 16px;
+    margin-left: 20px;
 
     font-size: 12px;
     text-align: center;
@@ -118,12 +118,6 @@
     border: 4px solid $alt-color-darker;
     border-radius: 50%;
   }
-    .event-dot--joined {
-      background-color: $brand-info;
-    }
-    .event-dot--competition {
-      background-color: $brand-warning;
-    }
 
   .event-icon {
     margin-left: 14px;

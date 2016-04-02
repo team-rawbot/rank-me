@@ -11,9 +11,14 @@
     {% block page %}
         <div class="app">
             <aside class="app__sidebar">
-                <div class="clearfix">
-                    <a href="/" class="brand pull-left">Rank-Me</a>
-                    <button id="sidebar-collapse-button" class="btn btn--default pull-right">Menu</button>
+                <div class="app__header">
+                    <a href="/" class="brand">
+                        {% include 'icons/swords.svg' %}
+                        Rank-Me
+                    </a>
+                    <button id="sidebar-collapse-button" class="btn btn--bare">
+                        {% include 'icons/hamburger.svg' %}
+                    </button>
                 </div>
 
                 <div id="sidebar-collapse">

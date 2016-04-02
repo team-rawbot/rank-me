@@ -106,8 +106,6 @@ export function drawChart(container) {
 }
 
 function doDraw(container) {
-    console.log('DRAW');
-
     var url = container.data('json') + offset;
     d3.json(url, function(err, data) {
         if(err) {

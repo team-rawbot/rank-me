@@ -100,12 +100,10 @@
                 </div>
             </div>
 
-            <div class="mrgt">
-                <form action="{% url "competition_leave"  competition_slug=competition.slug %}" method="post">
-                    {% csrf_token %}
-                    <button class="btn btn--default btn--block">{% trans "Leave competition" %}</button>
-                </form>
-            </div>
+            <form action="{% url "competition_leave"  competition_slug=competition.slug %}" method="post" class="mrgt">
+                {% csrf_token %}
+                <button class="btn btn--default btn--block">{% trans "Leave competition" %}</button>
+            </form>
         </div>
         <div class="grid__item xl-w-2/3">
             <div class="latest-results panel">

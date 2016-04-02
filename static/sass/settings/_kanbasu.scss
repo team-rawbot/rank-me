@@ -63,8 +63,8 @@ $screen-sm-max:                     768px;
 $screen-md-min:                     $screen-sm-max + 1px;
 $screen-md-max:                     1024px;
 $screen-lg-min:                     $screen-md-max + 1px;
-$screen-lg-max:                       1200px;
-$screen-xl-min:                       $screen-lg-max + 1px;
+$screen-lg-max:                     1200px;
+$screen-xl-min:                     $screen-lg-max + 1px;
 
 $breakpoints-default:               (
                                       'sm' '(min-width: #{$screen-sm-min})',
@@ -156,7 +156,7 @@ $field-focus-border-color:          $alt-color;
  * Lists
  */
 
-$list-separator-style:              1px solid $alt-color;
+$list-separator-style:              1px dashed $alt-color;
 
 
 /**

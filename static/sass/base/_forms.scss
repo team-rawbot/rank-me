@@ -3,6 +3,10 @@
  * FORMS
  */
 
+select[multiple] {
+  min-height: 200px;
+}
+
 .help-block {
   display: block;
   margin-top: $spacing-unit-tiny;
