@@ -1,15 +1,17 @@
 {% extends "base.html" %}
+
 {% load i18n static %}
 
-{% block page %}
-    <div class="anonymous">
-        <div class="anonymous__body">
-            <header class="page-header">
-                <p class="mrgb0"><a href="/" class="brand">Rank-Me</a></p>
-                <p class="mrgt0">{% trans "Create competitions and track your scores." %}</p>
-            </header>
+{% block body_class %}page--landing{% endblock %}
 
-            <a href="{% url 'social:social.apps.django_app.views.auth' backend='twitter' %}" class="btn btn--primary" title="{% trans "Sign in with Twitter" %}">{% trans "Sign in with Twitter" %}</a>
+{% block page %}
+    <div class="landing">
+        <div class="landing__body">
+            {% include 'icons/swords.svg' %}
+
+            <h1 class="landing__title mrgb0">Rank-Me</h1>
+            <p class="mrgt-- mrgb+ text-muted">{% trans "Create competitions and track your scores." %}</p>
+            <p><a href="{% url 'social:social.apps.django_app.views.auth' backend='twitter' %}" class="btn btn--primary btn--large" title="{% trans "Sign in with Twitter" %}">{% trans "Sign in with Twitter" %}</a></p>
         </div>
     </div>
 {% endblock %}
