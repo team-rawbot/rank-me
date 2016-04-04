@@ -15,7 +15,7 @@ framework.
 """
 import os
 
-from . import get_project_root_path, import_env_vars
+from rankme.utils import get_project_root_path, import_env_vars
 
 import_env_vars(os.path.join(get_project_root_path(), 'envdir'))
 

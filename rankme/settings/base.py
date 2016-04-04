@@ -4,7 +4,7 @@ import dj_database_url
 
 from django.contrib.messages import constants as messages
 
-from .. import get_project_root_path
+from ..utils import get_project_root_path
 from . import get_env_variable
 
 DEBUG = bool(get_env_variable('DEBUG', False))

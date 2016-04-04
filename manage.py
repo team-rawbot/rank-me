@@ -2,7 +2,7 @@
 import os
 import sys
 
-from rankme import get_project_root_path, import_env_vars
+from rankme.utils import get_project_root_path, import_env_vars
 
 if __name__ == "__main__":
     import_env_vars(os.path.join(get_project_root_path(), 'envdir'))
