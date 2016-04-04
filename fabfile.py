@@ -59,7 +59,8 @@ def restart_process():
 @task
 def compile_css():
     with cd(env.project_root):
-        run('grunt compass')
+        run('npm install')
+        run('gulp build --production')
 
 
 @task
