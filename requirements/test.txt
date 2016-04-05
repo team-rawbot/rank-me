@@ -4,6 +4,7 @@
 #
 #    pip-compile test.in
 #
+beautifulsoup4==4.4.1
 defusedxml==0.4.1
 dj-database-url==0.4.0
 django-bootstrap-form==3.2

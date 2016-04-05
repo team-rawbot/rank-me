@@ -35,6 +35,12 @@ class GameForm(forms.Form):
 
     def clean(self):
         cleaned_data = super(GameForm, self).clean()
+
+        if not self.competition.is_active():
+            raise ValidationError(
+                _("Cannot add result on inactive competition")
+            )
+
         winner = cleaned_data.get('winner', None)
         loser = cleaned_data.get('loser', None)
 

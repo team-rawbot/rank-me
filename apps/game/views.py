@@ -161,13 +161,6 @@ def competition_leave(request, competition_slug):
 def game_add(request, competition_slug):
     competition = get_object_or_404(Competition, slug=competition_slug)
 
-    if not competition.is_active():
-        messages.add_message(
-            request, messages.ERROR, _("The competition is not active.")
-        )
-
-        return redirect(reverse('homepage'))
-
     if request.method == 'POST':
         form = GameForm(request.POST, competition=competition)
 

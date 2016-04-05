@@ -42,6 +42,10 @@ And then run the tests with the following command (again, in the box):
 
     ./runtests.sh
 
+To run a specific test, use [the same syntax as you would with ``manage.py test``](https://docs.djangoproject.com/en/stable/topics/testing/overview/#running-tests>):
+
+    ./runtests apps.game.tests.functional.test_competition.TestCompetition.test_create_competition
+
 ## Contribute
 
 Any contribution welcome! Ideally use pull requests and make sure that the

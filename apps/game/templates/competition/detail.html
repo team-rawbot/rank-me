@@ -22,7 +22,11 @@
                 {% if user_can_edit_competition %}
                     <li>
                         <a href="{% url 'game_add' competition_slug=competition.slug %}"
-                            id="add-result-button" class="btn btn--primary pull-right {% if not competition.is_active %}disabled{% endif %}">
+                            id="add-result-button"
+                            class="btn btn--primary pull-right"
+                            {% if not competition.is_active %}
+                                disabled="disabled"
+                            {% endif %}>
                             {% trans "Add a result" %}
                         </a>
                     </li>

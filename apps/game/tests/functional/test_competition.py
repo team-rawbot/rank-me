@@ -5,6 +5,8 @@ from django.conf import settings
 from django.core.urlresolvers import reverse
 from django.utils import timezone
 
+from bs4 import BeautifulSoup
+
 from rankme.tests import RankMeTestCase
 
 from ...models import Competition
@@ -66,7 +68,7 @@ class TestCompetition(RankMeTestCase):
         }))
         self.assertEqual(200, response.status_code)
 
-    def test_access_on_unaccessible_competition_doesnt_show_competition(self):
+    def test_access_on_inaccessible_competition_doesnt_show_competition(self):
         competition = CompetitionFactory()
         john = UserFactory()
         self.client.login(username=john.username, password='password')
@@ -86,3 +88,35 @@ class TestCompetition(RankMeTestCase):
             'competition_slug': competition.slug
         }))
         self.assertEqual(response.status_code, 200)
+
+    def test_add_result_button_is_disabled_on_ended_competition(self):
+        john = UserFactory()
+        competition = CompetitionFactory(
+            end_date=timezone.now() - datetime.timedelta(days=2)
+        )
+        competition.players.add(john)
+        self.client.login(username=john.username, password='password')
+        response = self.client.get(reverse('competition_detail', kwargs={
+            'competition_slug': competition.slug
+        }))
+        soup = BeautifulSoup(response.content)
+        add_result_button = soup.select_one('a#add-result-button')
+        self.assertIn('disabled', add_result_button.attrs)
+
+    def test_add_result_on_ended_competition_shows_error(self):
+        john, joe = [UserFactory() for _ in range(2)]
+        competition = CompetitionFactory(
+            end_date=timezone.now() - datetime.timedelta(days=2)
+        )
+        for player in (john, joe):
+            competition.players.add(player)
+        self.client.login(username=john.username, password='password')
+        response = self.client.post(reverse('game_add', kwargs={
+            'competition_slug': competition.slug
+        }), data={
+            'winner': john,
+            'loser': joe,
+        })
+        self.assertEqual(response.status_code, 200)
+        self.assertFormError(response, 'form', None,
+                             "Cannot add result on inactive competition")

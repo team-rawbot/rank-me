@@ -95,7 +95,7 @@ class Competition(models.Model):
         """
         Return True if the competition end date is reached.
         """
-        return self.end_date is not None and self.end_date < timezone.now()
+        return self.end_date is not None and self.end_date <= timezone.now()
 
     def is_started(self):
         """
