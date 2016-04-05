@@ -3,8 +3,7 @@
 \*----------------------------------------*/
 
 .btn--default {
-  &:focus,
-  &:hover {
+  &:focus {
     box-shadow: 0 0 15px 2px $alt-color-light;
   }
 }
@@ -13,6 +12,9 @@
   &:focus,
   &:hover {
     color: $btn-primary-color;
+  }
+
+  &:focus {
     box-shadow: 0 0 15px 2px $brand-color;
   }
 }
