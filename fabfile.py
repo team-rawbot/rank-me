@@ -51,9 +51,8 @@ def install_static():
 
 @task
 def restart_process():
-    gunicorn_pid = run('cat %s' % os.path.join(env.project_root,
-                                               '../tmp/gunicorn.pid'))
-    run('kill %s' % gunicorn_pid)
+    with cd(env.project_root):
+        run('touch rankme/wsgi.py')
 
 
 @task
