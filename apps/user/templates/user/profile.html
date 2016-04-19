@@ -1,5 +1,6 @@
 {% extends "base.html" %}
 {% load i18n static %}
+{% block page_title %}{% trans "Your profile" %}{% endblock %}
 
 {% block content %}
 <div class="team">
@@ -11,7 +12,10 @@
                         {% include 'game/_player_avatar.html' with class="user-avatar--large" %}
                     </div>
                     <div class="media__body">
-                        <h1>{{ profile.get_full_name }}</h1>
+                        <h1>
+                            {{ profile.get_full_name }}
+                            <small class="text-muted">{{ profile.user }}</small>
+                        </h1>
                     </div>
                 </div>
             </div>

@@ -1,10 +1,13 @@
 {% extends "base.html" %}
-
 {% load i18n %}
+{% block page_title %}{{ player.get_full_name }}{% endblock %}
 
 {% block content %}
 <div class="page-header">
-    <h1>{{ player }}</h1>
+    <h1 class="mrgb0">
+        {{ player.get_full_name }}
+        <small class="mrgt0 text-muted">{{ player }}</small>
+    </h1>
 </div>
 
 <h3>{% trans "Competitions in which this player participates" %}</h3>

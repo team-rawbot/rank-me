@@ -1,6 +1,6 @@
 {% extends "base.html" %}
-
 {% load i18n game_extras %}
+{% block page_title %}{{ player.get_full_name }} &middot; {{ competition }}{% endblock %}
 
 {% block content %}
 <div class="team">
