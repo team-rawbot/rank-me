@@ -68,7 +68,7 @@
                         <tbody>
                             {% for opponent, results in head2head.items %}
                                 <tr>
-                                    <td><a href="{% url 'player_detail' player_id=opponent.id competition_slug=competition.slug %}">{{ opponent.get_full_name }}</a></td>
+                                    <td>{{ opponent.get_short_name }}</td>
                                     <td>{{ results.wins }}</td>
                                     <td>{{ results.defeats }}</td>
                                     <td>{{ results.fairness }}</td>
