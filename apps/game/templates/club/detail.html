@@ -29,7 +29,8 @@
                 <ul class="members list-group">
                     {% for member in club.members.all %}
                         <li class="list-group-item">
-                            <a href="{% url 'profile' user_id=member.id %}">{{member}}
+                            <a href="{% url 'player_general_detail' player_id=member.id %}">{{member}}</a>
+                        </li>
                     {% endfor %}
                 </ul>
             </div>
