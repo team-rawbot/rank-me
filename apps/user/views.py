@@ -14,7 +14,7 @@ def index(request, user_id=None):
     else:
         displayed_user = request.user
 
-    profile = displayed_user.get_profile()
+    profile = displayed_user.profile
 
     scores = request.user.scores.all()
     return render(request, 'user/profile.html', {
