@@ -4,11 +4,21 @@
 {% block content %}
 <div class="team">
     <header class="page-header">
-        <a href="{% url 'edit_profile' %}" class="btn btn--default pull-right">{% trans "Edit your profile" %}</a>
-        <h1>
-            {% include 'game/_player_avatar.html' %}
-            {{ profile.get_full_name }}
-        </h1>
+        <div class="mirror">
+            <div class="mirror__item mrgb--">
+                <div class="media">
+                    <div class="media__left">
+                        {% include 'game/_player_avatar.html' with class="user-avatar--large" %}
+                    </div>
+                    <div class="media__body">
+                        <h1>{{ profile.get_full_name }}</h1>
+                    </div>
+                </div>
+            </div>
+            <div class="mirror__item">
+                <a href="{% url 'edit_profile' %}" class="btn btn--default pull-right">{% trans "Edit your profile" %}</a>
+            </div>
+        </div>
     </header>
 
     <h3>{% trans "Competitions" %}</h3>
@@ -24,7 +34,7 @@
             <tbody>
                 {% for score in scores %}
                     <tr>
-                        <td>{{ score.competition.name }}</td>
+                        <td><a href="{% url 'player_detail' competition_slug=score.competition.slug player_id=profile.id %}">{{ score.competition }}</a></td>
                         <td>{{ score.score|floatformat:"2" }}</td>
                         <td>{{ score.stdev|floatformat:"3" }}</td>
                     </tr>
