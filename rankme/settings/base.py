@@ -138,7 +138,7 @@ INSTALLED_APPS = (
     'apps.user',
     'apps.slack',
     'apps.api',
-    'apps.timeline',
+    'apps.timeline.apps.TimelineConfig',
     'django.contrib.admin',
     'django.contrib.admindocs',
     'social.apps.django_app.default',
