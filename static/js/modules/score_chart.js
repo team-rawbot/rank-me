@@ -51,12 +51,6 @@ function setDomain(event) {
 function redraw() {
     var event = null;
     var duration = 1250;
-
-    if(d3.event && d3.event.type == 'zoom') {
-        event = d3.event;
-        duration = 100;
-    }
-
     var t = svg.selectAll('.position').transition().duration(duration);
 
     setDomain(event);
@@ -131,10 +125,6 @@ function doDraw(container) {
             .x(function(d, idx) { return x(idx + 1); })
             .y(function(d) { return y(d[attribute]); });
 
-        var zoom = d3.behavior.zoom()
-            .scaleExtent([0.1, 1])
-            .on('zoom', redraw);
-
         container.empty();
         svg = d3.select(container[0])
             .append('svg')
@@ -142,7 +132,6 @@ function doDraw(container) {
             .attr('height', height)
             .attr('preserveAspectRatio', 'xMidYMid')
             .attr('viewBox', '0 0 ' + width + ' ' + height)
-            .call(zoom)
             .style('pointer-events', 'all')
             .append('g')
             .attr('transform', 'translate(' + margin.left + ',' + margin.top + ')');
