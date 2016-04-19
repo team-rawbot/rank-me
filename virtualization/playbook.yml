@@ -17,3 +17,8 @@
     - { role: postgresql }
     - { role: django }
     - { role: gulp }
+
+  pre_tasks:
+    - name: Install postgresql-contrib (for hstore)
+      apt: pkg=postgresql-contrib state=present update_cache=yes
+      sudo: yes
