@@ -7,6 +7,7 @@ from django.utils import timezone
 
 from rankme.tests import RankMeTestCase
 
+from ...exceptions import CannotLeaveCompetitionError
 from ...models import Competition, Game
 from ...signals import competition_created
 from ..factories import CompetitionFactory, UserFactory
@@ -93,3 +94,9 @@ class CompetitionTestCase(RankMeTestCase):
             start_date=timezone.now() - timedelta(days=1)
         )
         self.assertIn(c, Competition.ongoing_objects.all())
+
+    def test_creator_cannot_leave_competition(self):
+        user = UserFactory()
+        competition = CompetitionFactory(creator=user)
+        with self.assertRaises(CannotLeaveCompetitionError):
+            competition.remove_user_access(user)

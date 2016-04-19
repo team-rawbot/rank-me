@@ -102,10 +102,12 @@
                 </div>
             </div>
 
+            {% if user_can_leave_competition %}
             <form action="{% url "competition_leave"  competition_slug=competition.slug %}" method="post" class="mrgt">
                 {% csrf_token %}
                 <button class="btn btn--default btn--block">{% trans "Leave competition" %}</button>
             </form>
+            {% endif %}
         </div>
         <div class="grid__item xl-w-2/3">
             <div class="latest-results panel">

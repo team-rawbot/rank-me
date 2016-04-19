@@ -91,6 +91,9 @@ class Competition(models.Model):
     def user_is_admin(self, user):
         return self.creator_id == user.id
 
+    def user_can_leave(self, user):
+        return self.creator_id != user.id
+
     def is_over(self):
         """
         Return True if the competition end date is reached.

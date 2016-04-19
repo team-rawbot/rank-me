@@ -120,3 +120,13 @@ class TestCompetition(RankMeTestCase):
         self.assertEqual(response.status_code, 200)
         self.assertFormError(response, 'form', None,
                              "Cannot add result on inactive competition")
+
+    def test_creator_doesnt_see_leave_competition_button(self):
+        user = UserFactory()
+        competition = CompetitionFactory(creator=user)
+        self.client.login(username=user.username, password='password')
+
+        response = self.client.get(reverse('competition_detail', kwargs={
+            'competition_slug': competition.slug
+        }))
+        self.assertNotContains(response, "Leave competition")

@@ -97,7 +97,8 @@ def competition_detail(request, competition_slug):
         'score_board': score_board,
         'competition': competition,
         'user_can_edit_competition': competition.user_has_write_access(request.user),
-        'user_is_admin_of_competition': competition.user_is_admin(request.user)
+        'user_is_admin_of_competition': competition.user_is_admin(request.user),
+        'user_can_leave_competition': competition.user_can_leave(request.user)
     }
 
     return render(request, 'competition/detail.html', context)
