@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% load static i18n bootstrap %}
+{% load static i18n %}
 {% block page_title %}{% blocktrans %}Edit "{{ competition }}"{% endblocktrans %}{% endblock %}
 
 {% block content %}
@@ -9,7 +9,7 @@
 
 <form action="" method="post">
     {% csrf_token %}
-    {{ form|bootstrap }}
+    {% include "competition/_form.html" %}
     <p><input type="submit" value="{% trans "Update" %}" class="btn btn--primary" /></p>
 </form>
 {% endblock %}

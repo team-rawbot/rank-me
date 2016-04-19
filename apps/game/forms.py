@@ -6,6 +6,9 @@ from django.utils.translation import ugettext as _
 
 from .models import Competition, Game
 
+# Use dedicated HTML5 forms for date-related fields
+forms.DateInput.input_type="date"
+forms.DateTimeInput.input_type="datetime-local"
 
 class UserChoiceField(forms.ModelChoiceField):
     def label_from_instance(self, obj):
@@ -57,6 +60,9 @@ class CompetitionForm(forms.ModelForm):
     class Meta:
         model = Competition
         fields = ('name', 'description', 'players', 'start_date', 'end_date')
+        widgets = {
+            'description': forms.Textarea(attrs={'rows': 3})
+        }
 
     def save(self, creator):
         competition = super(CompetitionForm, self).save(commit=False)
