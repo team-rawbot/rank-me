@@ -46,6 +46,9 @@ export function init() {
         removeUserFrom($(this).val(), opposite($(this).attr('id')));
     });
 
+    $('#id_winner').select2();
+    $('#id_loser').select2();
+
     $('body.page--add-result').keydown(function(event) {
         var username = appDatas.username;
 
