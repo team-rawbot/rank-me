@@ -9,8 +9,8 @@
     <p class="event-competition"><a href="{% url "competition_detail" event.competition.slug %}" class="text-muted">{{ event.competition }}</a></p>
 
     <p class="mrgt0">
-        <strong>{% include 'timeline/_player.html' with player=event.get_details.winner %}</strong>
+        <strong>{% include 'timeline/_player.html' with player=event.get_details.winner competition=event.competition %}</strong>
         {% trans "won against" %}
-        <strong>{% include 'timeline/_player.html' with player=event.get_details.loser %}</strong>
+        <strong>{% include 'timeline/_player.html' with player=event.get_details.loser competition=event.competition %}</strong>
     </p>
 </div>
