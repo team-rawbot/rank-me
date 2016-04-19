@@ -2,11 +2,12 @@
 import os
 import dj_database_url
 
-from .. import get_project_root_path
+from django.contrib.messages import constants as messages
+
+from ..utils import get_project_root_path
 from . import get_env_variable
 
 DEBUG = bool(get_env_variable('DEBUG', False))
-TEMPLATE_DEBUG = DEBUG
 
 ADMINS = (('', email) for email in get_env_variable('ADMINS', '').splitlines())
 
@@ -18,7 +19,7 @@ DATABASES = {
     'default': dj_database_url.parse(get_env_variable('DATABASE_URL'))
 }
 
-BASE_PATH = get_project_root_path()
+BASE_DIR = get_project_root_path()
 
 # Local time zone for this installation. Choices can be found here:
 # http://en.wikipedia.org/wiki/List_of_tz_zones_by_name
@@ -46,7 +47,7 @@ USE_TZ = True
 
 # Absolute filesystem path to the directory that will hold user-uploaded files.
 # Example: "/home/media/media.lawrence.com/media/"
-MEDIA_ROOT = get_env_variable('MEDIA_ROOT', os.path.join(BASE_PATH, "static/media"))
+MEDIA_ROOT = get_env_variable('MEDIA_ROOT', '/static/media')
 
 # URL that handles the media served from MEDIA_ROOT. Make sure to use a
 # trailing slash.
@@ -65,7 +66,7 @@ STATIC_URL = get_env_variable('STATIC_URL', '/static/')
 
 # Additional locations of static files
 STATICFILES_DIRS = (
-    os.path.join(BASE_PATH, 'static'),
+    os.path.join(BASE_DIR, 'static'),
     # Put strings here, like "/home/html/static" or "C:/www/django/static".
     # Always use forward slashes, even on Windows.
     # Don't forget to use absolute paths, not relative paths.
@@ -82,14 +83,6 @@ STATICFILES_FINDERS = (
 # Make this unique, and don't share it with anybody.
 SECRET_KEY = get_env_variable('SECRET_KEY', '')
 
-# List of callables that know how to import templates from various sources.
-TEMPLATE_LOADERS = (
-    ('django.template.loaders.cached.Loader', (
-        'django.template.loaders.filesystem.Loader',
-        'django.template.loaders.app_directories.Loader',
-    )),
-)
-
 MIDDLEWARE_CLASSES = (
     'django.middleware.common.CommonMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -105,12 +98,34 @@ ROOT_URLCONF = 'rankme.urls'
 # Python dotted path to the WSGI application used by Django's runserver.
 WSGI_APPLICATION = 'rankme.wsgi.application'
 
-TEMPLATE_DIRS = (
-    os.path.join(BASE_PATH, 'templates'),
-    # Put strings here, like "/home/html/django_templates" or "C:/www/django/templates".
-    # Always use forward slashes, even on Windows.
-    # Don't forget to use absolute paths, not relative paths.
-)
+TEMPLATES = [{
+    'BACKEND': 'django.template.backends.django.DjangoTemplates',
+    'DIRS': [
+        os.path.join(BASE_DIR, 'templates'),
+        os.path.join(BASE_DIR, 'static/images'),
+    ],
+    'OPTIONS': {
+        'context_processors': [
+            'django.contrib.auth.context_processors.auth',
+            'django.contrib.messages.context_processors.messages',
+            'django.template.context_processors.i18n',
+            'django.template.context_processors.debug',
+            'django.template.context_processors.request',
+            'django.template.context_processors.media',
+            'django.template.context_processors.csrf',
+            'django.template.context_processors.tz',
+            'django.template.context_processors.static',
+            'social.apps.django_app.context_processors.backends',
+            'social.apps.django_app.context_processors.login_redirect',
+        ],
+        'loaders': [
+            ('django.template.loaders.cached.Loader', [
+                'django.template.loaders.filesystem.Loader',
+                'django.template.loaders.app_directories.Loader',
+            ]),
+        ]
+    },
+}]
 
 INSTALLED_APPS = (
     'django.contrib.auth',
@@ -118,19 +133,18 @@ INSTALLED_APPS = (
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'game',
-    'user',
-    'slack',
-    'api',
-    'timeline',
+    'django.contrib.postgres',
+    'apps.game',
+    'apps.user',
+    'apps.slack',
+    'apps.api',
+    'apps.timeline.apps.TimelineConfig',
     'django.contrib.admin',
     'django.contrib.admindocs',
     'social.apps.django_app.default',
     'bootstrapform',
     'rest_framework',
     'rest_framework.authtoken',
-    'django_hstore',
-    'rest_framework_extensions',
 )
 
 # A sample logging configuration. The only tangible logging
@@ -173,19 +187,6 @@ AUTHENTICATION_BACKENDS = (
     'django.contrib.auth.backends.ModelBackend',
 )
 
-TEMPLATE_CONTEXT_PROCESSORS = (
-    'django.contrib.auth.context_processors.auth',
-    'django.core.context_processors.debug',
-    'django.core.context_processors.i18n',
-    'django.core.context_processors.media',
-    'django.core.context_processors.static',
-    'django.core.context_processors.tz',
-    'django.contrib.messages.context_processors.messages',
-    'social.apps.django_app.context_processors.backends',
-    'social.apps.django_app.context_processors.login_redirect',
-    'django.core.context_processors.request',
-)
-
 SOCIAL_AUTH_TWITTER_KEY = get_env_variable('SOCIAL_AUTH_TWITTER_KEY', '')
 SOCIAL_AUTH_TWITTER_SECRET = get_env_variable('SOCIAL_AUTH_TWITTER_SECRET', '')
 SOCIAL_AUTH_LOGIN_REDIRECT_URL = '/'
@@ -198,7 +199,7 @@ SOCIAL_AUTH_PIPELINE = (
     'social.pipeline.user.create_user',
     'social.pipeline.social_auth.associate_user',
     'social.pipeline.social_auth.load_extra_data',
-    'user.social.user_details',
+    'apps.user.social.user_details',
     'social.pipeline.user.user_details',
 )
 LOGIN_URL = '/login/twitter/'
@@ -220,10 +221,8 @@ REST_FRAMEWORK = {
     ),
     'DEFAULT_PERMISSION_CLASSES': ['rest_framework.permissions.IsAuthenticated'],
     'PAGINATE_BY': 10,
-    'PAGINATE_BY_PARAM': 'page_size'
+    'PAGINATE_BY_PARAM': 'per_page'
 }
-
-from django.contrib.messages import constants as messages
 
 MESSAGE_TAGS = {
     messages.ERROR: 'danger'

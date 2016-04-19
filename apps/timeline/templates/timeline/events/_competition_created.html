@@ -1,0 +1,11 @@
+{% load i18n %}
+{% url "competition_detail" event.get_details.competition.slug as competition_url %}
+
+<div class="event-hook">
+    <div class="event-dot"></div>
+</div>
+<div class="event-body">
+    {% blocktrans with url=competition_url name=event.details.competition.name %}
+        Competition <strong><a href="{{ url }}" class="link-ghost">{{ name }}</a></strong> was created
+    {% endblocktrans %}
+</div>

@@ -1,0 +1,26 @@
+---
+# Name of your project, will also be the vagrant box name
+project_name: "rank-me"
+
+# Main hostname through which the vagrant box will be accessible
+hostname: "rank-me.lo"
+# Alternative hostnames through which you want to access the vagrant box
+hostnames: []
+
+# The box IP, this must be unique across all your virtualized projects to
+# avoid collisions. WARNING, this parameter will not guarantee that your box
+# will be accessible at this IP depending on your network configuration or
+# provider choice.
+box_ip: "10.10.10.10"
+
+# Name of the database to create for your project if you include the
+# MySQL or PostgreSQL role
+database_name: "rankme"
+
+# Root directory of your project for the webserver and other purposes
+root_directory: "/vagrant/"
+
+# For a Django project, you might want to set the following
+django_pip_requirements: "requirements/dev.txt"
+django_version: "1.9"
+python_version: 3

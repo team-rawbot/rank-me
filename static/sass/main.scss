@@ -1,117 +1,103 @@
 /*!
  *    _______        __      _____  ___   __   ___  ___      ___   _______
- *   /"      \      /""\    (\"   \|"  \ |/"| /  ")|"  \    /"  | /"     "|
+ *   /'      \      /'\    (\'   \|'  \ |/'| /  ')|'  \    /'  | /'     '|
  *  |:        |    /    \   |.\\   \    |(: |/   /  \   \  //   |(: ______)
  *  |_____/   )   /' /\  \  |: \.   \\  ||    __/   /\\  \/.    | \/    |
  *   //      /   //  __'  \ |.  \    \. |(// _  \  |: \.        | // ___)_
- *  |:  __   \  /   /  \\  \|    \    \ ||: | \  \ |.  \    /:  |(:      "|
+ *  |:  __   \  /   /  \\  \|    \    \ ||: | \  \ |.  \    /:  |(:      '|
  *  |__|  \___)(___/    \___)\___|\____\)(__|  \__)|___|\__/|___| \_______)
  *
  */
 
 
 /**
- * CUSTOM BOOTSTRAP SETTINGS
+ * Settings
  */
 
-$brand-primary: #e18a70;
-$brand-success: #89c571;
-$brand-danger: #d76b7a;
-$brand-warning: #e1c170;
-$brand-info: #659dca;
-
-$brand-lighter: #f9ede7;
-
-$link-color: $brand-info;
-
-$well-bg: lighten($brand-primary,33%);
-$well-border: lighten($brand-primary,25%);
-
-$hr-border: $brand-lighter;
-$list-group-border: $brand-lighter;
-
-$panel-default-heading-bg: $brand-lighter;
-$panel-default-border: $well-border;
-$panel-inner-border: $panel-default-border;
-
-$table-bg-accent: $well-bg;
-$table-border-color: $well-border;
-
-$navbar-default-bg: $brand-primary;
-$navbar-default-color: white;
-$navbar-default-link-color: rgba(255,255,255,.8);
-$navbar-default-link-hover-color: white;
-$navbar-default-link-active-color: white;
-$navbar-default-brand-color: rgba(255,255,255,.8);
-$navbar-default-brand-hover-color: white;
-$navbar-default-toggle-icon-bar-bg: white;
-
-$btn-primary-bg: $brand-info;
-$btn-default-border: $well-border;
-
-$font-size-base: 16px;
-$font-family-sans-serif: "Source Sans Pro", sans-serif;
-$icon-font-path: "../vendors/bootstrap-sass-official/assets/fonts/bootstrap/";
+@import 'settings/kanbasu';
+@import '../../node_modules/kanbasu/src/assets/scss/settings/settings';
 
 
 /**
- * BOOTSTRAP COMPONENTS
+ * Tools
  */
 
-// Core variables and mixins
-@import "../vendors/bootstrap-sass-official/assets/stylesheets/bootstrap/variables";
-@import "../vendors/bootstrap-sass-official/assets/stylesheets/bootstrap/mixins";
-
-// Reset and dependencies
-@import "../vendors/bootstrap-sass-official/assets/stylesheets/bootstrap/normalize";
-@import "../vendors/bootstrap-sass-official/assets/stylesheets/bootstrap/print";
-@import "../vendors/bootstrap-sass-official/assets/stylesheets/bootstrap/glyphicons";
-
-// Core CSS
-@import "../vendors/bootstrap-sass-official/assets/stylesheets/bootstrap/scaffolding";
-@import "../vendors/bootstrap-sass-official/assets/stylesheets/bootstrap/type";
-@import "../vendors/bootstrap-sass-official/assets/stylesheets/bootstrap/code";
-@import "../vendors/bootstrap-sass-official/assets/stylesheets/bootstrap/grid";
-@import "../vendors/bootstrap-sass-official/assets/stylesheets/bootstrap/tables";
-@import "../vendors/bootstrap-sass-official/assets/stylesheets/bootstrap/forms";
-@import "../vendors/bootstrap-sass-official/assets/stylesheets/bootstrap/buttons";
-
-// Components
-@import "../vendors/bootstrap-sass-official/assets/stylesheets/bootstrap/component-animations";
-@import "../vendors/bootstrap-sass-official/assets/stylesheets/bootstrap/dropdowns";
-@import "../vendors/bootstrap-sass-official/assets/stylesheets/bootstrap/button-groups";
-// @import "../vendors/bootstrap-sass-official/assets/stylesheets/bootstrap/input-groups";
-@import "../vendors/bootstrap-sass-official/assets/stylesheets/bootstrap/navs";
-@import "../vendors/bootstrap-sass-official/assets/stylesheets/bootstrap/navbar";
-// @import "../vendors/bootstrap-sass-official/assets/stylesheets/bootstrap/breadcrumbs";
-// @import "../vendors/bootstrap-sass-official/assets/stylesheets/bootstrap/pagination";
-// @import "../vendors/bootstrap-sass-official/assets/stylesheets/bootstrap/pager";
-// @import "../vendors/bootstrap-sass-official/assets/stylesheets/bootstrap/labels";
-// @import "../vendors/bootstrap-sass-official/assets/stylesheets/bootstrap/badges";
-// @import "../vendors/bootstrap-sass-official/assets/stylesheets/bootstrap/jumbotron";
-@import "../vendors/bootstrap-sass-official/assets/stylesheets/bootstrap/thumbnails";
-@import "../vendors/bootstrap-sass-official/assets/stylesheets/bootstrap/alerts";
-// @import "../vendors/bootstrap-sass-official/assets/stylesheets/bootstrap/progress-bars";
-@import "../vendors/bootstrap-sass-official/assets/stylesheets/bootstrap/media";
-@import "../vendors/bootstrap-sass-official/assets/stylesheets/bootstrap/list-group";
-@import "../vendors/bootstrap-sass-official/assets/stylesheets/bootstrap/panels";
-// @import "../vendors/bootstrap-sass-official/assets/stylesheets/bootstrap/responsive-embed";
-@import "../vendors/bootstrap-sass-official/assets/stylesheets/bootstrap/wells";
-@import "../vendors/bootstrap-sass-official/assets/stylesheets/bootstrap/close";
-
-// Components w/ JavaScript
-// @import "../vendors/bootstrap-sass-official/assets/stylesheets/bootstrap/modals";
-// @import "../vendors/bootstrap-sass-official/assets/stylesheets/bootstrap/tooltip";
-// @import "../vendors/bootstrap-sass-official/assets/stylesheets/bootstrap/popovers";
-// @import "../vendors/bootstrap-sass-official/assets/stylesheets/bootstrap/carousel";
-
-// Utility classes
-@import "../vendors/bootstrap-sass-official/assets/stylesheets/bootstrap/utilities";
-@import "../vendors/bootstrap-sass-official/assets/stylesheets/bootstrap/responsive-utilities";
+@import '../../node_modules/kanbasu/src/assets/scss/tools/functions';
+@import '../../node_modules/kanbasu/src/assets/scss/tools/mixins';
 
 
 /**
- * RANK-ME SPECIFIC STYLE
+ * Vendors
  */
 
-@import "rankme";
+@import '../../node_modules/kanbasu/src/assets/scss/vendor/normalize';
+
+
+/**
+ * Defaults
+ */
+
+@import '../../node_modules/kanbasu/src/assets/scss/defaults/box-model';
+@import '../../node_modules/kanbasu/src/assets/scss/defaults/elements';
+@import '../../node_modules/kanbasu/src/assets/scss/defaults/typography';
+@import '../../node_modules/kanbasu/src/assets/scss/defaults/table';
+@import '../../node_modules/kanbasu/src/assets/scss/defaults/forms';
+
+
+/**
+ * Base
+ */
+
+@import 'base/typography';
+@import 'base/layout';
+@import 'base/graphs';
+@import 'base/forms';
+
+
+/**
+ * Helpers
+ */
+
+@import '../../node_modules/kanbasu/src/assets/scss/helpers/text';
+@import '../../node_modules/kanbasu/src/assets/scss/helpers/float';
+@import '../../node_modules/kanbasu/src/assets/scss/helpers/spacings';
+@import '../../node_modules/kanbasu/src/assets/scss/helpers/spacings-responsive';
+@import '../../node_modules/kanbasu/src/assets/scss/helpers/images';
+@import '../../node_modules/kanbasu/src/assets/scss/helpers/positionning';
+@import '../../node_modules/kanbasu/src/assets/scss/helpers/display';
+
+
+/**
+ * Components
+ */
+
+@import '../../node_modules/kanbasu/src/assets/scss/components/grid';
+@import '../../node_modules/kanbasu/src/assets/scss/components/widths';
+@import '../../node_modules/kanbasu/src/assets/scss/components/widths-responsive';
+@import '../../node_modules/kanbasu/src/assets/scss/components/btn';
+@import '../../node_modules/kanbasu/src/assets/scss/components/box';
+@import '../../node_modules/kanbasu/src/assets/scss/components/media';
+@import '../../node_modules/kanbasu/src/assets/scss/components/media-responsive';
+@import '../../node_modules/kanbasu/src/assets/scss/components/mosaic';
+@import '../../node_modules/kanbasu/src/assets/scss/components/mosaic-responsive';
+@import '../../node_modules/kanbasu/src/assets/scss/components/list';
+@import '../../node_modules/kanbasu/src/assets/scss/components/list-inline';
+@import '../../node_modules/kanbasu/src/assets/scss/components/list-stacked';
+@import '../../node_modules/kanbasu/src/assets/scss/components/embed-responsive';
+
+@import 'components/spinner';
+@import 'components/game';
+@import 'components/table';
+@import 'components/user';
+@import 'components/timeline';
+@import 'components/panel';
+@import 'components/btn';
+@import 'components/mirror';
+@import 'components/key';
+
+
+/**
+ * Pages
+ */
+
+@import 'pages/landing';

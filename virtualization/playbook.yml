@@ -1,0 +1,24 @@
+---
+# This is the file used by Ansible to provision your project
+# You can decide what you want to install in your box by choosing
+# various provided roles or add tasks to this file. If you need
+# more explanation, please refer to the drifter README
+
+# For some part, multiple roles are proposed, just uncomment the ones
+# you need.
+
+- hosts: all
+  vars_files:
+   - parameters.yml
+  sudo: no
+
+  roles:
+    - { role: base }
+    - { role: postgresql }
+    - { role: django }
+    - { role: gulp }
+
+  pre_tasks:
+    - name: Install postgresql-contrib (for hstore)
+      apt: pkg=postgresql-contrib state=present update_cache=yes
+      sudo: yes

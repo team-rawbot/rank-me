@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+{% load i18n static %}
+
+{% block content %}
+<div class="team">
+    <header class="page-header">
+        <div class="mirror">
+            <div class="mirror__item mrgb--">
+                <div class="media">
+                    <div class="media__left">
+                        {% include 'game/_player_avatar.html' with class="user-avatar--large" %}
+                    </div>
+                    <div class="media__body">
+                        <h1>{{ profile.get_full_name }}</h1>
+                    </div>
+                </div>
+            </div>
+            <div class="mirror__item">
+                <a href="{% url 'edit_profile' %}" class="btn btn--default pull-right">{% trans "Edit your profile" %}</a>
+            </div>
+        </div>
+    </header>
+
+    <h3>{% trans "Competitions" %}</h3>
+    {% if scores %}
+        <table class="table tabble-stripped">
+            <thead>
+                <tr>
+                    <th>Competition</th>
+                    <th>Score (µ)</th>
+                    <th>σ</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for score in scores %}
+                    <tr>
+                        <td><a href="{% url 'player_detail' competition_slug=score.competition.slug player_id=profile.id %}">{{ score.competition }}</a></td>
+                        <td>{{ score.score|floatformat:"2" }}</td>
+                        <td>{{ score.stdev|floatformat:"3" }}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <p class="text-muted">{% trans "This user didn’t participate in any competition yet." %}</p>
+    {% endif %}
+</div>
+{% endblock %}

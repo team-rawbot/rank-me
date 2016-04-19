@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+
+{% load static i18n bootstrap %}
+
+{% block content %}
+<header class="page-header">
+    <h1>{{ competition.name }}</h1>
+</header>
+
+<form action="" method="post">
+    {% csrf_token %}
+    {{ form|bootstrap }}
+    <p><input type="submit" value="{% trans "Update" %}" class="btn btn--primary" /></p>
+</form>
+{% endblock %}

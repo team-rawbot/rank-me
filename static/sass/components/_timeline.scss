@@ -1,0 +1,139 @@
+/**
+ * Object
+ * TIMELINE
+ */
+
+.timeline {
+  position: relative;
+
+  &::before {
+    content: '';
+    display: block;
+    width: 2px;
+    height: 100%;
+
+    position: absolute;
+    top: 0;
+    left: 27px;
+    bottom: 0;
+    z-index: -1;
+
+    background-color: $alt-color-light;
+  }
+}
+
+  .timeline-event {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+
+    + .timeline-event {
+      margin-top: $spacing-unit-large;
+    }
+  }
+
+  .timeline-date {
+    margin: $spacing-unit-default 0;
+    padding-top: $spacing-unit-default;
+    padding-left: 68px;
+
+    position: relative;
+
+    &:first-child {
+      margin-top: 0;
+    }
+
+    &::before {
+      content: '';
+      display: block;
+      width: 14px;
+      height: 14px;
+      margin-top: -7px;
+
+      position: absolute;
+      top: calc(50% + #{$spacing-unit-small});
+      left: 21px;
+
+      border: 2px solid $alt-color-light;
+      background-color: $alt-color-darker;
+      border-radius: 50%;
+    }
+
+    &::after {
+      content: '';
+      display: block;
+      width: 50%;
+      height: 2px;
+      margin-top: -1px;
+
+      position: absolute;
+      top: calc(50% + #{$spacing-unit-small});
+      left: 33px;
+
+      background-image: linear-gradient(to right, $alt-color-light, transparentize($alt-color-light, 1));
+    }
+
+    h4 {
+      display: inline-block;
+      margin: 0 -8px;
+      padding: 0 8px;
+
+      position: relative;
+      z-index: 1;
+
+      font-size: $font-size-small;
+      color: $muted-color;
+      text-transform: uppercase;
+
+      background-color: $alt-color-darker;
+    }
+  }
+
+  .event-hook {
+    width: 56px;
+    margin-right: $spacing-unit-small;
+  }
+
+  .event-img-wrap {
+    display: block;
+    position: relative;
+  }
+    .event-img {
+      width: 100%;
+      border-radius: 50%;
+      border: 5px solid $alt-color-darker;
+    }
+
+  .event-dot {
+    width: 16px;
+    height: 16px;
+    margin-left: 20px;
+
+    font-size: 12px;
+    text-align: center;
+    line-height: 24px;
+    color: white;
+
+    background-color: $alt-color-light;
+    border: 4px solid $alt-color-darker;
+    border-radius: 50%;
+  }
+
+  .event-icon {
+    margin-left: 14px;
+    padding: 4px;
+    background-color: $alt-color-darker;
+  }
+
+  .event-body {
+    > *:last-child {
+      margin-bottom: 0;
+    }
+  }
+
+  .event-competition {
+    margin-top: 0;
+    margin-bottom: 5px;
+
+    font-size: 13px;
+  }

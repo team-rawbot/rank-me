@@ -1,0 +1,32 @@
+/**
+ * Object
+ * USER
+ */
+
+.user-avatar {
+  width: 32px;
+
+  border-radius: 50%;
+}
+  .user-avatar--large {
+    width: 48px;
+  }
+
+.rank-num {
+  text-align: right;
+
+  tr:first-child & {
+    font-size: 24px;
+    font-weight: 500;
+  }
+
+  tr:nth-child(2) & {
+    font-size: 20px;
+    font-weight: 500;
+  }
+
+  tr:nth-child(3) & {
+    font-size: 16px;
+    font-weight: 500;
+  }
+}

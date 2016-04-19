@@ -1,0 +1,114 @@
+/**
+ * Base
+ * LAYOUT
+ */
+
+html,
+body {
+  height: 100%;
+}
+
+body {
+  background-color: $alt-color-darker;
+}
+
+
+.app {
+  min-height: 100%;
+}
+
+  .app__header {
+    @media (max-width: $screen-sm-max) {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    @media (min-width: $screen-md-min) {
+      margin: -$spacing-unit-default;
+      padding: $spacing-unit-default;
+      margin-bottom: $spacing-unit-small;
+
+      border-bottom: 2px solid $alt-color-darker;
+    }
+
+    .btn {
+      line-height: 0;
+    }
+  }
+
+  .app__sidebar {
+    padding: $spacing-unit-small;
+
+    background-color: $alt-color-dark;
+  }
+
+    #sidebar-collapse {
+      display: none;
+    }
+
+  .app__body {
+    padding: $spacing-unit-small;
+  }
+
+
+.brand {
+  display: block;
+  font-size: rem(24px);
+  text-transform: uppercase;
+  font-weight: 300;
+  line-height: 40px;
+
+  svg {
+    width: 40px;
+    margin-right: 6px;
+
+    position: relative;
+    top: -2px;
+
+    vertical-align: middle;
+
+    fill: currentColor;
+  }
+}
+
+
+.page-header {
+  margin-bottom: $spacing-unit-default;
+}
+
+
+@media (min-width: $screen-md-min) {
+  .app {
+    display: flex;
+  }
+
+    .app__sidebar {
+      min-width: 300px;
+      padding: $spacing-unit-default;
+    }
+
+      #sidebar-collapse-button {
+        display: none;
+      }
+      #sidebar-collapse {
+        display: block !important;
+      }
+
+    .app__body {
+      flex: 1;
+      padding: $spacing-unit-default $spacing-unit-large;
+    }
+
+  .quick-profile {
+    width: 300px;
+    padding: $spacing-unit-default;
+
+    position: fixed;
+    left: 0;
+    bottom: 0;
+
+    background-color: $alt-color-dark;
+    border-top: 2px solid $alt-color-darker;
+  }
+}

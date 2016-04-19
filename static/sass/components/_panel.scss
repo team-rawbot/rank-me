@@ -1,0 +1,33 @@
+/*----------------------------------------*\
+  PANEL
+\*----------------------------------------*/
+
+.panel {
+  border: 2px solid $alt-color-dark;
+  border-radius: $border-radius-default;
+}
+
+  .panel__header,
+  .panel__body,
+  .panel__footer {
+    padding: $spacing-unit-tiny $spacing-unit-small;
+
+    > :first-child {
+      margin-top: 0;
+    }
+    > :last-child {
+      margin-bottom: 0;
+    }
+
+    @media (min-width: $screen-md-min) {
+      padding: $spacing-unit-small $spacing-unit-default;
+    }
+  }
+
+  .panel__header {
+    border-bottom: 2px solid $alt-color-dark;
+  }
+
+  .panel__footer {
+    border-top: 2px solid $alt-color-dark;
+  }

@@ -1,0 +1,25 @@
+{
+    "src": {
+        "sass": "static/sass/**/*.scss",
+        "javascript": "static/js/**/*",
+        "webpack": [
+          "./static/js/main.js"
+        ],
+        "images": "static/images/**/*.{gif,jpg,jpeg,png,svg}",
+        "templates": "./**/templates/**/*.html"
+    },
+    "dest": {
+        "css": "static/build",
+        "webpack": {
+            "path": "static/build",
+            "filename": "bundle.js"
+        },
+        "images": "static/images"
+    },
+    "autoprefixer": {
+        "browsers": [
+            "last 2 versions"
+        ],
+        "cascade": false
+    }
+}

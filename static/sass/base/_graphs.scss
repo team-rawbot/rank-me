@@ -1,0 +1,45 @@
+/**
+ * Base
+ * GRAPHS
+ */
+
+.chart {
+  svg {
+    display: block;
+    max-width: 100%;
+    height: auto;
+  }
+
+  path {
+    fill: none;
+    stroke-width: 2px;
+  }
+
+  circle,
+  path {
+    &.highlighted {
+      stroke-width: 3px;
+    }
+  }
+
+  text.highlighted {
+    font-weight: 500;
+  }
+
+  .axis {
+    line {
+      fill: none;
+      stroke: $text-color;
+      shape-rendering: crispEdges;
+    }
+
+    path {
+      display: none;
+    }
+  }
+
+  .tick,
+  .legend {
+    fill: $muted-color;
+  }
+}

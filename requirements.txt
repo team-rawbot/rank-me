@@ -1,4 +1,0 @@
-# This is a requirement file that's only here to enable automatic systems to
-# keep track of the requirements used in prod. You should usually directly use
-# requirements in requirements/ directory
--r requirements/base.txt

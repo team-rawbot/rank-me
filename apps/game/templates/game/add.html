@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+
+{% load i18n bootstrap %}
+
+{% block body_class %}page--add-result{% endblock %}
+
+{% block content %}
+<header class="page-header">
+    <h1>{{ competition }}</h1>
+    <p class="text-muted">Press <span class="key">W</span> if you won or <span class="key">L</span> if you loose.</p>
+</header>
+
+<form id="add-result" action="" method="post">
+    {% csrf_token %}
+    {{ form|bootstrap }}
+    <ul class="list-inline list-inline--small mrgt">
+        <li><input type="submit" name="save" value="{% trans "Save" %}" class="btn btn--primary" /></li>
+        <li><input type="submit" name="save_add" value="{% trans "Save and add more" %}" class="btn btn--default" /></li>
+    </ul>
+</form>
+{% endblock %}

@@ -1,0 +1,32 @@
+/**
+ * Page
+ * LANDING
+ */
+
+.page--landing {
+  background-image:
+    radial-gradient(circle at 23.55% 21.82%, $alt-color-darker, transparent 57%),
+    radial-gradient(circle at 91.05% 84.06%, $alt-color-darker, transparent 71%),
+    radial-gradient(circle at 8.49% 89.47%, $alt-color, transparent 100%),
+    radial-gradient(circle at 88.42% 16.7%, $alt-color, transparent 100%);
+}
+
+.landing {
+  min-height: 100%;
+  padding: $spacing-unit-default;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  text-align: center;
+
+  svg {
+    width: 100px;
+    fill: currentColor;
+  }
+}
+
+  .landing__title {
+    text-transform: uppercase;
+    font-size: rem(50px);
+  }

@@ -1,0 +1,16 @@
+/**
+ * Component
+ * MIRROR
+ */
+
+.mirror {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+  .mirror__item {
+    &:first-child {
+      max-width: 100%;
+      flex: 1 0 auto;
+    }
+  }

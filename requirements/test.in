@@ -1,0 +1,6 @@
+-r base.txt
+beautifulsoup4
+factory-boy
+freezegun
+mock
+tox

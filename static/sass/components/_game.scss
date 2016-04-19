@@ -1,0 +1,22 @@
+/**
+ * Object
+ * GAME
+ */
+
+.game-win {
+  color: $brand-success;
+
+  a {
+    color: inherit;
+    text-decoration: underline;
+  }
+}
+
+.game-defeat {
+  color: $brand-danger;
+
+  a {
+    color: inherit;
+    text-decoration: underline;
+  }
+}

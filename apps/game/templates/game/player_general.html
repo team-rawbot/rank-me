@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+
+{% load i18n %}
+
+{% block content %}
+<div class="page-header">
+    <h1>{{ player }}</h1>
+</div>
+
+<h3>{% trans "Competitions in which this player participates" %}</h3>
+
+{% if player.scores.all %}
+    <table class="table">
+        <tbody>
+            {% for score in player.scores.all %}
+                <tr>
+                    <td><a href="{% url 'player_detail' competition_slug=score.competition.slug player_id=player.id %}">{{ score.competition }}</a></td>
+                    <td class="text-right text-muted">{{ score.score }}</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% else %}
+    <p class="text-muted">{% trans "This player didn’t participate in any competition yet." %}</p>
+{% endif %}
+
+{% endblock %}

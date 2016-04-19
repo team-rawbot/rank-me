@@ -1,0 +1,157 @@
+{% extends "base.html" %}
+
+{% load i18n game_extras %}
+
+{% block content %}
+<div class="team">
+    <header class="page-header media">
+        <p class="mrgt0 text-muted text-uppercase">{{ competition.name }}</p>
+        <div class="media__left">
+            {% include 'game/_player_avatar.html' with user=player class="user-avatar--large" %}
+        </div>
+        <div class="media__body">
+            <h1>
+                {{ player.get_full_name }}
+                <small class="text-muted">{{ score.score|floatformat }}</small>
+            </h1>
+        </div>
+    </header>
+
+    <div class="panel mrgb">
+        <header class="panel__header">
+            <h3>{% trans "Games per week" %}</h3>
+        </header>
+        <div class="panel__body games-per-week chart">
+            {% include '_spinner.html' %}
+
+            <table id="games-per-week" class="table hidden">
+                <thead>
+                    <tr>
+                        <td>{% trans "Week" %}</td>
+                        <td>{% trans "Games played by player" %}</td>
+                        <td>{% trans "Total number of games played" %}</td>
+                        <td>{% trans "Average of games played" %}</td>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for week, stats in stats_per_week %}
+                        <tr>
+                            <td>{{ week }}</td>
+                            <td>{{ stats.games_played_by_player }}</td>
+                            <td>{{ stats.games_total }}</td>
+                            <td>{{ stats.avg_games_played }}</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="grid">
+        <div class="grid__item mrgb">
+            <div class="panel">
+                <header class="panel__header">
+                    <h3>{% trans "Head-to-Head" %}</h3>
+                </header>
+                <div class="panel__body head-2-head chart">
+                    {% include '_spinner.html' %}
+
+                    <table id="head-2-head-results" class="table hidden">
+                        <thead>
+                            <tr>
+                                <td>{% trans "Opponents" %}</td>
+                                <td>{% trans "Wins" %}</td>
+                                <td>{% trans "Defeats" %}</td>
+                                <td>{% trans "Fairness" %}</td>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for opponent, results in head2head.items %}
+                                <tr>
+                                    <td><a href="{% url 'player_detail' player_id=opponent.id competition_slug=competition.slug %}">{{ opponent.get_full_name }}</a></td>
+                                    <td>{{ results.wins }}</td>
+                                    <td>{{ results.defeats }}</td>
+                                    <td>{{ results.fairness }}</td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div class="grid__item lg-w-1/2 mrgb">
+            <div class="panel">
+                <header class="panel__header">
+                    <h3>{% trans "Last 10 games" %}</h3>
+                </header>
+                <div class="panel__body">
+                    <ul class="team-last-games list-stacked list-stacked--tiny">
+                        {% regroup last_results.games by date|date:"d F Y" as last_games %}
+                        {% for game_dates in last_games %}
+                            <li class="date text-muted">{{ game_dates.grouper }}</li>
+                            {% for game in game_dates.list %}
+                                {% if game.winner == player %}
+                                    <li class="game game-win list-group-item">
+                                        {% url 'player_detail' player_id=game.loser_id competition_slug=competition.slug as loser_url %}
+                                        {% blocktrans with loser=game.loser.get_full_name %}Win against <a href="{{ loser_url }}">{{ loser }}</a>{% endblocktrans %}
+                                    </li>
+                                {% else %}
+                                    <li class="game game-defeat list-group-item">
+                                        {% url 'player_detail' player_id=game.winner_id competition_slug=competition.slug as winner_url %}
+                                        {% blocktrans with winner=game.winner.get_full_name %}Defeat against <a href="{{ winner_url }}">{{ winner }}</a>{% endblocktrans %}
+                                    </li>
+                                {% endif %}
+                            {% endfor %}
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="grid__item lg-w-1/2 mrgb">
+            <div class="panel">
+                <header class="panel__header">
+                    <h3>{% trans "Statistics" %}</h3>
+                </header>
+                <div class="panel__body">
+                    <table class="team-statistics table table-bordered">
+                        <tbody>
+                            <tr>
+                                <th width="40%">{% trans "Games" %}</th>
+                                <td>{{ games }}</td>
+                            </tr>
+                            <tr>
+                                <th >{% trans "Wins" %}</th>
+                                <td>{{ wins }} ({{ wins|as_percentage_of:games }} of games)</td>
+                            </tr>
+                            <tr>
+                                <th>{% trans "Defeats" %}</th>
+                                <td>{{ defeats }} ({{ defeats|as_percentage_of:games }} of games)</td>
+                            </tr>
+                            <tr>
+                                <th>µ</th>
+                                <td>{{ score.score|floatformat:"5" }}</td>
+                            </tr>
+                            <tr>
+                                <th>σ</th>
+                                <td>{{ score.stdev|floatformat:"5" }}</td>
+                            </tr>
+                            <tr>
+                                <th>{% trans "Last 10 matches" %}</th>
+                                <td>{% blocktrans with wins=last_results.wins defeats=last_results.defeats %}{{ wins }} wins - {{ defeats }} defeats{% endblocktrans %}</td>
+                            </tr>
+                            <tr>
+                                <th>{% trans "Longest Winning Streak" %}</th>
+                                <td>{{ longest_streak }}</td>
+                            </tr>
+                            <tr>
+                                <th>{% trans "Current Winning Streak" %}</th>
+                                <td>{{ current_streak }}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -16,19 +16,19 @@ env.site_group = 'rankme'
 env.project_root = '/var/www/rank-me/rankme'
 
 
-def push_tag(tag):
+def push_commit(commit):
     with settings(warn_only=True):
-        local("git push -f origin %s" % tag)
+        local("git push -f origin %s" % commit)
 
 
-def checkout_tag(tag):
-    local("git checkout %s" % tag)
+def checkout_tag(commit):
+    local("git checkout %s" % commit)
 
 
-def update_remote_git(tag):
+def update_remote_git(commit):
     with cd(env.project_root):
         run("git fetch -t -p")
-        run("git checkout %s" % tag)
+        run("git checkout %s" % commit)
 
 
 def install_requirements():
@@ -51,22 +51,22 @@ def install_static():
 
 @task
 def restart_process():
-    gunicorn_pid = run('cat %s' % os.path.join(env.project_root,
-                                               '../tmp/gunicorn.pid'))
-    run('kill %s' % gunicorn_pid)
+    with cd(env.project_root):
+        run('touch rankme/wsgi.py')
 
 
 @task
 def compile_css():
     with cd(env.project_root):
-        run('grunt compass')
+        run('npm install')
+        run('gulp build --production')
 
 
 @task
-def deploy(tag):
-    execute(push_tag, tag=tag)
+def deploy(commit='origin/master'):
+    execute(push_commit, commit=commit)
 
-    execute(update_remote_git, tag=tag)
+    execute(update_remote_git, commit=commit)
     execute(install_requirements)
     execute(compile_css)
     execute(install_static)

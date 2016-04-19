@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+
+{% load static i18n ago %}
+
+{% block content %}
+<header class="page-header">
+    <h1>{% trans "Recent activity" %}</h1>
+</header>
+
+<ul class="timeline list">
+    {% for event in events %}
+        {% ifchanged event.date|ago %}
+            <li class="timeline-date"><h4>{{ event.date | ago }}</h4></li>
+        {% endifchanged %}
+        <li class="timeline-event">
+            {% with template_name=event.event_type|add:".html" %}
+                {% include "timeline/events/_"|add:template_name %}
+            {% endwith %}
+        </li>
+    {% endfor %}
+</ul>
+{% endblock %}
