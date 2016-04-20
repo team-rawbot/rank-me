@@ -44,12 +44,14 @@ def create_sports_and_assign(apps, schema_editor):
     for sport, competitions in sport_competitions.items():
         Competition.objects.filter(slug__in=competitions).update(sport=sport)
 
+
 def unassign_competition_sport(apps, schema_editor):
     Sport = apps.get_model('game', 'Sport')
     Competition = apps.get_model('game', 'Competition')
 
     Sport.objects.all().delete()
     Competition.objects.all().update(sport=None)
+
 
 class Migration(migrations.Migration):
 
