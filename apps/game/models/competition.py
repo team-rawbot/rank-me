@@ -39,6 +39,14 @@ class UpcomingCompetitionManager(CompetitionManager):
         return super().get_queryset().filter(start_date__gt=timezone.now())
 
 
+class Sport(models.Model):
+    slug = models.SlugField(unique=True)
+    name = models.CharField(max_length=255)
+
+    def __str__(self):
+        return self.name
+
+
 class Competition(models.Model):
     name = models.CharField(max_length=255, unique=True)
     description = models.TextField(blank=True)
@@ -50,6 +58,8 @@ class Competition(models.Model):
                                      blank=True)
     creator = models.ForeignKey(settings.AUTH_USER_MODEL,
                                 related_name='my_competitions')
+    sport = models.ForeignKey('Sport',
+                              related_name='competitions')
 
     objects = CompetitionManager()
     ongoing_objects = OngoingCompetitionManager()

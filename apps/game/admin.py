@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from .models import Competition, Game, Score
+from .models import Competition, Game, Score, Sport
 
 
 class CompetitionAdmin(admin.ModelAdmin):
@@ -15,5 +15,6 @@ class ScoreAdmin(admin.ModelAdmin):
         return queryset.select_related('competition')
 
 admin.site.register(Game)
+admin.site.register(Sport)
 admin.site.register(Score, ScoreAdmin)
 admin.site.register(Competition, CompetitionAdmin)
