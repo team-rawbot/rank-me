@@ -3,7 +3,7 @@ from django.utils import timezone
 
 import factory
 
-from ..models import Competition
+from ..models import Competition, Sport
 
 
 class UserFactory(factory.django.DjangoModelFactory):
@@ -15,6 +15,14 @@ class UserFactory(factory.django.DjangoModelFactory):
     password = factory.PostGenerationMethodCall('set_password', 'password')
 
 
+class SportFactory(factory.django.DjangoModelFactory):
+    class Meta:
+        model = Sport
+
+    slug = factory.Sequence(lambda n: 'sport%d' % n)
+    name = factory.Sequence(lambda n: 'sport%d' % n)
+
+
 class CompetitionFactory(factory.django.DjangoModelFactory):
     class Meta:
         model = Competition
@@ -23,3 +31,4 @@ class CompetitionFactory(factory.django.DjangoModelFactory):
     start_date = factory.LazyAttribute(lambda _: timezone.now())
     end_date = None
     creator = factory.SubFactory(UserFactory)
+    sport = factory.SubFactory(SportFactory)
