@@ -38,7 +38,7 @@
             <tbody>
                 {% for score in scores %}
                     <tr>
-                        <td><a href="{% url 'player_detail' competition_slug=score.competition.slug player_id=profile.id %}">{{ score.competition }}</a></td>
+                        <td><a href="{% url 'player_detail' competition_slug=score.competition.slug player_id=user.id %}">{{ score.competition }}</a></td>
                         <td>{{ score.score|floatformat:"2" }}</td>
                         <td>{{ score.stdev|floatformat:"3" }}</td>
                     </tr>
