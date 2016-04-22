@@ -42,7 +42,7 @@ class UpcomingCompetitionManager(CompetitionManager):
 class Sport(models.Model):
     slug = models.SlugField(unique=True)
     name = models.CharField(max_length=255)
-    icon = models.TextField(null=True, blank=True)
+    icon = models.TextField(blank=True)
 
     def __str__(self):
         return self.name

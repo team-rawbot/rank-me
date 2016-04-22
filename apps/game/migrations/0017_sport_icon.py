@@ -15,6 +15,6 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='sport',
             name='icon',
-            field=models.TextField(blank=True, null=True),
+            field=models.TextField(blank=True),
         ),
     ]
