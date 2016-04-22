@@ -1,3 +1,5 @@
+import itertools
+
 from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.db import models
@@ -39,9 +41,18 @@ class UpcomingCompetitionManager(CompetitionManager):
         return super().get_queryset().filter(start_date__gt=timezone.now())
 
 
+class Sport(models.Model):
+    slug = models.SlugField(unique=True)
+    name = models.CharField(max_length=255)
+    icon = models.TextField(blank=True)
+
+    def __str__(self):
+        return self.name
+
+
 class Competition(models.Model):
     name = models.CharField(max_length=255, unique=True)
-    description = models.TextField(blank=True)
+    description = models.CharField(max_length=80, blank=True)
     start_date = models.DateTimeField(default=timezone.now)
     end_date = models.DateTimeField(null=True, blank=True)
     slug = models.SlugField(unique=True)
@@ -50,6 +61,8 @@ class Competition(models.Model):
                                      blank=True)
     creator = models.ForeignKey(settings.AUTH_USER_MODEL,
                                 related_name='my_competitions')
+    sport = models.ForeignKey('Sport',
+                              related_name='competitions')
 
     objects = CompetitionManager()
     ongoing_objects = OngoingCompetitionManager()
@@ -172,9 +185,25 @@ class Competition(models.Model):
         Return a list of players who have played at least 1 game in the
         competition.
         """
-        return get_user_model().objects.filter(
-                  Q(games_won__competition=self) |
-                  Q(games_lost__competition=self)).distinct()
+        # Another way to get all the players from the competition would be:
+        # get_user_model().objects.filter(
+        #       Q(games_won__competition=self) |
+        #       Q(games_lost__competition=self)
+        # ).distinct()
+        #
+        # But this would be highly inefficient since Django would then do 2
+        # OUTER JOINs on the games table (which is big!). We instead fetch all
+        # winner IDs, all loser IDs, and finally combine them in a set
+        users = set(itertools.chain(
+            Game.objects.filter(competition=self).values_list(
+                'winner_id', flat=True
+            ).distinct(),
+            Game.objects.filter(competition=self).values_list(
+                'loser_id', flat=True
+            ).distinct()
+        ))
+
+        return get_user_model().objects.filter(pk__in=users)
 
     def get_score_board(self):
         """

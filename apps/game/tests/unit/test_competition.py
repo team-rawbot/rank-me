@@ -10,7 +10,7 @@ from rankme.tests import RankMeTestCase
 from ...exceptions import CannotLeaveCompetitionError
 from ...models import Competition, Game
 from ...signals import competition_created
-from ..factories import CompetitionFactory, UserFactory
+from ..factories import CompetitionFactory, SportFactory, UserFactory
 
 
 class CompetitionTestCase(RankMeTestCase):
@@ -31,7 +31,8 @@ class CompetitionTestCase(RankMeTestCase):
 
     def test_save_competition_generates_slug(self):
         c = Competition.objects.create(name='Hello World',
-                                       creator=UserFactory())
+                                       creator=UserFactory(),
+                                       sport=SportFactory())
         self.assertEqual(c.slug, 'hello-world')
 
     def test_save_new_competition_sends_created_signal(self):

@@ -20,7 +20,7 @@ class StatsTestCase(RankMeTestCase):
             competition.add_game(users[0], users[1])
 
         with freeze_time('2016-04-04'):
-            self.assertEqual(len(stats.get_stats_per_week(users[0], 7)), 1)
+            self.assertEqual(len(stats.get_stats_per_week(users[0], competition, 7)), 1)
 
     def test_get_stats_per_week_rounds_to_monday(self):
         users = [UserFactory() for _ in range(2)]
@@ -34,4 +34,4 @@ class StatsTestCase(RankMeTestCase):
 
         # That's monday
         with freeze_time('2016-03-28'):
-            self.assertEqual(len(stats.get_stats_per_week(users[0], 3)), 1)
+            self.assertEqual(len(stats.get_stats_per_week(users[0], competition, 3)), 1)

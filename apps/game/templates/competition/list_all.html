@@ -11,7 +11,7 @@
         <div class="grid__item md-w-1/3">
             <h3>{% trans "Past competitions" %}</h3>
             {% if past_competitions %}
-                <ul class="list-stacked list-stacked--divided">
+                <ul class="competitions-list list-stacked list-stacked--divided">
                     {% include "competition/_list.html" with competitions=past_competitions %}
                 </ul>
             {% else %}
@@ -21,7 +21,7 @@
         <div class="grid__item md-w-1/3">
             <h3>{% trans "Ongoing competitions" %}</h3>
             {% if ongoing_competitions %}
-                <ul class="list-stacked list-stacked--divided">
+                <ul class="competitions-list list-stacked list-stacked--divided">
                     {% include "competition/_list.html" with competitions=ongoing_competitions %}
                 </ul>
             {% else %}
@@ -31,7 +31,7 @@
         <div class="grid__item md-w-1/3">
             <h3>{% trans "Upcoming competitions" %}</h3>
             {% if upcoming_competitions %}
-                <ul class="list-stacked list-stacked--divided">
+                <ul class="competitions-list list-stacked list-stacked--divided">
                     {% include "competition/_list.html" with competitions=upcoming_competitions %}
                 </ul>
             {% else %}
