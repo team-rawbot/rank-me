@@ -6,6 +6,7 @@ from .models import Competition, Game, Score, Sport
 class CompetitionAdmin(admin.ModelAdmin):
     fields = ['name', 'description', 'start_date', 'end_date', 'slug',
               'players', 'creator']
+    list_display = ('name', 'description')
 
 
 class ScoreAdmin(admin.ModelAdmin):
