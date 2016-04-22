@@ -34,7 +34,19 @@ module.exports = function(production) {
 
   if (production) {
     // Minify
-    config.plugins.push(new webpack.optimize.UglifyJsPlugin());
+    config.plugins = config.plugins.concat([
+      new webpack.DefinePlugin({
+        'process.env': {
+          'NODE_ENV': JSON.stringify('production')
+        }
+      }),
+      new webpack.optimize.UglifyJsPlugin({
+        comments: false,
+        compress: {
+          warnings: false
+        }
+      })
+    ]);
   }
   else {
     // Write sourcemaps

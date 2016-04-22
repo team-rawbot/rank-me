@@ -1,11 +1,12 @@
 from django.contrib import admin
 
-from .models import Competition, Game, Score
+from .models import Competition, Game, Score, Sport
 
 
 class CompetitionAdmin(admin.ModelAdmin):
     fields = ['name', 'description', 'start_date', 'end_date', 'slug',
               'players', 'creator']
+    list_display = ('name', 'description')
 
 
 class ScoreAdmin(admin.ModelAdmin):
@@ -15,5 +16,6 @@ class ScoreAdmin(admin.ModelAdmin):
         return queryset.select_related('competition')
 
 admin.site.register(Game)
+admin.site.register(Sport)
 admin.site.register(Score, ScoreAdmin)
 admin.site.register(Competition, CompetitionAdmin)

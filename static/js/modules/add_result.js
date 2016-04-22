@@ -40,7 +40,7 @@ function removeUserFrom(user, field) {
 
 export function init() {
     // focus "add result" button on load
-    $('body.home #add-result-button').focus();
+    $('.page--competition #add-result-button').focus();
 
     $(selects).on('change', function() {
         removeUserFrom($(this).val(), opposite($(this).attr('id')));
@@ -49,7 +49,7 @@ export function init() {
     $('#id_winner').select2();
     $('#id_loser').select2();
 
-    $('body.page--add-result').keydown(function(event) {
+    $('.page--add-result').keydown(function(event) {
         var username = appDatas.username;
 
         // press 'w' to set yourself as winner
