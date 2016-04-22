@@ -15,6 +15,11 @@ class UserChoiceField(forms.ModelChoiceField):
         return obj.profile.get_full_name()
 
 
+class MultipleUserChoiceField(forms.ModelMultipleChoiceField):
+    def label_from_instance(self, obj):
+        return obj.profile.get_full_name()
+
+
 class GameForm(forms.Form):
     # values overridden in __init__ !
     winner = UserChoiceField(queryset=get_user_model().objects.none(), empty_label='')
@@ -57,6 +62,15 @@ class GameForm(forms.Form):
 
 
 class CompetitionForm(forms.ModelForm):
+    players = MultipleUserChoiceField(
+        queryset=(get_user_model().objects
+                                  .extra(select={
+                                      'lower_first': 'lower(first_name)'
+                                  })
+                                  .order_by('lower_first', 'last_name')
+                                  .select_related('profile')
+    ))
+
     class Meta:
         model = Competition
         fields = ('name', 'description', 'sport', 'players', 'start_date', 'end_date')
