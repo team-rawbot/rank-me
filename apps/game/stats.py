@@ -183,6 +183,7 @@ def get_latest_results_by_player(competition, nb_games, offset=0,
     # add start to nb_games because slicing want the end position
     nb_games += offset
     games = (competition.games
+             .select_related('winner__profile', 'loser__profile')
              .order_by('-id')
              .prefetch_related('historical_scores')[offset:nb_games])
 

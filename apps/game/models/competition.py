@@ -1,3 +1,5 @@
+import itertools
+
 from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.db import models
@@ -183,9 +185,25 @@ class Competition(models.Model):
         Return a list of players who have played at least 1 game in the
         competition.
         """
-        return get_user_model().objects.filter(
-                  Q(games_won__competition=self) |
-                  Q(games_lost__competition=self)).distinct()
+        # Another way to get all the players from the competition would be:
+        # get_user_model().objects.filter(
+        #       Q(games_won__competition=self) |
+        #       Q(games_lost__competition=self)
+        # ).distinct()
+        #
+        # But this would be highly inefficient since Django would then do 2
+        # OUTER JOINs on the games table (which is big!). We instead fetch all
+        # winner IDs, all loser IDs, and finally combine them in a set
+        users = set(itertools.chain(
+            Game.objects.filter(competition=self).values_list(
+                'winner_id', flat=True
+            ).distinct(),
+            Game.objects.filter(competition=self).values_list(
+                'loser_id', flat=True
+            ).distinct()
+        ))
+
+        return get_user_model().objects.filter(pk__in=users)
 
     def get_score_board(self):
         """
