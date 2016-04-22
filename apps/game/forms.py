@@ -56,7 +56,7 @@ class GameForm(forms.Form):
 class CompetitionForm(forms.ModelForm):
     class Meta:
         model = Competition
-        fields = ('name', 'description', 'players', 'start_date', 'end_date')
+        fields = ('name', 'description', 'sport', 'players', 'start_date', 'end_date')
 
     def save(self, creator):
         competition = super(CompetitionForm, self).save(commit=False)

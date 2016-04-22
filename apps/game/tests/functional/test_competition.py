@@ -10,7 +10,7 @@ from bs4 import BeautifulSoup
 from rankme.tests import RankMeTestCase
 
 from ...models import Competition
-from ..factories import UserFactory, CompetitionFactory
+from ..factories import CompetitionFactory, SportFactory, UserFactory
 
 
 class TestCompetition(RankMeTestCase):
@@ -21,6 +21,8 @@ class TestCompetition(RankMeTestCase):
         self.client.login(username=self.user.username, password='password')
 
     def test_create_competition(self):
+        sport = SportFactory()
+
         response = self.client.get(reverse('competition_add'))
         self.assertEqual(200, response.status_code)
 
@@ -32,7 +34,8 @@ class TestCompetition(RankMeTestCase):
             'description': 'Official ATP tournament',
             'players': [self.user.id],
             'start_date': '2014-05-03 00:00:00',
-            'end_date': '2014-06-03 00:00:00'
+            'end_date': '2014-06-03 00:00:00',
+            'sport': sport.id
         })
         self.assertRedirects(response, reverse('competition_detail', kwargs={
             'competition_slug': 'atp-tournament-2014'

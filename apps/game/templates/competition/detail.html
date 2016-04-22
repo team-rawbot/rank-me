@@ -9,9 +9,14 @@
             <div class="mirror__item mrgb--">
                 <h1 class="mrgb0">{{ competition }}</h1>
 
-                {% if competition.description %}
-                    <p class="mrgv0 text-muted">{{ competition.description | linebreaksbr }}</p>
-                {% endif %}
+                <ul class="list-inline list-inline--divided text-muted">
+                    {% spaceless %}
+                        <li>{{ competition.sport.icon|safe }} {{ competition.sport }}</li>
+                        {% if competition.description %}
+                            <li>{{ competition.description }}</li>
+                        {% endif %}
+                    {% endspaceless %}
+                </ul>
             </div>
 
             <ul class="list-inline list-inline--small mirror__item">
