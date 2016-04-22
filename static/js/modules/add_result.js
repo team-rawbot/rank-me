@@ -1,6 +1,5 @@
 import $ from 'jquery';
 
-var alreadySelected = false;
 var selects = '#add-result select';
 
 /**
@@ -23,14 +22,18 @@ function opposite(field) {
 function selectAs(field, event) {
     var option = $('#id_' + field + ' option[value=' + appDatas.user_id + ']');
 
-    if(option && !alreadySelected) {
-        option.attr('selected', 'selected');
+    if (option.length) {
+        option.prop('selected', true);
         option.trigger('change');
 
-        opposite(field).focus();
-        alreadySelected = true;
+        opposite(field).data('select2').open();
         event.preventDefault();
+        discardShortcut();
     }
+}
+
+function discardShortcut() {
+    $('.page--add-result').off('keydown.shortcut');
 }
 
 function removeUserFrom(user, field) {
@@ -46,12 +49,18 @@ export function init() {
         removeUserFrom($(this).val(), opposite($(this).attr('id')));
     });
 
-    $('#id_winner').select2();
-    $('#id_loser').select2();
+    $('#id_winner, #id_loser')
+        .on('select2:opening', discardShortcut)
+        .select2({
+            placeholder: 'Select…',
+            language: {
+                'noResults': function() {
+                    return 'No results found ☹️';
+                }
+            }
+        });
 
-    $('.page--add-result').keydown(function(event) {
-        var username = appDatas.username;
-
+    $('.page--add-result').on('keydown.shortcut', function(event) {
         // press 'w' to set yourself as winner
         if (event.keyCode == 87) {
             selectAs('winner', event);
@@ -60,8 +69,8 @@ export function init() {
         else if (event.keyCode == 76) {
             selectAs('loser', event);
         }
-        // press Ctrl + enter to submit the form
-        else if (event.keyCode == 13 && event.ctrlKey) {
+        // press Ctrl/Cmd + enter to submit the form
+        else if (event.KeyCode == 13 && (event.ctrlKey || event.metaKey)) {
             $('#add-result').submit();
         }
     });
