@@ -1,5 +1,6 @@
 import $ from 'jquery';
-import dropdown from 'bootstrap-sass/assets/javascripts/bootstrap/dropdown';
+import 'bootstrap-sass/assets/javascripts/bootstrap/dropdown';
+import 'select2';
 
 import * as AddResult from 'modules/add_result';
 import * as TeamChart from 'modules/team_charts';
