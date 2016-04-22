@@ -33,7 +33,7 @@ class GameForm(forms.Form):
             id__in=self.competition.players.all()
         ).extra(
             select={'lower_first': 'lower(first_name)'}
-        ).order_by('lower_first')
+        ).select_related('profile').order_by('lower_first')
 
         self.fields['winner'].queryset = queryset
         self.fields['loser'].queryset = queryset
