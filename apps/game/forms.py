@@ -4,7 +4,7 @@ from django.core.exceptions import ValidationError
 from django.template.defaultfilters import slugify
 from django.utils.translation import ugettext as _
 
-from .models import Competition, Game
+from .models import Competition, Game, Sport
 
 # Use dedicated HTML5 forms for date-related fields
 forms.DateInput.input_type="date"
@@ -70,6 +70,7 @@ class CompetitionForm(forms.ModelForm):
                                   .order_by('lower_first', 'last_name')
                                   .select_related('profile')
     ))
+    sport = forms.ModelChoiceField(queryset=Sport.objects.all(), empty_label='')
 
     class Meta:
         model = Competition
