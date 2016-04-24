@@ -103,7 +103,7 @@ function doDraw(container) {
     var url = container.data('json') + offset;
     d3.json(url, function(err, data) {
         if(err) {
-            alert(err);
+            container.html('<p class="text-danger">Unable to load graph data.</p>');
             return;
         }
 
