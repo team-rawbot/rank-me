@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% load i18n bootstrap %}
+{% load i18n %}
 {% block page_title %}{% trans "Add a result" %} &middot; {{ competition }}{% endblock %}
 {% block body_class %}page--add-result{% endblock %}
 
@@ -11,7 +11,26 @@
 
 <form id="add-result" action="" method="post">
     {% csrf_token %}
-    {{ form|bootstrap }}
+    {{ form.non_field_errors }}
+    <div class="grid">
+        {% for field in form %}
+            <div class="grid__item md-w-1/2">
+                <div class="form-group mrgb-{% if field.errors %} has-error{% endif %}">
+                    <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+                    {{ field }}
+                    {% if field.errors %}
+                        <span class="help-block">
+                            {% for error in field.errors %}
+                                {{error}}
+                            {% endfor %}
+                        </span>
+                    {% elif field.help_text %}
+                        <span class="help-block">{{ field.help_text|safe }}</span>
+                    {% endif %}
+                </div>
+            </div>
+        {% endfor %}
+    </div>
     <ul class="list-inline list-inline--small mrgt">
         <li><input type="submit" name="save" value="{% trans "Save" %}" class="btn btn--primary" /></li>
         <li><input type="submit" name="save_add" value="{% trans "Save and add more" %}" class="btn btn--default" /></li>
