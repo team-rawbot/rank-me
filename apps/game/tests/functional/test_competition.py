@@ -33,8 +33,8 @@ class TestCompetition(RankMeTestCase):
             'name': 'ATP Tournament 2014',
             'description': 'Official ATP tournament',
             'players': [self.user.id],
-            'start_date': '2014-05-03 00:00:00',
-            'end_date': '2014-06-03 00:00:00',
+            'start_date': '2014-05-03T00:00:00',
+            'end_date': '2014-06-03T00:00:00',
             'sport': sport.id
         })
         self.assertRedirects(response, reverse('competition_detail', kwargs={

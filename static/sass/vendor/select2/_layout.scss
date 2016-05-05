@@ -16,6 +16,12 @@
     outline: none;
   }
 
+  &.select2-container--focus {
+    .select2-selection {
+      border-color: $alt-color;
+    }
+  }
+
   &.select2-container--open {
     .select2-selection {
       border-color: $alt-color;

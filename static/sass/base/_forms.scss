@@ -12,8 +12,16 @@ select[multiple] {
   margin-top: $spacing-unit-tiny;
 
   color: $muted-color;
+}
 
-  .has-error & {
+.has-error {
+  input,
+  select,
+  textarea {
+    border-color: $brand-danger;
+  }
+
+  .help-block {
     color: $brand-danger;
   }
 }

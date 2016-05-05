@@ -13,6 +13,7 @@ def competitions_list(context):
     return {
         'competitions': Competition.ongoing_objects
                                    .get_visible_for_user(request.user)
+                                   .select_related('sport')
                                    .order_by('name')
     }
 

@@ -44,13 +44,13 @@ $text-color:                        $alt-color-lighter;
  * Spacings
  */
 
-// $ratio:                             1.61803398875;
+$ratio:                             1.61803398875;
 
-// $spacing-unit-default:              24px;
-// $spacing-unit-tiny:                 floor($spacing-unit-default / ($ratio * 2));
-// $spacing-unit-small:                floor($spacing-unit-default / $ratio);
-// $spacing-unit-large:                floor($spacing-unit-default * $ratio);
-// $spacing-unit-huge:                 floor($spacing-unit-default * ($ratio * 2));
+$spacing-unit-default:              24px;
+$spacing-unit-tiny:                 floor($spacing-unit-default / ($ratio * 2));
+$spacing-unit-small:                floor($spacing-unit-default / $ratio);
+$spacing-unit-large:                floor($spacing-unit-default * $ratio);
+$spacing-unit-huge:                 floor($spacing-unit-default * ($ratio * 2));
 
 
 /**
@@ -126,7 +126,7 @@ $btn-primary-color:                 $alt-color-darker;
  * Forms
  */
 
-// $field-padding:                     $spacing-unit-small;
+$field-padding:                     $spacing-unit-small;
 
 // $field-color:                       inherit;
 // $field-font-size:                   inherit;

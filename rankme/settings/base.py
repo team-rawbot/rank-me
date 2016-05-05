@@ -40,7 +40,8 @@ USE_I18N = True
 
 # If you set this to False, Django will not format dates, numbers and
 # calendars according to the current locale.
-USE_L10N = True
+# /!\ Disabled on purpose to allow custom date formats
+USE_L10N = False
 
 # If you set this to False, Django will not use timezone-aware datetimes.
 USE_TZ = True
@@ -227,3 +228,15 @@ REST_FRAMEWORK = {
 MESSAGE_TAGS = {
     messages.ERROR: 'danger'
 }
+
+# Custom date format to match HTML5 date/datetime-local format
+DATE_INPUT_FORMATS = [
+    '%Y-%m-%d', # '2006-10-25'
+    '%m/%d/%Y', # '10/25/2006'
+    '%m/%d/%y', # '10/25/06'
+]
+DATETIME_INPUT_FORMATS = [
+    '%Y-%m-%dT%H:%M',        # '2006-10-25T14:30'
+    '%Y-%m-%dT%H:%M:%S',     # '2006-10-25T14:30:59'
+    '%Y-%m-%dT%H:%M:%S.%f',  # '2006-10-25T14:30:59.000200'
+]

@@ -4,10 +4,18 @@ from django.core.exceptions import ValidationError
 from django.template.defaultfilters import slugify
 from django.utils.translation import ugettext as _
 
-from .models import Competition, Game
+from .models import Competition, Game, Sport
 
+# Use dedicated HTML5 forms for date-related fields
+forms.DateInput.input_type="date"
+forms.DateTimeInput.input_type="datetime-local"
 
 class UserChoiceField(forms.ModelChoiceField):
+    def label_from_instance(self, obj):
+        return obj.profile.get_full_name()
+
+
+class MultipleUserChoiceField(forms.ModelMultipleChoiceField):
     def label_from_instance(self, obj):
         return obj.profile.get_full_name()
 
@@ -25,7 +33,7 @@ class GameForm(forms.Form):
             id__in=self.competition.players.all()
         ).extra(
             select={'lower_first': 'lower(first_name)'}
-        ).order_by('lower_first')
+        ).select_related('profile').order_by('lower_first')
 
         self.fields['winner'].queryset = queryset
         self.fields['loser'].queryset = queryset
@@ -54,9 +62,22 @@ class GameForm(forms.Form):
 
 
 class CompetitionForm(forms.ModelForm):
+    players = MultipleUserChoiceField(
+        queryset=(get_user_model().objects
+                                  .extra(select={
+                                      'lower_first': 'lower(first_name)'
+                                  })
+                                  .order_by('lower_first', 'last_name')
+                                  .select_related('profile')
+    ))
+    sport = forms.ModelChoiceField(queryset=Sport.objects.all(), empty_label='')
+
     class Meta:
         model = Competition
         fields = ('name', 'description', 'sport', 'players', 'start_date', 'end_date')
+        widgets = {
+            'description': forms.Textarea(attrs={'rows': 3})
+        }
 
     def save(self, creator):
         competition = super(CompetitionForm, self).save(commit=False)

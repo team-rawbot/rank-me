@@ -1,6 +1,7 @@
 {% extends "base.html" %}
-{% load static i18n bootstrap %}
+{% load static i18n %}
 {% block page_title %}{% trans "Create a competition" %}{% endblock %}
+{% block body_class %}page--competition-form{% endblock body_class %}
 
 {% block content %}
 <header class="page-header">
@@ -9,7 +10,11 @@
 
 <form id="add-result" action="" method="post">
     {% csrf_token %}
-    {{ form|bootstrap }}
-    <p><input type="submit" value="{% trans "Create" %}" class="btn btn--primary" /></p>
+    {% include "competition/_form.html" %}
+    <div class="grid grid--right">
+        <div class="grid__item md-w-3/4">
+            <p><input type="submit" value="{% trans "Create" %}" class="btn btn--primary" /></p>
+        </div>
+    </div>
 </form>
 {% endblock %}
