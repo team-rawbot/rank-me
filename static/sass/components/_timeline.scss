@@ -91,6 +91,7 @@
 
   .event-hook {
     width: 56px;
+    flex-shrink: 0;
     margin-right: $spacing-unit-small;
   }
 
