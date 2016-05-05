@@ -11,6 +11,10 @@
 <form action="" method="post">
     {% csrf_token %}
     {% include "competition/_form.html" %}
-    <p><input type="submit" value="{% trans "Update" %}" class="btn btn--primary" /></p>
+    <div class="grid grid--right">
+        <div class="grid__item md-w-3/4">
+            <p><input type="submit" value="{% trans "Update" %}" class="btn btn--primary" /></p>
+        </div>
+    </div>
 </form>
 {% endblock %}
